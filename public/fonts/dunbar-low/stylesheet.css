@@ -1,0 +1,125 @@
+@font-face {
+  font-family: "Dunbar Low";
+  src: url("DunbarLow-ExtraLight.woff2") format("woff2"),
+    url("DunbarLow-ExtraLight.woff") format("woff");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dunbar Low";
+  src: url("DunbarLow-HairlineItalic.woff2") format("woff2"),
+    url("DunbarLow-HairlineItalic.woff") format("woff");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dunbar Low";
+  src: url("DunbarLow-Hairline.woff2") format("woff2"),
+    url("DunbarLow-Hairline.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dunbar Low";
+  src: url("DunbarLow-BoldItalic.woff2") format("woff2"),
+    url("DunbarLow-BoldItalic.woff") format("woff");
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dunbar Low";
+  src: url("DunbarLow-LightItalic.woff2") format("woff2"),
+    url("DunbarLow-LightItalic.woff") format("woff");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dunbar Low";
+  src: url("DunbarLow-Light.woff2") format("woff2"),
+    url("DunbarLow-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dunbar Low";
+  src: url("DunbarLow-Medium.woff2") format("woff2"),
+    url("DunbarLow-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dunbar Low";
+  src: url("DunbarLow-MediumItalic.woff2") format("woff2"),
+    url("DunbarLow-MediumItalic.woff") format("woff");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dunbar Low";
+  src: url("DunbarLow-Italic.woff2") format("woff2"),
+    url("DunbarLow-Italic.woff") format("woff");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dunbar Low";
+  src: url("DunbarLow-Book.woff2") format("woff2"),
+    url("DunbarLow-Book.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dunbar Low";
+  src: url("DunbarLow-ExtraLightItalic.woff2") format("woff2"),
+    url("DunbarLow-ExtraLightItalic.woff") format("woff");
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dunbar Low";
+  src: url("DunbarLow-Regular.woff2") format("woff2"),
+    url("DunbarLow-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dunbar Low";
+  src: url("DunbarLow-BookItalic.woff2") format("woff2"),
+    url("DunbarLow-BookItalic.woff") format("woff");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dunbar Low";
+  src: url("DunbarLow-Bold.woff2") format("woff2"),
+    url("DunbarLow-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
