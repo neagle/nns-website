@@ -1,6 +1,9 @@
 import React from "react";
+import type { Show } from "@/app/types";
+import Nightsky from "@/app/components/Nightsky";
+import Logo from "@/app/components/Logo";
+import Navigation from "@/app/components/Navigation";
 import wixClient from "@/lib/wixClient";
-import { Show } from "@/app/types";
 import dayjs from "dayjs";
 import Link from "next/link";
 
@@ -18,24 +21,21 @@ const Header = async () => {
     }
     return acc;
   }, [] as string[]);
-  console.log("seasons", seasons);
 
   return (
-    <header>
-      <menu>
-        <ul>
-          <li>
-            Seasons
-            <ol>
-              {seasons.map((season) => (
-                <li key={season}>
-                  <Link href={`/seasons/${season}`}>{season}</Link>
-                </li>
-              ))}
-            </ol>
-          </li>
-        </ul>
-      </menu>
+    <header className="border-b-8 border-primary">
+      <Nightsky>
+        <div className="navbar p-0">
+          <div className="flex-1">
+            <Link href="/">
+              <Logo />
+            </Link>
+          </div>
+          <div className="flex-none self-end">
+            <Navigation seasons={seasons} />
+          </div>
+        </div>
+      </Nightsky>
     </header>
   );
 };

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/app/components/Header";
+import Footer from "@/app/components/Footer";
 import localFont from "next/font/local";
 
 const dunbarLow = localFont({
@@ -28,11 +29,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${dunbarLow.variable} font-sans`}>
-        <h1 className="font-serif">DEBUG!</h1>
+    <html lang="en" className="h-full">
+      <body className={`${dunbarLow.variable} font-sans h-full flex flex-col`}>
         <Header />
-        {children}
+        <main className="flex-grow bg-base-100">{children}</main>
+        <Footer />
       </body>
     </html>
   );

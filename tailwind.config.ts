@@ -9,9 +9,10 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        // sans: ["var(--font-dunbar-low)"],
-        sans: ["Papyrus"],
-        serif: ["Comic Sans MS"],
+        sans: ["var(--font-dunbar-low)"],
+      },
+      fontSize: {
+        base: "1.25rem",
       },
     },
   },

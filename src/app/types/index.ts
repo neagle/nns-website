@@ -10,6 +10,7 @@ export interface Show extends WixDataItem {
     lastName: string;
   };
   logo: string;
+  backgroundTexture?: string;
   openingDate: string;
 }
 
