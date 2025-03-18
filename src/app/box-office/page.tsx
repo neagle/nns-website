@@ -14,7 +14,7 @@ const BoxOffice = async () => {
     .ascending("dateAndTimeSettings.startDate")
     .find();
 
-  console.log("events", events);
+  // console.log("events", events);
   // events.map((event) => {
   //   console.log(event.status);
   // });
@@ -35,7 +35,7 @@ const BoxOffice = async () => {
     {}
   );
 
-  console.log("shows", shows);
+  // console.log("shows", shows);
 
   return (
     <div className="p-4">

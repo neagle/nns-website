@@ -5,7 +5,6 @@ import React, {
   useEffect,
   useCallback,
   ReactNode,
-  KeyboardEvent,
   MouseEvent,
 } from "react";
 import { media } from "@wix/sdk";
@@ -43,12 +42,12 @@ const PhotoModal = ({ photo, children }: PhotoModalProps) => {
 
   // Close modal on Escape
   useEffect(() => {
-    function handleEscape(e: KeyboardEvent) {
+    function handleEscape(e: globalThis.KeyboardEvent) {
       if (e.key === "Escape") {
         setIsOpen(false);
       }
     }
-    document.addEventListener("keydown", handleEscape);
+    document.addEventListener("keydown", handleEscape as EventListener);
     return () => {
       document.removeEventListener("keydown", handleEscape);
     };
@@ -90,7 +89,8 @@ const PhotoModal = ({ photo, children }: PhotoModalProps) => {
     const newUrl = media.getScaledToFillImageUrl(
       photo.src,
       finalWidth,
-      finalHeight
+      finalHeight,
+      {}
     );
     setScaledUrl(newUrl);
     setIsLoading(true);

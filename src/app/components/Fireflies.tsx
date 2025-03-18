@@ -52,10 +52,11 @@ const easing = {
 class Firefly {
   public elem: SVGGElement;
   public parent: SVGElement;
-  public flightPath: SVGPathElement;
+  public flightPath?: SVGPathElement;
 
   private animationFrameRequest: number = 0;
-  private anchor: ICoordinates;
+  private anchor?: ICoordinates;
+  private positionOffset: ICoordinates = { x: 0, y: 0 };
 
   constructor({ parent, initialPosition }: IFireFly) {
     this.parent = parent;
@@ -242,7 +243,7 @@ type Props = {
 };
 
 const Fireflies = ({ num = 3 }: Props) => {
-  const containerSVG = useRef<SVGElement>(null);
+  const containerSVG = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     if (!containerSVG.current) return;
