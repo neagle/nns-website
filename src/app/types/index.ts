@@ -31,9 +31,10 @@ export interface Credit {
 export interface ShowWithData extends Show {
   cast: Credit[];
   crew: Credit[];
-  shows: any[];
+  shows: Show[];
 }
 
+/* Probably deprecated by V3Event type */
 export interface Event extends WixDataItem {
   title: string;
   dateAndTimeSettings: {
@@ -83,4 +84,20 @@ interface Price {
   currency: string; // "USD"
   formattedValue: string; // "$25.00"
   value: string; // "25.00"
+}
+
+export interface PhotoSettings {
+  width: number;
+  height: number;
+  focalPoint?: [number, number];
+}
+
+export interface Photo {
+  description: string;
+  slug: string;
+  alt: string;
+  src: string;
+  title: string;
+  type: "image";
+  settings: PhotoSettings;
 }

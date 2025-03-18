@@ -1,6 +1,5 @@
 import React from "react";
 import wixClient from "@/lib/wixClient";
-import Link from "next/link";
 import ShowTime from "@/app/components/ShowTime";
 import { getScaledImageByHeight } from "@/app/actions/media";
 // import type { Event } from "@/app/types";
@@ -42,10 +41,12 @@ const BoxOffice = async () => {
     <div className="p-4">
       <h1 className="text-xl mb-4">Box Office</h1>
       {Object.keys(shows).map(async (show) => {
-        const showImage = await getScaledImageByHeight(
-          shows[show][0].mainImage,
-          400
-        );
+        const imageUrl = shows[show][0].mainImage;
+        if (!imageUrl) {
+          return;
+        }
+        const showImage = await getScaledImageByHeight(imageUrl, 400);
+
         return (
           <div key="show">
             <div className={classnames(["flex", "flex-col", "md:flex-row"])}>

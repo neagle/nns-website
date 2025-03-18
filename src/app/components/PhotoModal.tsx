@@ -10,22 +10,7 @@ import React, {
 } from "react";
 import { media } from "@wix/sdk";
 import classnames from "classnames";
-
-interface PhotoSettings {
-  width: number;
-  height: number;
-  focalPoint?: [number, number];
-}
-
-interface Photo {
-  description: string;
-  slug: string;
-  alt: string;
-  src: string;
-  title: string;
-  type: "image";
-  settings: PhotoSettings;
-}
+import type { Photo } from "@/app/types";
 
 interface PhotoModalProps {
   photo: Photo;

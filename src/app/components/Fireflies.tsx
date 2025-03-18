@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import classnames from "classnames";
 
 interface ICoordinates {
@@ -39,10 +39,6 @@ function namespaced<T extends keyof SVGElementTagNameMap>(
   }
   return elem;
 }
-
-const coinFlip = (): boolean => {
-  return Math.round(Math.random()) === 1;
-};
 
 const easing = {
   // acceleration until halfway, then deceleration
@@ -233,7 +229,9 @@ class Firefly {
       throw new Error("No parent to which to attach our flight path!");
     }
 
-    parent && parent.appendChild(this.flightPath);
+    if (parent) {
+      parent.appendChild(this.flightPath);
+    }
 
     return this.flightPath;
   }

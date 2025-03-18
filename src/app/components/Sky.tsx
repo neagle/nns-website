@@ -84,9 +84,9 @@ const NightskyCanvas: React.FC = () => {
       ];
 
       for (let i = 0; i < 5; i++) {
-        let x = Math.random() * canvas.width;
-        let y = Math.random() * canvas.height;
-        let size = Math.random() * 300 + 200;
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const size = Math.random() * 300 + 200;
 
         const gradient = nebCtx.createRadialGradient(x, y, 0, x, y, size);
         const color =

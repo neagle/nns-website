@@ -1,7 +1,7 @@
 import { media } from "@wix/sdk";
 import probe from "probe-image-size";
 
-export const getImageWithDimensions = async (image: any) => {
+export const getImageWithDimensions = async (image: string) => {
   "use server";
   const imageUrl = media.getImageUrl(image);
   const imageSize = await probe(imageUrl.url);
@@ -19,7 +19,7 @@ export const getImageWithDimensions = async (image: any) => {
  * @returns An object containing the scaled image URL, width, and height.
  */
 export const getScaledImage = async (
-  image: any, // Replace `any` with the appropriate Wix image type if available
+  image: string,
   targetWidth: number
 ): Promise<{ url: string; width: number; height: number }> => {
   const imageurl = media.getImageUrl(image);
@@ -44,7 +44,7 @@ export const getScaledImage = async (
 };
 
 export const getScaledImageByHeight = async (
-  image: any, // Replace `any` with the appropriate Wix image type if available
+  image: string,
   targetHeight: number
 ): Promise<{ url: string; width: number; height: number }> => {
   const imageurl = media.getImageUrl(image);

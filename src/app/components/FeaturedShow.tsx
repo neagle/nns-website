@@ -1,7 +1,6 @@
 import React from "react";
 import wixClient from "@/lib/wixClient";
 import { media } from "@wix/sdk";
-import dayjs from "dayjs";
 import classnames from "classnames";
 
 import { Show } from "@/app/types";

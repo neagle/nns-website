@@ -1,6 +1,6 @@
 import React from "react";
 import wixClient from "@/lib/wixClient";
-import type { Show, ShowWithData } from "@/app/types";
+import type { Show, ShowWithData, Photo } from "@/app/types";
 // import { media } from "@wix/sdk";
 import { fullName } from "@/app/utils";
 import {
@@ -100,11 +100,11 @@ const Season = async ({ params: { slug } }: PageProps) => {
       </div>
       {show.photos && (
         <div className="carousel mt-4 mb-4 group">
-          {show.photos.map(async (photo) => {
+          {show.photos.map(async (photo: Photo) => {
             // const image = await getImageWithDimensions(photo.src);
-            // console.log("photo", photo);
+            console.log("photo", photo);
             const image = await getScaledImageByHeight(photo.src, 300);
-            const fullImage = await getImageWithDimensions(photo.src);
+            // const fullImage = await getImageWithDimensions(photo.src);
             // console.log("fullImage", fullImage.url);
 
             return (
