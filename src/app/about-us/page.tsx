@@ -52,8 +52,8 @@ const Page = async () => {
                 talents of our company members and&nbsp;casts.
               </p>
             </div>
-            <p className="text-lg mb-4 text-right">
-              Thank you for supporting us on this journey!
+            <p className="text-lg mb-4 md:text-right leading-tight">
+              Thank you for supporting us on this&nbsp;journey!
             </p>
 
             <p className="text-lg text-primary text-right">
