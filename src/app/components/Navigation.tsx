@@ -8,7 +8,7 @@ type Props = {
 
 const Navigation = async ({ seasons }: Props) => {
   return (
-    <ul className="menu menu-horizontal uppercase m-0 p-0 text-lg">
+    <ul className="menu menu-horizontal m-0 p-0 text-sm font-bold">
       <li className="dropdown dropdown-hover dropdown-center">
         <div tabIndex={0} role="button" className="">
           Seasons
@@ -20,8 +20,7 @@ const Navigation = async ({ seasons }: Props) => {
             "menu",
             "m-0!",
             "z-1",
-            "bg-base-100",
-            "text-xl",
+            "bg-base-200",
           ])}
         >
           {seasons.map((season) => (

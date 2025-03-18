@@ -1,8 +1,9 @@
-import { WixDataItem } from "@wix/wix-data-items-sdk";
+import type { WixDataItem } from "@wix/wix-data-items-sdk";
 
 export interface Show extends WixDataItem {
   _id: string;
   title: string;
+  slug: string;
   author: string;
   director: {
     firstName: string;
@@ -14,12 +15,72 @@ export interface Show extends WixDataItem {
   openingDate: string;
 }
 
+export interface Person extends WixDataItem {
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  headshot: string;
+}
+
 export interface Credit {
   _id: string;
   role: string;
-  person: {
-    firstName: string;
-    middleName?: string;
-    lastName: string;
+  person: Person;
+}
+
+export interface ShowWithData extends Show {
+  cast: Credit[];
+  crew: Credit[];
+  shows: any[];
+}
+
+export interface Event extends WixDataItem {
+  title: string;
+  dateAndTimeSettings: {
+    startDate: string;
+    endDate: string;
   };
+  eventPageUrl: string;
+  location: {
+    name: string;
+    address: {
+      city: string;
+      country: string;
+      formatted: string; // "225 E Broad St, Falls Church, VA 22046, USA"
+      postalCode: string;
+      streetAddress: {
+        apt: string;
+        name: string;
+        number: string;
+      };
+      subdivision: string; // "VA"
+    };
+    locationTbd: boolean;
+    type: string; // "VENUE"
+  };
+  mainImage: string;
+  registration: {
+    allowedGuestTypes: string; // "VISITOR_OR_MEMBER"
+    initialType: string;
+    registrationDisabled: boolean;
+    registrationPaused: boolean;
+    status: string; // "OPEN_TICKETS"
+    tickets: {
+      currency: string; // "USD"
+      highestPrice: Price;
+      lowestPrice: Price;
+      type: string; // "REGULAR"
+      soldOut: boolean;
+      ticketLimitPerOrder: number;
+    };
+  };
+  shortDescription: string;
+  slug: string;
+  status: "UPCOMING" | "PAST" | "CANCELED";
+}
+
+interface Price {
+  currency: string; // "USD"
+  formattedValue: string; // "$25.00"
+  value: string; // "25.00"
 }

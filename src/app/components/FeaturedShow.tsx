@@ -9,6 +9,9 @@ import { Show } from "@/app/types";
 import probe from "probe-image-size";
 import Image from "next/image";
 import { fullName } from "@/app/utils";
+import FeaturedCastMember from "./FeaturedCastMember";
+import { getShowsWithData } from "@/app/actions/shows";
+import ShowTime from "./ShowTime";
 
 const FeaturedShow = async () => {
   // 1. Get featured shows
@@ -21,32 +24,9 @@ const FeaturedShow = async () => {
   const shows = items as Show[];
 
   // 2. For each show, get cast and showtimes in parallel using Promise.all
-  const showsWithData = await Promise.all(
-    shows.map(async (show: Show) => {
-      const [credits, events] = await Promise.all([
-        wixClient.items
-          .query("Credits")
-          .eq("show", show._id)
-          .eq("category", "cast")
-          .include("person")
-          .ascending("order")
-          .find(),
-        wixClient.wixEventsV2
-          .queryEvents()
-          .eq("title", show.title)
-          .ascending("dateAndTimeSettings.startDate")
-          .find(),
-      ]);
 
-      return {
-        ...show,
-        cast: credits.items,
-        shows: events.items,
-      };
-    })
-  );
-
-  console.log("showsWithData", showsWithData);
+  const showsWithData = await getShowsWithData({ shows });
+  // console.log("showsWithData", showsWithData);
 
   // 3. Render
   return (
@@ -68,7 +48,7 @@ const FeaturedShow = async () => {
           let backgroundStyle = {};
           if (show.backgroundTexture) {
             const backgroundTexture = media.getImageUrl(show.backgroundTexture);
-            console.log("backgroundTexture", backgroundTexture);
+            // console.log("backgroundTexture", backgroundTexture);
             backgroundStyle = {
               backgroundImage: `url(${backgroundTexture.url})`,
               backgroundSize: "cover", // Optional: Adjust as needed
@@ -78,7 +58,6 @@ const FeaturedShow = async () => {
           // console.log("logoSize", logoSize);
 
           return (
-            // Make sure to use curly braces for the key!
             <li
               key={show._id}
               className={classnames([
@@ -86,108 +65,108 @@ const FeaturedShow = async () => {
                 "h-full",
                 "flex-col",
                 "md:flex-row",
+                "[&>section]:p-8",
               ])}
             >
+              <section className="grow-1 w-2/3" style={backgroundStyle}>
+                <section className={classnames(["text-center"])}>
+                  <div className="rounded-lg">
+                    <Image
+                      src={scaledLogo}
+                      alt={show.title}
+                      width={scaledWidth}
+                      height={scaledHeight}
+                      className="mx-auto mb-5"
+                    />
+                  </div>
+                  <section className={classnames(["text-left"])}>
+                    <div className="flex mb-2 items-center justify-center">
+                      <p
+                        className={classnames([
+                          "drop-shadow-lg",
+                          "text-xl",
+                          "mb-6",
+                        ])}
+                      >
+                        Directed by <b>{fullName(show.director)}</b>
+                      </p>
+                    </div>
+                    <h3 className="text-xl text-primary/80! mb-6 drop-shadow-lg text-center">
+                      Featuring
+                    </h3>
+                    <div className="grid gap-2 md:grid-cols-2 place-items-center">
+                      {show.cast.map(async (cast) => {
+                        const headshot = media.getImageUrl(
+                          cast.person.headshot
+                        );
+                        const headshotSize = await probe(headshot.url);
+                        const headshotRatio =
+                          headshotSize.width / headshotSize.height;
+                        const scaledHeight = 200;
+                        const scaledWidth = scaledHeight * headshotRatio;
+
+                        const scaledHeadshot = media.getScaledToFillImageUrl(
+                          cast.person.headshot,
+                          scaledWidth,
+                          scaledHeight,
+                          {}
+                        );
+
+                        return (
+                          <FeaturedCastMember
+                            key={cast._id}
+                            className="flex flex-col items-center justify-center"
+                            role={cast.role}
+                            castMember={cast.person}
+                            headshot={{
+                              url: scaledHeadshot,
+                              width: scaledWidth,
+                              height: scaledHeight,
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+                  </section>
+                </section>
+              </section>
               <section
-                className={classnames(["p-8", "grow-1", "text-center"])}
-                style={backgroundStyle}
+                className={classnames(["grow-1", "bg-base-200", "text-center"])}
               >
-                <Image
-                  src={scaledLogo}
-                  alt={show.title}
-                  width={scaledWidth}
-                  height={scaledHeight}
-                  className="mx-auto"
-                />
-                <a href="/box-office" className="btn">
-                  Buy Tickets
-                </a>
-              </section>
-              <section className={classnames(["p-8", "grow-1"])}>
-                <h3 className="text-4xl uppercase text-primary mb-2">
-                  Directed by
-                </h3>
-                <p className="mb-10 text-4xl text-base-content">
-                  {fullName(show.director)}
+                <p className="text-right mb-4">
+                  <a
+                    href="/box-office"
+                    className="btn btn-lg btn-wide btn-primary"
+                  >
+                    Buy Tickets
+                  </a>
                 </p>
-                <h3 className="text-4xl uppercase text-primary mb-2">
-                  Featuring
-                </h3>
-                <ul className="flex gap-4">
-                  {show.cast.map(async (cast) => {
-                    // console.log(cast);
-                    const headshot = media.getImageUrl(cast.person.headshot);
-                    const headshotSize = await probe(headshot.url);
-                    const headshotRatio =
-                      headshotSize.width / headshotSize.height;
-                    const scaledHeight = 200;
-                    const scaledWidth = scaledHeight * headshotRatio;
-
-                    const scaledHeadshot = media.getScaledToFillImageUrl(
-                      cast.person.headshot,
-                      scaledWidth,
-                      scaledHeight,
-                      {}
-                    );
-
-                    return (
-                      <li key={cast._id} className="text-2xl">
-                        <a
-                          href={cast.person.aboutTheArtists}
-                          className="break-words"
-                        >
-                          {
-                            <Image
-                              src={scaledHeadshot}
-                              width={scaledWidth}
-                              height={scaledHeight}
-                              alt={fullName(cast.person)}
-                              className="mb-2"
-                            />
-                          }
-                          <span className="text-primary">
-                            {fullName(cast.person)}
-                          </span>
-                          <span className="pl-2 text-base-content">as</span>
-                          <span className="text-primary block">
-                            {" "}
-                            {cast.role}
-                          </span>
-                        </a>
-                      </li>
-                    );
+                <h3 className="text-xl mb-2 md:text-center">Showtimes</h3>
+                <div className="grid gap-2 text-left text-xs">
+                  {show.shows.map((event) => {
+                    return <ShowTime key={event._id} event={event} />;
                   })}
-                </ul>
-              </section>
-              <section className={classnames(["p-8", "grow-1"])}>
-                <h3 className="text-3xl uppercase text-primary mb-2">
-                  Showtimes
-                </h3>
-                <table className="text-base-content text-2xl">
-                  <tbody>
-                    {show.shows.map((event) => {
-                      // console.log("event", event);
-                      // @see https://day.js.org/docs/en/display/format
+                </div>
+                {/* <ol className="md:text-right leading-loose text-lg md:text-xs xl:text-lg inline-block">
+                  {show.shows.map((event) => {
+                    // console.log("event", event);
+                    // @see https://day.js.org/docs/en/display/format
 
-                      const startDate = event?.dateAndTimeSettings?.startDate;
-                      return startDate ? (
-                        <tr key={event._id}>
-                          <td className="text-right pr-1">
-                            <a href={event.eventPageUrl}>
-                              {dayjs(startDate).format("dddd, MMMM D")}
-                            </a>{" "}
-                            &ndash;
-                          </td>
-                          <td>
-                            <a href={event.eventPageUrl}>
-                              {dayjs(startDate).format("h:mm A")}
-                            </a>
-                          </td>
-                        </tr>
-                      ) : null;
-                    })}
-                  </tbody>
-                </table>
+                    const startDate = event?.dateAndTimeSettings?.startDate;
+                    return startDate ? (
+                      <li key={event._id} className="whitespace-nowrap">
+                        <a href={event.eventPageUrl} className="link">
+                          {dayjs(startDate).format("dddd, MMMM D")}
+                        </a>{" "}
+                        <b className="text-primary/50">&ndash;</b>{" "}
+                        {dayjs(startDate).format("h:mm")}{" "}
+                        <b className="text-primary/50 font-normal text-xs">
+                          {dayjs(startDate).format("A")}
+                        </b>
+                      </li>
+                    ) : null;
+                  })}
+                </ol> */}
               </section>
             </li>
           );

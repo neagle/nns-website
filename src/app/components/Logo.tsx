@@ -5,7 +5,7 @@ const Logo = () => {
     <h1
       aria-label="NOVA Nightsky Theater"
       className={classnames([
-        "text-5xl",
+        "text-3xl",
         "text-primary",
         "uppercase",
         "font-bold",

@@ -23,15 +23,15 @@ const Header = async () => {
   }, [] as string[]);
 
   return (
-    <header className="border-b-8 border-primary">
-      <Nightsky>
-        <div className="navbar p-0">
+    <header className="">
+      <Nightsky fireflies={true}>
+        <div className="navbar p-0 min-h-[auto] items-end">
           <div className="flex-1">
             <Link href="/">
               <Logo />
             </Link>
           </div>
-          <div className="flex-none self-end">
+          <div className="flex-none">
             <Navigation seasons={seasons} />
           </div>
         </div>

@@ -249,7 +249,7 @@ const Fireflies = ({ num = 3 }: Props) => {
   useEffect(() => {
     if (!containerSVG.current) return;
 
-    console.log("creating fireflies", num);
+    // console.log("creating fireflies", num);
     const fireflies: Firefly[] = [];
 
     for (let i = 0; i < num; i += 1) {
@@ -269,7 +269,7 @@ const Fireflies = ({ num = 3 }: Props) => {
       );
     }
 
-    console.log("starting fireflies", fireflies);
+    // console.log("starting fireflies", fireflies);
 
     fireflies.forEach((firefly) => firefly.startFlying());
 
