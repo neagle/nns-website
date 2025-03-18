@@ -10,9 +10,11 @@ const Logo = () => {
         "uppercase",
         "font-bold",
         "m-0",
+        "mt-[-0.10em]",
         "p-0",
         "leading-none",
         "hover:[&_svg]:transform hover:[&_svg]:scale-x-120 hover:[&_svg]:scale-y-120 hover:[&_svg]:rotate-180 hover:[&_svg>path]:fill-[hsl(37,100%,90%)]",
+        "inline-block",
       ])}
     >
       <span>N</span>

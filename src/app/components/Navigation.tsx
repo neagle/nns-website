@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Menu as MenuIcon, X as CloseIcon } from "lucide-react";
+import classnames from "classnames";
 
 type Props = {
   seasons: string[];
@@ -25,7 +26,16 @@ const Navigation = ({ seasons }: Props) => {
       </label>
       <ul
         tabIndex={0}
-        className="dropdown-content menu bg-base-200 p-2 shadow z-10"
+        className={classnames([
+          "dropdown-content",
+          "menu",
+          "m-0!",
+          "bg-base-200/90",
+          "p-2",
+          "shadow",
+          "z-10",
+          "rounded-b",
+        ])}
       >
         {seasons.map((season) => (
           <li key={season}>
@@ -37,7 +47,7 @@ const Navigation = ({ seasons }: Props) => {
   );
 
   return (
-    <nav className="navbar bg-base-100">
+    <nav className="navbar p-0 min-h-0">
       {/* Left side (mobile hamburger + optional logo) */}
       <div className="navbar-start">
         {/* Mobile menu toggle button (hidden on large screens) */}
@@ -67,10 +77,25 @@ const Navigation = ({ seasons }: Props) => {
 
       {/* Mobile menu (shows up when toggled) */}
       {isMobileMenuOpen && (
-        <ul className="menu menu-compact absolute top-full left-0 w-full bg-base-100 p-2 shadow lg:hidden">
+        <ul
+          className={classnames([
+            "menu",
+            "menu-compact",
+            "absolute",
+            "top-full",
+            "left-0",
+            "w-full",
+            "rounded",
+            "bg-base-100/95",
+            "p-2",
+            "shadow",
+            "lg:hidden",
+            "mt-2",
+          ])}
+        >
           {/* Seasons accordion item */}
-          <li className="collapse collapse-arrow border border-base-200 rounded-box">
-            <input type="checkbox" />
+          <li className="collapse collapse-arrow">
+            <input type="checkbox" className="p-0!" />
             {/* The clickable header for the accordion */}
             <div className="collapse-title font-bold">Seasons</div>
             {/* The content that expands */}

@@ -87,7 +87,10 @@ const FeaturedShow = async () => {
                           "mb-6",
                         ])}
                       >
-                        Directed by <b>{fullName(show.director)}</b>
+                        Directed by{" "}
+                        <b className="text-primary">
+                          {fullName(show.director)}
+                        </b>
                       </p>
                     </div>
                     <h3 className="text-xl text-primary/80! mb-6 drop-shadow-lg text-center">
@@ -114,7 +117,7 @@ const FeaturedShow = async () => {
                         return (
                           <FeaturedCastMember
                             key={cast._id}
-                            className="flex flex-col items-center justify-center"
+                            className="flex flex-col items-center justify-center text-center"
                             role={cast.role}
                             castMember={cast.person}
                             headshot={{
@@ -135,7 +138,14 @@ const FeaturedShow = async () => {
                 <p className="text-right mb-4">
                   <a
                     href="/box-office"
-                    className="btn btn-lg btn-wide btn-primary"
+                    className={classnames([
+                      "btn",
+                      "btn-lg",
+                      "btn-wide",
+                      "btn-primary",
+                      "hover:scale-105",
+                      "transition-all",
+                    ])}
                   >
                     Buy Tickets
                   </a>

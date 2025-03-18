@@ -25,8 +25,8 @@ const Header = async () => {
   return (
     <header className="">
       <Nightsky fireflies={true}>
-        <div className="navbar p-0 min-h-[auto] items-end">
-          <div className="flex-1">
+        <div className="navbar p-0 min-h-[auto] items-center">
+          <div className="flex-1 leading-1">
             <Link href="/">
               <Logo />
             </Link>
