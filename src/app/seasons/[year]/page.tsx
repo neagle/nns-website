@@ -7,12 +7,14 @@ import classnames from "classnames";
 import Link from "next/link";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     year: string;
-  };
+  }>;
 }
 
-const Season = async ({ params: { year } }: PageProps) => {
+const Season = async ({ params }: PageProps) => {
+  const { year } = await params;
+
   // Construct the start and end dates for the year
   const startOfYear = new Date(`${year}-01-01T00:00:00.000Z`);
   const endOfYear = new Date(`${year}-12-31T23:59:59.999Z`);
