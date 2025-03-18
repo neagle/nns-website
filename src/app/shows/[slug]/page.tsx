@@ -14,12 +14,13 @@ import { getShowsWithData } from "@/app/actions/shows";
 import PhotoModal from "@/app/components/PhotoModal";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-const Season = async ({ params: { slug } }: PageProps) => {
+const Season = async ({ params }: PageProps) => {
+  const { slug } = await params;
   const { items } = await wixClient.items
     .query("Shows")
     .eq("slug", slug)
