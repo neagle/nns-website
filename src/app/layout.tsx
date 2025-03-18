@@ -7,11 +7,11 @@ import localFont from "next/font/local";
 const dunbarLow = localFont({
   src: [
     {
-      path: "../../public/fonts/dunbar-low/DunbarLow-regular.woff2",
+      path: "../../public/fonts/dunbar-low/DunbarLow-Regular.woff2",
       weight: "400",
     },
     {
-      path: "../../public/fonts/dunbar-low/DunbarLow-bold.woff2",
+      path: "../../public/fonts/dunbar-low/DunbarLow-Bold.woff2",
       weight: "700",
     },
   ],

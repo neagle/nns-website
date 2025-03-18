@@ -33,7 +33,7 @@ const Season = async ({ params: { year } }: PageProps) => {
       </h1>
       <div className="flex flex-row flex-wrap group">
         {shows.map(async (show) => {
-          console.log("show", show);
+          // console.log("show", show);
 
           const logo = await getImageWithDimensions(show.logo);
           const backgroundTexture = show.backgroundTexture

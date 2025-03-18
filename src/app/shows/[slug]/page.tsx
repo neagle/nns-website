@@ -29,7 +29,7 @@ const Season = async ({ params: { slug } }: PageProps) => {
   const showsWithData = await getShowsWithData({ shows: items as Show[] });
 
   const show = showsWithData[0] as ShowWithData;
-  console.log("show", show);
+  // console.log("show", show);
   const logo = await getImageWithDimensions(show.logo);
   const backgroundTexture = show.backgroundTexture
     ? await getImageWithDimensions(show.backgroundTexture)
@@ -102,10 +102,10 @@ const Season = async ({ params: { slug } }: PageProps) => {
         <div className="carousel mt-4 mb-4 group">
           {show.photos.map(async (photo) => {
             // const image = await getImageWithDimensions(photo.src);
-            console.log("photo", photo);
+            // console.log("photo", photo);
             const image = await getScaledImageByHeight(photo.src, 300);
             const fullImage = await getImageWithDimensions(photo.src);
-            console.log("fulImage", fullImage.url);
+            // console.log("fullImage", fullImage.url);
 
             return (
               <div key={photo.slug} className="carousel-item mr-4">
