@@ -75,3 +75,12 @@ h6 {
 .link {
   text-underline-offset: 0.2em;
 }
+
+p > a {
+  color: var(--color-warning);
+  text-underline-offset: 0.2em;
+  transition: color 0.25s;
+  &:hover {
+    color: var(--color-primary);
+  }
+}

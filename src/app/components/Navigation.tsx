@@ -47,7 +47,7 @@ const Navigation = ({ seasons }: Props) => {
   );
 
   return (
-    <nav className="navbar p-0 min-h-0">
+    <nav className="navbar p-0 min-h-0 text-primary">
       {/* Left side (mobile hamburger + optional logo) */}
       <div className="navbar-start">
         {/* Mobile menu toggle button (hidden on large screens) */}

@@ -31,8 +31,8 @@ const FeaturedCastMember = ({
         className="mb-2 border-4 border-primary shadow-lg"
       />
       <div className="leading-tight drop-shadow-lg">
-        <span className="">{fullName(castMember)}</span>{" "}
-        <span className="text-base-content">as</span>{" "}
+        <span className="text-primary font-bold">{fullName(castMember)}</span>{" "}
+        <span className="text-primary/80">as</span>{" "}
         <span className="text-primary font-bold uppercase"> {role}</span>
       </div>
     </div>

@@ -64,12 +64,11 @@ const ShowTime = ({ event, className = "" }: Props) => {
             </div>
             <div
               className={classnames([
-                // Was: text-xs => 0.75rem => text-[0.75em]
                 "text-[0.75em]",
-                // Was: leading-3 => 0.75rem => leading-[0.75em]
                 "leading-[0.75em]",
-                "text-info/70",
+                "text-info",
                 "whitespace-nowrap",
+                "font-bold",
               ])}
             >
               {startDate.format("MMM YYYY")}
@@ -79,20 +78,14 @@ const ShowTime = ({ event, className = "" }: Props) => {
             <div
               className={classnames([
                 "font-bold",
-                // Was: leading-4 => 1rem => leading-[1em]
                 "leading-[1em]",
                 "mb-1",
-                "text-primary/50",
+                "text-primary",
               ])}
             >
               {startDate.format("dddd")} {showType}
             </div>
-            <div
-              className={classnames([
-                // Same logic: leading-4 => 1rem => leading-[1em]
-                "leading-[1em]",
-              ])}
-            >
+            <div className={classnames(["leading-[1em]"])}>
               {startDate.format("h:mm")} <span>{startDate.format("A")}</span>
             </div>
           </div>

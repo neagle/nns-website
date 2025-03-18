@@ -37,7 +37,11 @@ const Season = async ({ params }: PageProps) => {
         {shows.map(async (show) => {
           // console.log("show", show);
 
-          const logo = await getImageWithDimensions(show.logo);
+          let logo;
+          if (show.logo) {
+            logo = await getImageWithDimensions(show.logo);
+          }
+
           const backgroundTexture = show.backgroundTexture
             ? await getImageWithDimensions(show.backgroundTexture)
             : null;
@@ -77,13 +81,17 @@ const Season = async ({ params }: PageProps) => {
                 href={`/shows/${show.slug}`}
                 className="w-full h-full flex items-center"
               >
-                <Image
-                  // className="w-full"
-                  src={logo.url}
-                  alt={show.title}
-                  width={logo.width}
-                  height={logo.height}
-                />
+                {logo ? (
+                  <Image
+                    // className="w-full"
+                    src={logo.url}
+                    alt={show.title}
+                    width={logo.width}
+                    height={logo.height}
+                  />
+                ) : (
+                  show.title
+                )}
               </Link>
             </section>
           );

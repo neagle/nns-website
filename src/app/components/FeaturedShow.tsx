@@ -67,7 +67,7 @@ const FeaturedShow = async () => {
                 "[&>section]:p-8",
               ])}
             >
-              <section className="grow-1 w-2/3" style={backgroundStyle}>
+              <section className="grow-1 md:w-2/3" style={backgroundStyle}>
                 <section className={classnames(["text-center"])}>
                   <div className="rounded-lg">
                     <Image
@@ -85,6 +85,7 @@ const FeaturedShow = async () => {
                           "drop-shadow-lg",
                           "text-xl",
                           "mb-6",
+                          "text-primary/80",
                         ])}
                       >
                         Directed by{" "}
@@ -93,10 +94,10 @@ const FeaturedShow = async () => {
                         </b>
                       </p>
                     </div>
-                    <h3 className="text-xl text-primary/80! mb-6 drop-shadow-lg text-center">
+                    <h3 className="text-xl text-primary mb-6 drop-shadow-lg text-center">
                       Featuring
                     </h3>
-                    <div className="grid gap-2 md:grid-cols-2 place-items-center">
+                    <div className="grid gap-2 md:grid-cols-2 items-start">
                       {show.cast.map(async (cast) => {
                         const headshot = media.getImageUrl(
                           cast.person.headshot
@@ -135,7 +136,7 @@ const FeaturedShow = async () => {
               <section
                 className={classnames(["grow-1", "bg-base-200", "text-center"])}
               >
-                <p className="text-right mb-4">
+                <div className="mb-4">
                   <a
                     href="/box-office"
                     className={classnames([
@@ -145,11 +146,12 @@ const FeaturedShow = async () => {
                       "btn-primary",
                       "hover:scale-105",
                       "transition-all",
+                      "mx-auto",
                     ])}
                   >
                     Buy Tickets
                   </a>
-                </p>
+                </div>
                 <h3 className="text-xl mb-2 md:text-center">Showtimes</h3>
                 <div className="grid gap-2 text-left text-xs">
                   {show.shows.map((event) => {
