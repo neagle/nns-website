@@ -83,14 +83,14 @@ const Navigation = ({ seasons }: Props) => {
             "menu-compact",
             "absolute",
             "top-full",
-            "left-0",
-            "w-full",
+            "right-0",
             "rounded",
-            "bg-base-100/95",
+            "bg-base-300",
             "p-2",
-            "shadow",
+            "shadow-lg",
             "lg:hidden",
             "mt-2",
+            "z-50",
           ])}
         >
           {/* Seasons accordion item */}
