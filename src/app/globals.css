@@ -2,81 +2,36 @@
 
 @plugin "daisyui/theme" {
   name: "nightsky";
-  default: false;
+  default: true;
   prefersdark: true;
   color-scheme: "dark";
-
-  /* 
-    YOUR BRAND COLORS
-    #151843 (dark blue) => base-100
-    #202055 (slightly lighter dark blue) => base-200
-    #636260 (dark gray) => base-300 or neutral
-    #c4bdad (lighter gray) => base-content
-    #fdbf5d (brand yellow) => primary
-   */
-
-  --color-base-100: oklch(16.5% 0.049 264.9); /* #151843 */
-  --color-base-200: oklch(20% 0.042 264); /* #202055 */
-  --color-base-300: oklch(45.2% 0.015 277.1); /* #636260 */
-  --color-base-content: oklch(78.6% 0.051 84); /* #c4bdad */
-
-  --color-primary: oklch(84.3% 0.1345 76.52); /* #fdbf5d */
-  --color-primary-content: oklch(15.7% 0.051 264); /* #151843 */
-
-  /* 
-    For secondary, accent, and neutrals, you can keep 
-    or customize as you see fit. I’ve left them so you 
-    still have a “dark” vibe with some subtle color hints.
-  */
-  --color-secondary: oklch(
-    59% 0.176 134
-  ); /* a mossy green (#6b8f40?), tweak as desired */
-  --color-secondary-content: oklch(
-    96% 0.018 272
-  ); /* a light text color (#eee8d5-like) */
-
-  --color-accent: oklch(
-    70% 0.138 192
-  ); /* teal-ish (#49b9b0?), tweak if you like */
-  --color-accent-content: oklch(
-    20% 0.042 264
-  ); /* same as base-200 text color for contrast */
-
-  /* 
-    “Neutral” is often used for backgrounds or 
-    other base-level surfaces. 
-    You could reuse your brand gray (#636260),
-    or pick a mid-tone for variety.
-  */
-  --color-neutral: oklch(29% 0.02 263);
-  --color-neutral-content: oklch(85% 0.03 270);
-
-  /* 
-    Info, Success, Warning, Error 
-    You can pick brand or complementary colors. 
-    Here, I'm using a few from a typical dark palette.
-    Feel free to replace with brand colors if you have them.
-  */
-  --color-info: oklch(67% 0.16 230);
-  --color-info-content: oklch(15% 0.032 235);
-
-  --color-success: oklch(65% 0.18 130);
-  --color-success-content: oklch(14% 0.025 134);
-
-  --color-warning: oklch(75% 0.19 85);
-  --color-warning-content: oklch(21% 0.045 80);
-
-  --color-error: oklch(62% 0.19 28);
-  --color-error-content: oklch(24% 0.08 25);
-
-  /* Daisy’s radius and size tokens, adjust as needed */
+  --color-base-100: oklch(26.73% 0.0486 219.82);
+  --color-base-200: oklch(30.92% 0.0518 219.65);
+  --color-base-300: oklch(34.92% 0.0518 219.65);
+  --color-base-content: oklch(65.37% 0.0197 205.26);
+  --color-primary: oklch(84.3% 0.1345 76.52);
+  --color-primary-content: oklch(44.3% 0.1345 76.52);
+  --color-secondary: oklch(59.24% 0.2025 355.89);
+  --color-secondary-content: oklch(30% 0.2025 355.89);
+  --color-accent: oklch(64.37% 0.1019 187.38);
+  --color-accent-content: oklch(34.37% 0.1019 187.38);
+  --color-neutral: oklch(23.58% 0.08 275.4);
+  --color-neutral-content: oklch(83.58% 0.08 275.4);
+  --color-info: oklch(61.49% 0.1394 244.93);
+  --color-info-content: oklch(31.49% 0.1394 244.93);
+  --color-success: oklch(64.44% 0.1508 118.6);
+  --color-success-content: oklch(34.44% 0.1508 118.6);
+  --color-warning: oklch(65.45% 0.134 85.72);
+  --color-warning-content: oklch(35.45% 0.134 85.72);
+  --color-error: oklch(58.63% 0.2064 27.12);
+  --color-error-content: oklch(28.63% 0.2064 27.12);
   --radius-selector: 0.5rem;
   --radius-field: 0.25rem;
   --radius-box: 0.5rem;
-  --size-selector: 0.25rem;
-  --size-field: 0.25rem;
-  --border: 1px;
-  --depth: 1;
+  --size-selector: 0.3125rem;
+  --size-field: 0.3125rem;
+  --border: 2px;
+  --depth: 0;
   --noise: 0;
 }
 
