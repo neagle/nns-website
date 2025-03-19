@@ -24,7 +24,8 @@ const Footer = () => {
           </div>
           <p className="grow-0 text-xs link">
             <Link href="/venue">
-              Falls Church Presbyterian Church &ndash; Memorial Hall
+              Falls Church Presbyterian Church
+              <span className="hidden md:inline"> &ndash; Memorial Hall</span>
               <br />
               225 E Broad St, Falls Church, VA 22046
             </Link>
