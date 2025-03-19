@@ -44,6 +44,7 @@ const Season = async ({ params }: PageProps) => {
     backgroundSize: "cover",
     backgroundPosition: "center",
   };
+
   return (
     <div className="">
       <h1 className="p-4 text-2xl">{show.title}</h1>
