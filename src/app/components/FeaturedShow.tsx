@@ -86,6 +86,7 @@ const FeaturedShow = async () => {
                           "text-xl",
                           "mb-6",
                           "text-primary/80",
+                          "text-center",
                         ])}
                       >
                         Directed by <br className="md:hidden" />
