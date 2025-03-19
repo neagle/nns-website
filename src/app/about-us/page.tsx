@@ -22,7 +22,16 @@ const Page = async () => {
     <div>
       <section className="mb-4 p-4">
         <h1 className="text-xl mb-4">About Us</h1>
-        <Nightsky className="rounded-lg overflow-hidden shadow-md shadow-accent">
+        <Nightsky
+          className={classnames(
+            "rounded-lg",
+            "overflow-hidden",
+            "shadow-md",
+            "shadow-accent",
+            "p-2!",
+            "md:p-4!"
+          )}
+        >
           <div
             className={classnames([
               "m-2",
@@ -32,13 +41,20 @@ const Page = async () => {
             ])}
           >
             <div className="md:columns-2 drop-shadow-lg!">
-              <p className={classnames(["text-lg", "mb-4", "leading-tight"])}>
+              <p
+                className={classnames([
+                  "text-sm",
+                  "md:text-lg",
+                  "mb-4",
+                  "leading-tight",
+                ])}
+              >
                 <span className="font-bold text-accent uppercase">
                   NOVA Nightsky Theater
                 </span>{" "}
-                was founded in later summer of 2021 by actor/producer{" "}
+                was founded in later summer of 2021 by actor / producer{" "}
                 <strong className="text-primary">Jaclyn Robertson</strong> and
-                playwright/director{" "}
+                playwright / director{" "}
                 <strong className="text-primary">Ward Kay</strong>. Both had
                 worked in the local theater scene for years but wanted to bring
                 something a little different to the community. While our first
@@ -52,12 +68,12 @@ const Page = async () => {
                 talents of our company members and&nbsp;casts.
               </p>
             </div>
-            <p className="text-lg mb-4 md:text-right leading-tight">
+            <p className="text-sm md:text-lg mb-4 md:text-right leading-tight">
               Thank you for supporting us on this&nbsp;journey!
             </p>
 
-            <p className="text-lg text-primary text-right">
-              &mdash; NOVA Nightsky Theater Company
+            <p className="text-sm md:text-lg text-primary text-right">
+              &mdash; NOVA Nightsky Theater&nbsp;Company
             </p>
           </div>
         </Nightsky>
@@ -223,7 +239,15 @@ const Page = async () => {
             </p>
           </Person>
           <Person name="Fosse Thornton" title="Dancer / Actress">
-            <p>Fosse is a dancer and actress born and raised locally.</p>
+            <p>
+              Fosse is an actor / dancer / singer born and raised in Northern
+              Virginia. She loves the classics-with-an-in-your-face-twist, and
+              has found that NOVA Nightsky is the perfect place to work on some
+              real good theater with an incredibly talented and passionate team.
+              When she&rsquo;s not onstage, you can find her at the skatepark or
+              in a dance class. Thanks to Jaclyn, Adam, Sarah and the whole team
+              for the laughs and artistry&mdash;and cheers to many more.
+            </p>
           </Person>
         </div>
       </section>

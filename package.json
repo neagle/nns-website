@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@sindresorhus/slugify": "^2.2.1",
     "@wix/data": "^1.0.211",
     "@wix/events": "^1.0.452",
     "@wix/sdk": "^1.15.14",
