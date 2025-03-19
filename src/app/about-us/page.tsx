@@ -68,7 +68,7 @@ const Page = async () => {
                 talents of our company members and&nbsp;casts.
               </p>
             </div>
-            <p className="text-sm md:text-lg mb-4 md:text-right leading-tight">
+            <p className="text-sm md:mt-4 md:text-lg mb-4 md:text-right leading-tight">
               Thank you for supporting us on this&nbsp;journey!
             </p>
 
