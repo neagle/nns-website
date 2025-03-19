@@ -88,7 +88,7 @@ const FeaturedShow = async () => {
                           "text-primary/80",
                         ])}
                       >
-                        Directed by{" "}
+                        Directed by <br className="md:hidden" />
                         <b className="text-primary">
                           {fullName(show.director)}
                         </b>
