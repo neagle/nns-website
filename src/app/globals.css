@@ -89,6 +89,12 @@ p > a {
   label:has(+ input[required])::after,
   label:has(+ textarea[required])::after {
     content: " *";
-    color: red;
+    color: var(--color-error);
+    font-weight: bold;
   }
+}
+
+/* Google reCAPTCHA */
+.grecaptcha-badge {
+  box-shadow: none !important;
 }

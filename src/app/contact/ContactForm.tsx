@@ -126,11 +126,20 @@ export default function ContactForm() {
                 />
               </div>
             </div>
-          </div>
 
-          <button type="submit" className="btn btn-primary w-full md:btn-wide">
-            Send
-          </button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div
+                id="recaptcha-inline-badge"
+                className="place-content-center justify-items-center md:justify-items-start"
+              />
+
+              <div className="">
+                <button type="submit" className="btn btn-primary w-full">
+                  Send
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </ReCaptchaForm>
     </>

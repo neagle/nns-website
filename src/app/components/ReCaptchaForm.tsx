@@ -111,10 +111,21 @@ export default function ReCaptchaForm({
   return (
     <>
       <Script
-        src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
+        src={`https://www.google.com/recaptcha/api.js?render=${siteKey}&badge=inline`}
         onLoad={() => {
           window.grecaptcha?.ready(() => {
             setIsRecaptchaLoaded(true);
+
+            const badge = document.querySelector(".grecaptcha-badge");
+            const badgeContainer = document.getElementById(
+              "recaptcha-inline-badge"
+            );
+
+            // Move the badge to the badgeContainer
+            if (badge && badgeContainer) {
+              badgeContainer.appendChild(badge);
+            }
+
             if (debug) {
               console.log("reCAPTCHA script loaded");
             }
