@@ -34,3 +34,10 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+---
+
+# Notes
+
+* For the "Contact Us" page, I now have it successfully creating submissions that can be viewed in Wix's dashboard, and I assume they're successfully being sent to the site owner email address. (Confirm with Jaclyn!) It doesn't seem like they're being surfaced in the site's unified Inbox, yet. I think the answer to that lies in "automations," but I'm wary about tinkering with something too much that's going to spam NNS folks with emails. This can be addressed later, after talking with Jaclyn about what she wants out of the Contact US form. (3-23-2025)
+
