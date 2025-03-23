@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@sindresorhus/slugify": "^2.2.1",
+    "@wix/crm": "^1.0.183",
     "@wix/data": "^1.0.211",
     "@wix/events": "^1.0.452",
+    "@wix/forms": "^1.0.231",
     "@wix/sdk": "^1.15.14",
     "@wix/sdk-types": "^1.13.6",
     "@wix/stores": "^1.0.386",
@@ -21,7 +23,8 @@
     "next": "15.2.2",
     "probe-image-size": "^7.2.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-google-recaptcha": "^3.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

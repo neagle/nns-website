@@ -84,3 +84,10 @@ p > a {
     color: var(--color-primary);
   }
 }
+
+.required-asterisks {
+  label:has(+ input[required])::after {
+    content: " *";
+    color: red;
+  }
+}
