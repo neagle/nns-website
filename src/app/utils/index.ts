@@ -18,3 +18,17 @@ export function debounce<T extends (...args: unknown[]) => void>(
     }, delay);
   };
 }
+
+export function getWixImageDimensions(wixUrl: string) {
+  console.log("wixUrl", wixUrl);
+  const match = /originWidth=(?<width>\d+)&originHeight=(?<height>\d+)/g.exec(
+    wixUrl
+  )?.groups;
+  if (!match) {
+    throw new Error("Could not parse Wix image dimensions");
+  }
+
+  const { width, height } = match;
+
+  return { width: parseInt(width, 10), height: parseInt(height, 10) };
+}

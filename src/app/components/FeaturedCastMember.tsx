@@ -1,17 +1,13 @@
 import React from "react";
 import type { Person } from "@/app/types";
 import { fullName } from "@/app/utils";
-import Image from "next/image";
 import classnames from "classnames";
+import WixImage from "@/app/components/WixImage";
 
 type Props = {
   role: string;
   castMember: Person;
-  headshot: {
-    url: string;
-    width: number;
-    height: number;
-  };
+  headshot: string;
   className?: string;
 };
 
@@ -23,13 +19,19 @@ const FeaturedCastMember = ({
 }: Props) => {
   return (
     <div className={classnames([className, ""])}>
-      <Image
+      <WixImage
+        alt={fullName(castMember)}
+        src={headshot}
+        targetHeight={200}
+        className="mb-2 border-4 border-primary shadow-lg"
+      />
+      {/* <Image
         src={headshot.url}
         width={headshot.width}
         height={headshot.height}
         alt={fullName(castMember)}
         className="mb-2 border-4 border-primary shadow-lg"
-      />
+      /> */}
       <div className="leading-tight drop-shadow-lg">
         <span className="text-primary font-bold">{fullName(castMember)}</span>{" "}
         <span className="text-primary/80">as</span>{" "}

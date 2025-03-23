@@ -5,15 +5,13 @@ import classnames from "classnames";
 
 import { Show } from "@/app/types";
 
-import probe from "probe-image-size";
-import Image from "next/image";
 import { fullName } from "@/app/utils";
 import FeaturedCastMember from "./FeaturedCastMember";
 import { getShowsWithData } from "@/app/actions/shows";
 import ShowTime from "./ShowTime";
+import WixImage from "@/app/components/WixImage";
 
 const FeaturedShow = async () => {
-  // 1. Get featured shows
   const { items } = await wixClient.items
     .query("Shows")
     .eq("feature", true)
@@ -22,39 +20,27 @@ const FeaturedShow = async () => {
 
   const shows = items as Show[];
 
-  // 2. For each show, get cast and showtimes in parallel using Promise.all
-
+  // Get cast, crew, and events for each show
+  // These require separate queries to the Wix API
   const showsWithData = await getShowsWithData({ shows });
-  // console.log("showsWithData", showsWithData);
 
-  // 3. Render
   return (
     <div className="h-full">
       <ul className="h-full">
-        {showsWithData.map(async (show /*: ShowWithData*/) => {
-          const logo = media.getImageUrl(show.logo);
-          const logoSize = await probe(logo.url);
-          const logoRatio = logoSize.width / logoSize.height;
-          const scaledWidth = 400;
-          const scaledHeight = scaledWidth / logoRatio;
-          const scaledLogo = media.getScaledToFillImageUrl(
-            show.logo,
-            scaledWidth,
-            scaledHeight,
-            {}
-          );
+        {showsWithData.map(async (show) => {
+          let backgroundStyle: React.CSSProperties = {
+            backgroundColor: show.backgroundColor || "transparent",
+          };
 
-          let backgroundStyle = {};
           if (show.backgroundTexture) {
             const backgroundTexture = media.getImageUrl(show.backgroundTexture);
-            // console.log("backgroundTexture", backgroundTexture);
             backgroundStyle = {
+              ...backgroundStyle,
               backgroundImage: `url(${backgroundTexture.url})`,
-              backgroundSize: "cover", // Optional: Adjust as needed
-              backgroundPosition: "center", // Optional: Adjust as needed
+              backgroundSize: "cover",
+              backgroundPosition: "center",
             };
           }
-          // console.log("logoSize", logoSize);
 
           return (
             <li
@@ -70,11 +56,12 @@ const FeaturedShow = async () => {
               <section className="grow-1 md:w-2/3" style={backgroundStyle}>
                 <section className={classnames(["text-center"])}>
                   <div className="rounded-lg">
-                    <Image
-                      src={scaledLogo}
+                    <WixImage
+                      src={
+                        show.logoHorizontal ? show.logoHorizontal : show.logo
+                      }
                       alt={show.title}
-                      width={scaledWidth}
-                      height={scaledHeight}
+                      targetWidth={show.logoHorizontal ? 800 : 400}
                       className="mx-auto mb-5"
                     />
                   </div>
@@ -100,33 +87,13 @@ const FeaturedShow = async () => {
                     </h3>
                     <div className="grid gap-2 md:grid-cols-2 items-start">
                       {show.cast.map(async (cast) => {
-                        const headshot = media.getImageUrl(
-                          cast.person.headshot
-                        );
-                        const headshotSize = await probe(headshot.url);
-                        const headshotRatio =
-                          headshotSize.width / headshotSize.height;
-                        const scaledHeight = 200;
-                        const scaledWidth = scaledHeight * headshotRatio;
-
-                        const scaledHeadshot = media.getScaledToFillImageUrl(
-                          cast.person.headshot,
-                          scaledWidth,
-                          scaledHeight,
-                          {}
-                        );
-
                         return (
                           <FeaturedCastMember
                             key={cast._id}
                             className="flex flex-col items-center justify-center text-center"
                             role={cast.role}
                             castMember={cast.person}
-                            headshot={{
-                              url: scaledHeadshot,
-                              width: scaledWidth,
-                              height: scaledHeight,
-                            }}
+                            headshot={cast.person.headshot}
                           />
                         );
                       })}
@@ -159,26 +126,6 @@ const FeaturedShow = async () => {
                     return <ShowTime key={event._id} event={event} />;
                   })}
                 </div>
-                {/* <ol className="md:text-right leading-loose text-lg md:text-xs xl:text-lg inline-block">
-                  {show.shows.map((event) => {
-                    // console.log("event", event);
-                    // @see https://day.js.org/docs/en/display/format
-
-                    const startDate = event?.dateAndTimeSettings?.startDate;
-                    return startDate ? (
-                      <li key={event._id} className="whitespace-nowrap">
-                        <a href={event.eventPageUrl} className="link">
-                          {dayjs(startDate).format("dddd, MMMM D")}
-                        </a>{" "}
-                        <b className="text-primary/50">&ndash;</b>{" "}
-                        {dayjs(startDate).format("h:mm")}{" "}
-                        <b className="text-primary/50 font-normal text-xs">
-                          {dayjs(startDate).format("A")}
-                        </b>
-                      </li>
-                    ) : null;
-                  })}
-                </ol> */}
               </section>
             </li>
           );
