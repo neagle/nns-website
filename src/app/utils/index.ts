@@ -20,7 +20,6 @@ export function debounce<T extends (...args: unknown[]) => void>(
 }
 
 export function getWixImageDimensions(wixUrl: string) {
-  console.log("wixUrl", wixUrl);
   const match = /originWidth=(?<width>\d+)&originHeight=(?<height>\d+)/g.exec(
     wixUrl
   )?.groups;

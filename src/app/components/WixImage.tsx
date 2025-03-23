@@ -21,7 +21,6 @@ const WixImage = ({
 }: Props) => {
   const { width, height } = getWixImageDimensions(src);
   const ratio = width / height;
-  console.log("width, height, ratio", width, height, ratio);
 
   let scaledWidth;
   let scaledHeight;
