@@ -145,21 +145,38 @@ const Page = async () => {
             </p>
             <p className="mb-4">
               In 2010, his desire to tell immersive stories brought him to
-              Orlando where he joined Walt Disney Imagineering - the creative
-              arm for Disney&rsquo;s Parks and Resorts. Adam also served as a
-              freelance scenographer and technical production manager for
-              various theater organizations in central FL.
+              Orlando where he joined{" "}
+              <Link
+                className="link"
+                href="https://sites.disney.com/waltdisneyimagineering/"
+              >
+                Walt Disney Imagineering
+              </Link>{" "}
+              - the creative arm for Disney&rsquo;s Parks and Resorts. Adam also
+              served as a freelance scenographer and technical production
+              manager for various theater organizations in central FL.
             </p>
             <p>
               In 2017, Adam returned to the DMV and began working in the museum
               industry, creating content-based exhibits for the National Parks
               Service as well as other public and private institutions. He has
               worked for the Smithsonian as a Visual Information Specialist for
-              the National Portrait Gallery, and is currently working at the
-              Exhibits Specialist at the U.S. Capitol.
+              the{" "}
+              <Link href="https://npg.si.edu/" className="link">
+                National Portrait Gallery
+              </Link>
+              , and is currently working at the Exhibits Specialist at the U.S.
+              Capitol.
             </p>
             <p>
-              His infant son Levi is an adequate assistant lighting designer.
+              His infant son{" "}
+              <span
+                className="tooltip underline underline-offset-4 decoration-dotted"
+                data-tip="👖"
+              >
+                Levi
+              </span>{" "}
+              is an adequate assistant lighting designer.
             </p>
           </Person>
           <Person
