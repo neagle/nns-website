@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Menu as MenuIcon, X as CloseIcon } from "lucide-react";
 import classnames from "classnames";
+import { SiFacebook, SiInstagram } from "@icons-pack/react-simple-icons";
 
 type Props = {
   seasons: string[];
@@ -69,6 +70,22 @@ const Navigation = ({ seasons }: Props) => {
               <Link href={href}>{label}</Link>
             </li>
           ))}
+          <li>
+            <Link
+              title="Follow us on Facebook"
+              href="https://www.facebook.com/novanightskytheater/"
+            >
+              <SiFacebook />
+            </Link>
+          </li>
+          <li>
+            <Link
+              title="Follow us on Instagram"
+              href="https://www.instagram.com/novanightskytheater/"
+            >
+              <SiInstagram />
+            </Link>
+          </li>
         </ul>
       </div>
 

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@icons-pack/react-simple-icons": "^12.3.0",
     "@sindresorhus/slugify": "^2.2.1",
     "@wix/crm": "^1.0.183",
     "@wix/data": "^1.0.211",
