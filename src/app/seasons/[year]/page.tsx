@@ -2,7 +2,7 @@ import React from "react";
 import wixClient from "@/lib/wixClient";
 import type { Show } from "@/app/types";
 import { getImageWithDimensions } from "@/app/actions/media";
-import Image from "next/image";
+import WixImage from "@/app/components/WixImage";
 import classnames from "classnames";
 import Link from "next/link";
 
@@ -35,13 +35,7 @@ const Season = async ({ params }: PageProps) => {
       </h1>
       <div className="flex flex-row flex-wrap group">
         {shows.map(async (show) => {
-          // console.log("show", show);
-
-          let logo;
-          if (show.logo) {
-            logo = await getImageWithDimensions(show.logo);
-          }
-
+          // Todo: refactor background texture into reusable component
           const backgroundTexture = show.backgroundTexture
             ? await getImageWithDimensions(show.backgroundTexture)
             : null;
@@ -81,16 +75,24 @@ const Season = async ({ params }: PageProps) => {
                 href={`/shows/${show.slug}`}
                 className="w-full h-full flex items-center"
               >
-                {logo ? (
-                  <Image
-                    // className="w-full"
-                    src={logo.url}
+                {show.logo ? (
+                  <WixImage
+                    src={show.logo}
                     alt={show.title}
-                    width={logo.width}
-                    height={logo.height}
+                    className="w-full"
                   />
                 ) : (
-                  show.title
+                  <div
+                    className={classnames([
+                      // "items-center",
+                      // "min-h-400",
+                      // "min-w-400",
+                      "border-2",
+                      "border-accent",
+                    ])}
+                  >
+                    {show.title}
+                  </div>
                 )}
               </Link>
             </section>

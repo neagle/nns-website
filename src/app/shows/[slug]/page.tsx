@@ -7,6 +7,7 @@ import {
   getImageWithDimensions,
   getScaledImageByHeight,
 } from "@/app/actions/media";
+import WixImage from "@/app/components/WixImage";
 import Image from "next/image";
 import classnames from "classnames";
 import Link from "next/link";
@@ -31,7 +32,6 @@ const Season = async ({ params }: PageProps) => {
 
   const show = showsWithData[0] as ShowWithData;
   // console.log("show", show);
-  const logo = await getImageWithDimensions(show.logo);
   const backgroundTexture = show.backgroundTexture
     ? await getImageWithDimensions(show.backgroundTexture)
     : null;
@@ -49,50 +49,54 @@ const Season = async ({ params }: PageProps) => {
     <div className="">
       <h1 className="p-4 text-2xl">{show.title}</h1>
       <div className="flex flex-col md:flex-row">
-        <section
-          key={show._id}
-          style={styleBlock}
-          className={classnames(["md:w-1/3"])}
-        >
-          <Link href={`/shows/${show.slug}`}>
-            <Image
-              src={logo.url}
-              alt={show.title}
-              width={logo.width}
-              height={logo.height}
-            />
-          </Link>
-        </section>
+        {show.logo && (
+          <section
+            key={show._id}
+            style={styleBlock}
+            className={classnames(["md:w-1/3"])}
+          >
+            <Link href={`/shows/${show.slug}`}>
+              <WixImage src={show.logo} alt={show.title} />
+            </Link>
+          </section>
+        )}
         <section className="p-4">
           <h2 className="text-2xl mb-4">
             <b className="text-xl text-primary/50 font-normal">by</b>{" "}
             {show.author}
           </h2>
-          {/* <p className="mb-4">{show.author}</p> */}
 
           <h2>Director</h2>
 
           <p className="mb-4">{fullName(show.director)}</p>
 
-          <h2>Crew</h2>
-          <ul className="mb-4">
-            {show.crew.map((credit) => (
-              <li key={credit._id}>
-                <b>{credit.role}:</b> {fullName(credit.person)}
-              </li>
-            ))}
-          </ul>
+          {show.crew?.length ? (
+            <>
+              <h2>Crew</h2>
+              <ul className="mb-4">
+                {show.crew.map((credit) => (
+                  <li key={credit._id}>
+                    <b>{credit.role}:</b> {fullName(credit.person)}
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
 
-          <h2>Cast</h2>
+          {show.cast?.length ? (
+            <>
+              <h2>Cast</h2>
 
-          <ul>
-            {show.cast.map((credit) => (
-              <li key={credit._id}>
-                {fullName(credit.person)} as{" "}
-                <b className="uppercase">{credit.role}</b>
-              </li>
-            ))}
-          </ul>
+              <ul>
+                {show.cast.map((credit) => (
+                  <li key={credit._id}>
+                    {fullName(credit.person)} as{" "}
+                    <b className="uppercase">{credit.role}</b>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
         </section>
         <section className="md:w-1/3 p-4">
           {show.description && (

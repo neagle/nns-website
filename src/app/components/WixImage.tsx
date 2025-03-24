@@ -31,8 +31,9 @@ const WixImage = ({
     scaledHeight = targetHeight;
     scaledWidth = Math.round(scaledHeight * ratio);
   } else {
-    // Can't create an image without a target width or height
-    return null;
+    // If no target width or height is provided, use the original dimensions
+    scaledWidth = width;
+    scaledHeight = height;
   }
 
   const scaledImage = getScaledToFitImageUrl(
