@@ -37,6 +37,34 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ---
 
+# Todo
+
+What needs to be done for launch?
+
+- [x] Be able to send messages via Contact Us form
+- [ ] Be able to buy tickets
+- [ ] Be able to buy subscriptions
+- [ ] Complete seasons archive
+- [ ] Auditions page (either static or dynamic)
+- [ ] Add photos to "About Us" page
+- [ ] Work With Us page
+- [x] Our Venue page
+- [ ] Appropriate og:images on different pages
+- [x] Link to Facebook and Instagram accounts
+
+Optional next steps:
+
+- [ ] Feed from Facebook and Instagram accounts
+- [ ] Individual credits pages for all individuals
+- [ ] Support us page? Verify that we want this
+- [ ] Add video to venue page showing entrance
+
+Assets needed / desired:
+
+- [ ] Photos of people doing various activities
+- [ ] Photos of venue
+
+
 # Notes
 
 * For the "Contact Us" page, I now have it successfully creating submissions that can be viewed in Wix's dashboard, and I assume they're successfully being sent to the site owner email address. (Confirm with Jaclyn!) It doesn't seem like they're being surfaced in the site's unified Inbox, yet. I think the answer to that lies in "automations," but I'm wary about tinkering with something too much that's going to spam NNS folks with emails. This can be addressed later, after talking with Jaclyn about what she wants out of the Contact US form. (3-23-2025)
