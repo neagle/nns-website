@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import classnames from "classnames";
+import Image from "next/image";
 
 const Page = () => {
   return (
@@ -20,6 +21,14 @@ const Page = () => {
         "[&_li]:mb-2",
         "[&_li]:md:text-lg",
         "[&_li_strong]:text-info",
+
+        "[&_img]:m-8",
+        "[&_img]:mx-auto",
+        "[&_img]:shadow-accent",
+        "[&_img]:shadow-md",
+        "[&_img]:md:ml-8",
+        "[&_img]:md:float-right",
+        "[&_img]:md:max-w-1/3",
       ])}
     >
       <h1 className="mb-4">Work With Us</h1>
@@ -126,7 +135,16 @@ const Page = () => {
         .
       </p>
 
+      <Image
+        src="/images/photographs/general/volunteer-prop-making-2.jpg"
+        alt="Image of a volunteer painting props"
+        width={631}
+        height={1024}
+        className="rounded"
+      />
+
       <h2>Let&rsquo;s Work Together</h2>
+
       <p>
         We are always looking for volunteers & interns (unpaid) in a variety of
         roles.
