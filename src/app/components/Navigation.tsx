@@ -17,6 +17,14 @@ const Navigation = ({ seasons }: Props) => {
     { label: "About Us", href: "/about-us" },
     { label: "Work with Us", href: "/work-with-us" },
     { label: "Box Office", href: "/box-office" },
+    {
+      label: <SiFacebook />,
+      href: "https://www.facebook.com/novanightskytheater/",
+    },
+    {
+      label: <SiInstagram />,
+      href: "https://www.instagram.com/novanightskytheater/",
+    },
   ];
 
   // For desktop, we keep using a dropdown
@@ -66,26 +74,10 @@ const Navigation = ({ seasons }: Props) => {
         <ul className="menu menu-horizontal p-0 text-sm font-bold">
           <SeasonsDropdownDesktop />
           {navLinks.map(({ label, href }) => (
-            <li key={label}>
+            <li key={href}>
               <Link href={href}>{label}</Link>
             </li>
           ))}
-          <li>
-            <Link
-              title="Follow us on Facebook"
-              href="https://www.facebook.com/novanightskytheater/"
-            >
-              <SiFacebook />
-            </Link>
-          </li>
-          <li>
-            <Link
-              title="Follow us on Instagram"
-              href="https://www.instagram.com/novanightskytheater/"
-            >
-              <SiInstagram />
-            </Link>
-          </li>
         </ul>
       </div>
 
@@ -131,13 +123,15 @@ const Navigation = ({ seasons }: Props) => {
           </li>
 
           {/* Other nav links on mobile */}
-          {navLinks.map(({ label, href }) => (
-            <li key={label} className="font-bold">
-              <Link href={href} onClick={() => setIsMobileMenuOpen(false)}>
-                {label}
-              </Link>
-            </li>
-          ))}
+          {navLinks.map(({ label, href }) => {
+            return (
+              <li key={href} className={classnames(["font-bold"])}>
+                <Link href={href} onClick={() => setIsMobileMenuOpen(false)}>
+                  {label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       )}
     </nav>
