@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { debounce } from "@/app/utils";
 
 // Type for our star objects
@@ -15,6 +15,9 @@ interface Star {
 }
 
 const NightskyCanvas: React.FC = () => {
+  const [windowDimensions, setWindowDimensions] = useState<
+    Record<string, number>
+  >({ width: 0, height: 0 });
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // We store some references as mutable refs so we can update them without re-render:
@@ -221,8 +224,26 @@ const NightskyCanvas: React.FC = () => {
     };
 
     // ==== Resize logic ====
+
+    // Store the window dimensions so we can know if we really need to
+    // reinitialize. On mobile, a lot of things can trigger resize that aren't a
+    // real resize, like bouncing at the top or bottom of the page after
+    // scrolling.
+    setWindowDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
     const handleResize = debounce(() => {
-      init();
+      if (
+        window.innerWidth !== windowDimensions.width ||
+        window.innerHeight !== windowDimensions.height
+      ) {
+        setWindowDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+        init();
+      }
     }, 250);
 
     // Initialize and start
