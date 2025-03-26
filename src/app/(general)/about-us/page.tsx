@@ -2,7 +2,7 @@ import React from "react";
 import classnames from "classnames";
 import wixClient from "@/lib/wixClient";
 import type { Show } from "@/app/types";
-import Person from "@/app/about-us/Person";
+import Person from "./Person";
 import Nightsky from "@/app/components/Nightsky";
 import Link from "next/link";
 
