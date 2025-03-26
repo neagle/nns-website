@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "@/app/components/Header";
-import Footer from "@/app/components/Footer";
 import localFont from "next/font/local";
+import React from "react";
 
 const dunbarLow = localFont({
   src: [
@@ -57,9 +56,7 @@ export default function RootLayout({
       <body
         className={`${dunbarLow.variable} ${noah.variable} font-sans h-full flex flex-col`}
       >
-        <Header />
         <main className="flex-grow bg-base-100">{children}</main>
-        <Footer />
       </body>
     </html>
   );

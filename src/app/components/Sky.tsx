@@ -2,6 +2,13 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { debounce } from "@/app/utils";
+import { useSearchParams } from "next/navigation";
+
+type Props = {
+  numStars?: number;
+  nebularClouds?: boolean;
+  clouds?: boolean;
+};
 
 // Type for our star objects
 interface Star {
@@ -14,10 +21,18 @@ interface Star {
   twinkleOffset: number;
 }
 
-const NightskyCanvas: React.FC = () => {
+const NightskyCanvas = ({
+  numStars = 500,
+  nebularClouds = true,
+  clouds = true,
+}: Props) => {
   const [windowDimensions, setWindowDimensions] = useState<
     Record<string, number>
   >({ width: 0, height: 0 });
+  // Get numStars from the query string or use the default if not provided
+  const searchParams = useSearchParams();
+  const starsParam = searchParams.get("stars");
+  numStars = starsParam ? parseInt(starsParam, 10) : numStars;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // We store some references as mutable refs so we can update them without re-render:
@@ -29,7 +44,6 @@ const NightskyCanvas: React.FC = () => {
   const cloudOffsetRef = useRef<number>(0);
 
   // Settings
-  const numStars = 500;
   const CLOUD_SPEED = 0.9;
   // This will be recalculated to canvas width, so store in a ref or recalc as needed
   const fadeZoneRef = useRef<number>(0);
@@ -64,8 +78,12 @@ const NightskyCanvas: React.FC = () => {
         twinkleOffset: Math.random() * Math.PI * 2,
       }));
 
-      generateNebula();
-      generateClouds();
+      if (nebularClouds) {
+        generateNebula();
+      }
+      if (clouds) {
+        generateClouds();
+      }
     };
 
     // ==== Nebula generation ====
