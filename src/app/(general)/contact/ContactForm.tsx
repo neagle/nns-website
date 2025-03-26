@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import classnames from "classnames";
-import ReCaptchaForm from "../components/ReCaptchaForm";
-import { submitContactForm } from "../actions/contact";
+import ReCaptchaForm from "@/app/components/ReCaptchaForm";
+import { submitContactForm } from "@/app/actions/contact";
 
 export default function ContactForm() {
   const [error, setError] = useState<string | null>(null);
