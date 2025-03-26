@@ -123,6 +123,8 @@ const FeaturedShow = async () => {
                 <h3 className="text-xl mb-2 md:text-center">Showtimes</h3>
                 <div className="grid gap-2 text-left text-xs">
                   {show.shows.map((event) => {
+                    // console.log(event);
+
                     return <ShowTime key={event._id} event={event} />;
                   })}
                 </div>
