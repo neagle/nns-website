@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 
 type Props = {
   children: React.ReactNode;
@@ -14,11 +14,11 @@ export default function FullscreenWrapper({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const enterFullscreen = () => {
+  const enterFullscreen = useCallback(() => {
     if (containerRef.current && !isFullscreen) {
       containerRef.current.requestFullscreen?.();
     }
-  };
+  }, [isFullscreen]);
 
   const exitFullscreen = () => {
     if (document.fullscreenElement) {

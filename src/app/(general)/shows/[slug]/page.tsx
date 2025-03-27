@@ -108,7 +108,7 @@ const Season = async ({ params }: PageProps) => {
         <div className="carousel mt-4 mb-4 group">
           {show.photos.map(async (photo: Photo) => {
             // const image = await getImageWithDimensions(photo.src);
-            console.log("photo", photo);
+            // console.log("photo", photo);
             const image = await getScaledImageByHeight(photo.src, 300);
             // const fullImage = await getImageWithDimensions(photo.src);
             // console.log("fullImage", fullImage.url);

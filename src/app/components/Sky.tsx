@@ -290,7 +290,13 @@ const NightskyCanvas = ({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [
+    clouds,
+    nebularClouds,
+    numStars,
+    windowDimensions.width,
+    windowDimensions.height,
+  ]);
 
   return (
     <canvas
