@@ -1,11 +1,10 @@
 import React from "react";
 import wixClient from "@/lib/wixClient";
 import ShowTime from "@/app/components/ShowTime";
-import { getScaledImageByHeight } from "@/app/actions/media";
 // import type { Event } from "@/app/types";
 import type { V3Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import classnames from "classnames";
-import Image from "next/image";
+import WixImage from "@/app/components/WixImage";
 
 const BoxOffice = async () => {
   const { items: events } = await wixClient.wixEventsV2
@@ -13,11 +12,6 @@ const BoxOffice = async () => {
     .eq("status", "UPCOMING")
     .ascending("dateAndTimeSettings.startDate")
     .find();
-
-  // console.log("events", events);
-  // events.map((event) => {
-  //   console.log(event.status);
-  // });
 
   // Group events by show
   const shows: Record<string, V3Event[]> = events.reduce(
@@ -35,39 +29,34 @@ const BoxOffice = async () => {
     {}
   );
 
-  // console.log("shows", shows);
-
   return (
     <div className="p-4">
       <h1 className="text-xl mb-4">Box Office</h1>
       {Object.keys(shows).map(async (show) => {
         const imageUrl = shows[show][0].mainImage;
-        if (!imageUrl) {
-          return;
-        }
-        const showImage = await getScaledImageByHeight(imageUrl, 400);
 
         return (
           <div key="show">
             <div className={classnames(["flex", "flex-col", "md:flex-row"])}>
-              <div
-                className={classnames([
-                  "mb-4",
-                  "md:mb-0",
-                  "md:mr-4",
-                  "flex",
-                  "items-start",
-                  "justify-center",
-                ])}
-              >
-                <Image
-                  className="rounded-lg"
-                  src={showImage.url}
-                  alt={show}
-                  width={showImage.width}
-                  height={showImage.height}
-                />
-              </div>
+              {imageUrl && (
+                <div
+                  className={classnames([
+                    "mb-4",
+                    "md:mb-0",
+                    "md:mr-4",
+                    "flex",
+                    "items-start",
+                    "justify-center",
+                  ])}
+                >
+                  <WixImage
+                    className="rounded-lg"
+                    src={imageUrl}
+                    alt={show}
+                    targetHeight={400}
+                  />
+                </div>
+              )}
               <div className="grow-1">
                 <div
                   className={classnames([
