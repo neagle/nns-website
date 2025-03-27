@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 type Props = {
   numStars?: number;
+  adjustStarsToWindowWidth?: boolean;
   nebularClouds?: boolean;
   clouds?: boolean;
 };
@@ -21,8 +22,12 @@ interface Star {
   twinkleOffset: number;
 }
 
+const DEFAULT_NUM_STARS = 500;
+const NARROW_WIDTH = 600;
+
 const NightskyCanvas = ({
-  numStars = 500,
+  numStars = DEFAULT_NUM_STARS,
+  adjustStarsToWindowWidth = true,
   nebularClouds = true,
   clouds = true,
 }: Props) => {
@@ -33,6 +38,16 @@ const NightskyCanvas = ({
   const searchParams = useSearchParams();
   const starsParam = searchParams.get("stars");
   numStars = starsParam ? parseInt(starsParam, 10) : numStars;
+
+  if (adjustStarsToWindowWidth) {
+    // If we're using the default, adjust the number of stars according to
+    // window width
+
+    // If we're in a narrow (ish) view, halve the number of stars
+    if (windowDimensions.width < NARROW_WIDTH) {
+      numStars = numStars / 2;
+    }
+  }
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // We store some references as mutable refs so we can update them without re-render:

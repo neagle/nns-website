@@ -13,7 +13,11 @@ const Page = () => {
   return (
     <div className="h-full relative">
       <FullscreenWrapper>
-        <Nightsky nebularClouds={false} clouds={false} />
+        <Nightsky
+          adjustStarsToWindowWidth={false}
+          nebularClouds={false}
+          clouds={false}
+        />
       </FullscreenWrapper>
     </div>
   );

@@ -8,6 +8,7 @@ type Props = {
   children?: React.ReactNode;
   className?: string;
   fireflies?: boolean;
+  adjustStarsToWindowWidth?: boolean;
   nebularClouds?: boolean;
   clouds?: boolean;
 };
@@ -18,6 +19,7 @@ const Nightsky = ({
   fireflies = false,
   nebularClouds = true,
   clouds = true,
+  adjustStarsToWindowWidth = true,
 }: Props) => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -29,7 +31,12 @@ const Nightsky = ({
           "h-full",
         ])}
       >
-        <Sky numStars={2000} nebularClouds={nebularClouds} clouds={clouds} />
+        <Sky
+          numStars={2000}
+          adjustStarsToWindowWidth={adjustStarsToWindowWidth}
+          nebularClouds={nebularClouds}
+          clouds={clouds}
+        />
         <div className="relative">{children}</div>
         {fireflies && <Fireflies />}
       </div>
