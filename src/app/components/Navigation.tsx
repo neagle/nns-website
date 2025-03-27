@@ -28,32 +28,34 @@ const Navigation = ({ seasons }: Props) => {
   ];
 
   // For desktop, we keep using a dropdown
-  const SeasonsDropdownDesktop = () => (
-    <li className="dropdown dropdown-hover dropdown-center">
-      <label tabIndex={0} role="button" className="cursor-pointer">
-        Seasons
-      </label>
-      <ul
-        tabIndex={0}
-        className={classnames([
-          "dropdown-content",
-          "menu",
-          "m-0!",
-          "bg-base-200/90",
-          "p-2",
-          "shadow",
-          "z-10",
-          "rounded-b",
-        ])}
-      >
-        {seasons.map((season) => (
-          <li key={season}>
-            <Link href={`/seasons/${season}`}>{season}</Link>
-          </li>
-        ))}
-      </ul>
-    </li>
-  );
+  const SeasonsDropdownDesktop = () => {
+    return (
+      <li className="dropdown dropdown-hover dropdown-center">
+        <label role="button" className="cursor-pointer">
+          Seasons
+        </label>
+
+        <ul
+          className={classnames([
+            "dropdown-content",
+            "menu",
+            "m-0!",
+            "bg-base-200/90",
+            "p-2",
+            "shadow",
+            "z-10",
+            "rounded-b",
+          ])}
+        >
+          {seasons.map((season) => (
+            <li key={season}>
+              <Link href={`/seasons/${season}`}>{season}</Link>
+            </li>
+          ))}
+        </ul>
+      </li>
+    );
+  };
 
   return (
     <nav className="navbar p-0 min-h-0 text-primary">
@@ -94,7 +96,7 @@ const Navigation = ({ seasons }: Props) => {
             "top-full",
             "right-0",
             "rounded",
-            "bg-base-300",
+            "bg-base-300/95",
             "p-2",
             "shadow-lg",
             "lg:hidden",
@@ -104,11 +106,26 @@ const Navigation = ({ seasons }: Props) => {
         >
           {/* Seasons accordion item */}
           <li className="collapse collapse-arrow">
-            <input type="checkbox" className="p-0!" />
+            <input
+              type="checkbox"
+              className={classnames(["p-0!", "px-0!", "min-h-0!"])}
+            />
             {/* The clickable header for the accordion */}
-            <div className="collapse-title font-bold">Seasons</div>
+            <div
+              className={classnames([
+                "collapse-title",
+                "font-bold",
+                "p-0",
+                "px-3",
+                "py-1",
+                "min-h-0",
+                "after:top-[50%]!",
+              ])}
+            >
+              Seasons
+            </div>
             {/* The content that expands */}
-            <ul className="collapse-content pl-4">
+            <ul className="collapse-content ml-0 p-0 pl-2 pb-0! before:hidden">
               {seasons.map((season) => (
                 <li key={season}>
                   <Link
