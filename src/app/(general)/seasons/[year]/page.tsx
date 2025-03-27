@@ -63,12 +63,13 @@ const Season = async ({ params }: PageProps) => {
                 "opacity-100",
                 "peer",
                 "transition-all",
-                "group-hover:opacity-50", // Dim all sections when hovering over the parent
-                "group-hover:scale-90", // Dim all sections when hovering over the parent
-                "hover:scale-100",
+                // Dim all sections when hovering over the parent
+                "group-has-[section:hover]:opacity-50",
+                "group-has-[section:hover]:scale-90",
+                "hover:scale-100!",
                 "ease-in-out",
                 "duration-500",
-                "hover:opacity-100",
+                "hover:opacity-100!",
               ])}
             >
               <Link
