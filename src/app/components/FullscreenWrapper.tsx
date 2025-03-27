@@ -54,7 +54,7 @@ export default function FullscreenWrapper({
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
-  }, []);
+  }, [enterFullscreen]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full">
