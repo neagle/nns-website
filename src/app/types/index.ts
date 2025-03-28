@@ -6,6 +6,7 @@ export interface Show extends WixDataItem {
   slug: string;
   author: string;
   director: {
+    _id: string;
     firstName: string;
     middleName?: string;
     lastName: string;
@@ -15,6 +16,7 @@ export interface Show extends WixDataItem {
   backgroundTexture?: string;
   backgroundColor?: string;
   openingDate: string;
+  program?: string;
 }
 
 export interface Person extends WixDataItem {
@@ -28,11 +30,14 @@ export interface Credit {
   _id: string;
   role: string;
   person: Person;
+  order?: number;
+  show: Show;
+  category: "cast" | "crew";
 }
 
 export interface ShowWithData extends Show {
   cast: Credit[];
-  crew: Credit[];
+  crew: Credit[][];
   shows: Show[];
 }
 

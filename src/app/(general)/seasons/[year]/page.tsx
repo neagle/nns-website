@@ -24,7 +24,6 @@ const Season = async ({ params }: PageProps) => {
     .ge("openingDate", startOfYear.toISOString()) // Greater than or equal to start of the year
     .le("openingDate", endOfYear.toISOString()) // Less than or equal to end of the year
     .ascending("openingDate")
-    .include("director")
     .find();
 
   const shows = items as Show[];

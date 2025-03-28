@@ -1,7 +1,7 @@
 import React from "react";
 import wixClient from "@/lib/wixClient";
 import type { Show, ShowWithData, Photo } from "@/app/types";
-// import { media } from "@wix/sdk";
+import { media } from "@wix/sdk";
 import { fullName } from "@/app/utils";
 import {
   getImageWithDimensions,
@@ -13,6 +13,7 @@ import classnames from "classnames";
 import Link from "next/link";
 import { getShowsWithData } from "@/app/actions/shows";
 import PhotoModal from "@/app/components/PhotoModal";
+import { BookImage } from "lucide-react";
 
 interface PageProps {
   params: Promise<{
@@ -24,14 +25,15 @@ const Season = async ({ params }: PageProps) => {
   const { slug } = await params;
   const { items } = await wixClient.items
     .query("Shows")
-    .eq("slug", slug)
     .include("director")
+    .eq("slug", slug)
     .find();
 
+  console.log("items", items);
   const showsWithData = await getShowsWithData({ shows: items as Show[] });
 
   const show = showsWithData[0] as ShowWithData;
-  // console.log("show", show);
+  console.log("show", show);
   const backgroundTexture = show.backgroundTexture
     ? await getImageWithDimensions(show.backgroundTexture)
     : null;
@@ -44,6 +46,7 @@ const Season = async ({ params }: PageProps) => {
     backgroundSize: "cover",
     backgroundPosition: "center",
   };
+  // console.log("show.crew", show.crew);
 
   return (
     <div className="">
@@ -55,9 +58,13 @@ const Season = async ({ params }: PageProps) => {
             style={styleBlock}
             className={classnames(["md:w-1/3"])}
           >
-            <Link href={`/shows/${show.slug}`}>
+            {show.program ? (
+              <Link href={media.getDocumentUrl(show.program).url}>
+                <WixImage src={show.logo} alt={show.title} />
+              </Link>
+            ) : (
               <WixImage src={show.logo} alt={show.title} />
-            </Link>
+            )}
           </section>
         )}
         <section className="p-4">
@@ -68,39 +75,138 @@ const Season = async ({ params }: PageProps) => {
 
           <h2>Director</h2>
 
-          <p className="mb-4">{fullName(show.director)}</p>
+          <p className="mb-4">
+            <Link href={`/history/${show.director._id}`} className="link">
+              {fullName(show.director)}
+            </Link>
+          </p>
+
+          {show.program && (
+            <Link
+              href={media.getDocumentUrl(show.program).url}
+              className={classnames([
+                "flex",
+                "mb-4",
+                "ml-[-3px]",
+                "items-center",
+                "link",
+                "text-primary/70",
+                "hover:text-primary",
+                "transition-all",
+                "duration-250",
+                "hover:[&>svg]:scale-120",
+              ])}
+            >
+              <BookImage
+                size={32}
+                className={classnames([
+                  "mr-1",
+                  "duration-250",
+                  "transition-transform",
+                ])}
+              />
+              <span className="link">Download Program</span>
+            </Link>
+          )}
 
           {show.crew?.length ? (
             <>
               <h2>Crew</h2>
-              <ul className="mb-4">
-                {show.crew.map((credit) => (
-                  <li key={credit._id}>
-                    <b>{credit.role}:</b> {fullName(credit.person)}
-                  </li>
-                ))}
-              </ul>
-            </>
-          ) : null}
-
-          {show.cast?.length ? (
-            <>
-              <h2>Cast</h2>
-
-              <ul>
-                {show.cast.map((credit) => (
-                  <li key={credit._id}>
-                    {fullName(credit.person)} as{" "}
-                    <b className="uppercase">{credit.role}</b>
-                  </li>
-                ))}
-              </ul>
+              <table className="mt-1 mb-4">
+                <tbody>
+                  {show.crew.map((crew) => {
+                    return (
+                      <tr key={crew[0]._id}>
+                        <td
+                          className={classnames([
+                            "align-top",
+                            "text-right",
+                            "leading-tight",
+                            "pr-2",
+                            "pb-2",
+                            "text-sm",
+                          ])}
+                        >
+                          <Link
+                            href={`/history/${crew[0].person._id}`}
+                            className={classnames([
+                              "link",
+                              // "text-sm",
+                              "text-primary/70",
+                              "hover:text-primary",
+                              "transition-all",
+                            ])}
+                          >
+                            {fullName(crew[0].person)}
+                          </Link>
+                        </td>
+                        <td
+                          className={classnames([
+                            "align-top",
+                            "leading-tight",
+                            "pb-2",
+                            "text-sm",
+                          ])}
+                        >
+                          <ul>
+                            {crew.map((credit) => {
+                              return (
+                                <li
+                                  key={credit._id}
+                                  className={classnames([
+                                    // "leading-tight",
+                                    "[&+li]:mt-1",
+                                    // "text-sm",
+                                  ])}
+                                >
+                                  {credit.role}
+                                </li>
+                              );
+                            })}{" "}
+                          </ul>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </>
           ) : null}
         </section>
         <section className="md:w-1/3 p-4">
+          {show.cast?.length ? (
+            <>
+              <h2>Cast</h2>
+
+              <ul className="mb-4">
+                {show.cast.map((credit) => (
+                  <li key={credit._id}>
+                    {credit.person.aboutTheArtists ? (
+                      <Link
+                        href={`/history/${credit.person._id}`}
+                        className="link text-primary/70 hover:text-primary transition-all"
+                      >
+                        {fullName(credit.person)}
+                      </Link>
+                    ) : (
+                      fullName(credit.person)
+                    )}{" "}
+                    as{" "}
+                    <b className="uppercase text-primary/70">{credit.role}</b>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+
           {show.description && (
-            <div dangerouslySetInnerHTML={{ __html: show.description }}></div>
+            <>
+              <h2 className="text-lg">Description</h2>
+              <div
+                className="leading-tight"
+                dangerouslySetInnerHTML={{ __html: show.description }}
+              ></div>
+            </>
           )}
         </section>
       </div>
