@@ -7,7 +7,7 @@ import WixImage from "@/app/components/WixImage";
 type Props = {
   role: string;
   castMember: Person;
-  headshot: string;
+  headshot?: string;
   className?: string;
 };
 
@@ -19,12 +19,14 @@ const FeaturedCastMember = ({
 }: Props) => {
   return (
     <div className={classnames([className, ""])}>
-      <WixImage
-        alt={fullName(castMember)}
-        src={headshot}
-        targetHeight={200}
-        className="mb-2 border-4 border-primary shadow-lg"
-      />
+      {headshot && (
+        <WixImage
+          alt={fullName(castMember)}
+          src={headshot}
+          targetHeight={200}
+          className="mb-2 border-4 border-primary shadow-lg"
+        />
+      )}
       {/* <Image
         src={headshot.url}
         width={headshot.width}

@@ -42,3 +42,25 @@ export const nameSlug = ({ firstName, middleName, lastName }: Person) => {
 
   return slug;
 };
+
+// Wix has a pretty interesting feature: its items come with a `_manualSort` key
+// that seems to reflect the order in which items are arranged in tables in the
+// CMS. That's kinda handy: it means the person entering the data can control
+// the order of items without having to have an extra "order" column that's hard
+// to maintain.
+
+// However -- it's weird that it's called _manualSort-asdfasdfasdfasdf -- some
+// weird ID. Where does that even come from? Is this an experimental feature?
+// Who knows. We will take advantage of it for the time being.
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const manualSort = (arr: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return arr.toSorted((a: any, b: any) => {
+    const sortKeyName = /^_manualSort/;
+    const sortKey = Object.keys(a).find((key) => sortKeyName.test(key));
+    const aSortValue = (a[sortKey as keyof typeof a] as string) || "";
+    const bSortValue = (b[sortKey as keyof typeof b] as string) || "";
+    return aSortValue.localeCompare(bSortValue);
+  });
+};

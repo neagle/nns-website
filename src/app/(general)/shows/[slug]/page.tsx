@@ -1,8 +1,8 @@
 import React from "react";
 import wixClient from "@/lib/wixClient";
-import type { Show, ShowWithData, Photo } from "@/app/types";
+import type { Credit, Show, ShowWithData, Photo } from "@/app/types";
 import { media } from "@wix/sdk";
-import { fullName, nameSlug } from "@/app/utils";
+import { manualSort, fullName, nameSlug } from "@/app/utils";
 import {
   getImageWithDimensions,
   getScaledImageByHeight,
@@ -29,11 +29,10 @@ const Season = async ({ params }: PageProps) => {
     .eq("slug", slug)
     .find();
 
-  console.log("items", items);
   const showsWithData = await getShowsWithData({ shows: items as Show[] });
 
   const show = showsWithData[0] as ShowWithData;
-  console.log("show", show);
+
   const backgroundTexture = show.backgroundTexture
     ? await getImageWithDimensions(show.backgroundTexture)
     : null;
@@ -179,7 +178,7 @@ const Season = async ({ params }: PageProps) => {
               <h2>Cast</h2>
 
               <ul className="mb-4">
-                {show.cast.map((credit) => (
+                {manualSort(show.cast).map((credit: Credit) => (
                   <li key={credit._id}>
                     {credit.person.aboutTheArtists ? (
                       <Link

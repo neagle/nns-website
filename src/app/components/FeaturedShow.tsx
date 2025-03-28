@@ -3,9 +3,9 @@ import wixClient from "@/lib/wixClient";
 import { media } from "@wix/sdk";
 import classnames from "classnames";
 
-import { Show } from "@/app/types";
+import type { Credit, Show } from "@/app/types";
 
-import { fullName } from "@/app/utils";
+import { fullName, manualSort } from "@/app/utils";
 import FeaturedCastMember from "./FeaturedCastMember";
 import { getShowsWithData } from "@/app/actions/shows";
 import ShowTime from "./ShowTime";
@@ -86,14 +86,14 @@ const FeaturedShow = async () => {
                       Featuring
                     </h3>
                     <div className="grid gap-2 md:grid-cols-2 items-start">
-                      {show.cast.map(async (cast) => {
+                      {manualSort(show.cast).map(async (cast: Credit) => {
                         return (
                           <FeaturedCastMember
                             key={cast._id}
                             className="flex flex-col items-center justify-center text-center"
                             role={cast.role}
                             castMember={cast.person}
-                            headshot={cast.person.headshot}
+                            headshot={cast.person?.headshot}
                           />
                         );
                       })}
