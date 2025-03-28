@@ -6,6 +6,9 @@ import { useSearchParams } from "next/navigation";
 
 type Props = {
   numStars?: number;
+  starRadius?: number;
+  starBrightnessCeiling?: number;
+  starBrightnessFloor?: number;
   adjustStarsToWindowWidth?: boolean;
   nebularClouds?: boolean;
   clouds?: boolean;
@@ -27,6 +30,9 @@ const NARROW_WIDTH = 600;
 
 const NightskyCanvas = ({
   numStars = DEFAULT_NUM_STARS,
+  starRadius = 2,
+  starBrightnessCeiling = 70,
+  starBrightnessFloor = 30,
   adjustStarsToWindowWidth = true,
   nebularClouds = true,
   clouds = true,
@@ -34,10 +40,21 @@ const NightskyCanvas = ({
   const [windowDimensions, setWindowDimensions] = useState<
     Record<string, number>
   >({ width: 0, height: 0 });
-  // Get numStars from the query string or use the default if not provided
+
+  // Get various params from the query string or use the default if not provided
   const searchParams = useSearchParams();
   const starsParam = searchParams.get("stars");
   numStars = starsParam ? parseInt(starsParam, 10) : numStars;
+  const radiusParam = searchParams.get("radius");
+  starRadius = radiusParam ? parseInt(radiusParam, 10) : starRadius;
+  const starbrightnessCeilParam = searchParams.get("ceiling");
+  starBrightnessCeiling = starbrightnessCeilParam
+    ? parseInt(starbrightnessCeilParam, 10)
+    : starBrightnessCeiling;
+  const starbrightnessFloorParam = searchParams.get("floor");
+  starBrightnessFloor = starbrightnessFloorParam
+    ? parseInt(starbrightnessFloorParam, 10)
+    : starBrightnessFloor;
 
   if (adjustStarsToWindowWidth) {
     // If we're using the default, adjust the number of stars according to
@@ -86,8 +103,9 @@ const NightskyCanvas = ({
       starsRef.current = Array.from({ length: numStars }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 2,
-        baseBrightness: Math.random() * 70 + 30,
+        radius: Math.random() * starRadius,
+        baseBrightness:
+          Math.random() * starBrightnessCeiling + starBrightnessFloor,
         brightness: 0,
         twinkleSpeed: Math.random() * 0.002,
         twinkleOffset: Math.random() * Math.PI * 2,

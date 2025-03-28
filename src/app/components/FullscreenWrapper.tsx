@@ -57,7 +57,11 @@ export default function FullscreenWrapper({
   }, [enterFullscreen]);
 
   return (
-    <div ref={containerRef} className="relative w-full h-full">
+    <div
+      ref={containerRef}
+      className="relative w-full h-full"
+      onClick={() => enterFullscreen()}
+    >
       {showButton && (
         <button
           onClick={toggleFullscreen}
