@@ -24,7 +24,7 @@ export function getWixImageDimensions(wixUrl: string) {
     wixUrl
   )?.groups;
   if (!match) {
-    throw new Error("Could not parse Wix image dimensions");
+    throw new Error(`Could not parse Wix image dimensions: ${wixUrl}`);
   }
 
   const { width, height } = match;
