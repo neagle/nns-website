@@ -73,14 +73,16 @@ const History = async ({ params }: PageProps) => {
   // Transform the credits object back into an array, but with a single array
   // for each show, containing all of the person's credits
   const sortedCredits = Object.entries(creditsByShow);
-  sortedCredits.sort(([showA], [showB]) => {
-    const aShow = credits.find((credit) => credit.show._id === showA);
-    const bShow = credits.find((credit) => credit.show._id === showB);
-    if (aShow && bShow) {
-      return (
-        new Date(bShow.show.openingDate).getTime() -
-        new Date(aShow.show.openingDate).getTime()
-      );
+
+  // Sort shows by opening date
+  sortedCredits.sort(([_showA, creditsA], [_showB, creditsB]) => {
+    const aShow = creditsA[0].show;
+    const bShow = creditsB[0].show;
+    const aShowDate = new Date(aShow.openingDate).getTime();
+    const bShowDate = new Date(bShow.openingDate).getTime();
+
+    if (aShowDate && bShowDate) {
+      return bShowDate - aShowDate;
     }
     return 0;
   });
@@ -146,11 +148,13 @@ const History = async ({ params }: PageProps) => {
                 ])}
               >
                 <div>
-                  <ShowLogo
-                    show={show}
-                    targetWidth={300}
-                    className="text-center"
-                  />
+                  {show.logo && (
+                    <ShowLogo
+                      show={show}
+                      targetWidth={300}
+                      className="text-center"
+                    />
+                  )}
                 </div>
                 <div>
                   <h2 className="text-xl">
@@ -161,9 +165,7 @@ const History = async ({ params }: PageProps) => {
                   </p>
                   <div className="text-sm">
                     {wasDirector ? (
-                      <h3 className="text-lg mb-2">
-                        <strong>Director</strong>
-                      </h3>
+                      <p className="text-lg mb-2 text-primary/80">Director</p>
                     ) : null}
 
                     {cast.length ? (
@@ -199,9 +201,10 @@ const History = async ({ params }: PageProps) => {
       </div>
 
       {person.aboutTheArtists && (
-        <p>
+        <p className="mt-4">
+          See more of {fullName(person)}&rsquo;s theater credits at{" "}
           <Link href={person.aboutTheArtists} className="link">
-            More Theater Credits on &ldquo;About the Artists&rdquo; &rarr;
+            <strong>About the Artists</strong>
           </Link>
         </p>
       )}

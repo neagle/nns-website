@@ -28,6 +28,7 @@ const ShowLogo = ({
     backgroundSize: "cover",
     backgroundPosition: "center",
   };
+
   if (link) {
     return (
       <div style={styleBlock} className={classnames(className)}>
