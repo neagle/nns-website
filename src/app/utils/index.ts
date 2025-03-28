@@ -1,3 +1,5 @@
+import type { Person } from "@/app/types";
+
 export const fullName = ({
   firstName = "",
   middleName = "",
@@ -31,3 +33,12 @@ export function getWixImageDimensions(wixUrl: string) {
 
   return { width: parseInt(width, 10), height: parseInt(height, 10) };
 }
+
+export const nameSlug = ({ firstName, middleName, lastName }: Person) => {
+  const slug = [firstName, middleName, lastName]
+    .filter((name) => !!name)
+    .map((name) => encodeURIComponent(String(name).replaceAll(" ", "_")))
+    .join("-");
+
+  return slug;
+};

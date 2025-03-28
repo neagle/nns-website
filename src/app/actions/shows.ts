@@ -1,4 +1,4 @@
-import type { Show, Credit, Person } from "@/app/types";
+import type { Show, Credit } from "@/app/types";
 import wixClient from "@/lib/wixClient";
 
 type Props = {

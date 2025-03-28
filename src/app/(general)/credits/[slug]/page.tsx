@@ -12,17 +12,48 @@ import dayjs from "dayjs";
 
 interface PageProps {
   params: Promise<{
-    id: string;
+    slug: string;
   }>;
 }
 
-const History = async ({ params }: PageProps) => {
-  const { id } = await params;
-  const person = (await wixClient.items.get("People", id)) as Person;
+const getFirstMiddleLastNamesFromSlug = (slug: string) => {
+  const parts = slug.replaceAll("_", " ").split("-");
+  const firstName = parts[0];
+  const lastName = parts[parts.length - 1];
+  const middleName = parts.slice(1, -1).join(" ");
+
+  return {
+    firstName,
+    lastName,
+    middleName,
+  };
+};
+
+const Credits = async ({ params }: PageProps) => {
+  const { slug } = await params;
+  // const person = (await wixClient.items.get("People", id)) as Person;
+  const { firstName, lastName, middleName } = getFirstMiddleLastNamesFromSlug(
+    decodeURIComponent(slug)
+  );
+
+  let personQuery = wixClient.items
+    .query("People")
+    .eq("firstName", firstName)
+    .eq("lastName", lastName);
+
+  if (middleName) {
+    personQuery = personQuery.eq("middleName", middleName);
+  }
+
+  const { items: people } = await personQuery.find();
+
+  const person = people[0] as Person;
 
   if (!person) {
     notFound();
   }
+
+  const id = person._id;
 
   const { items: directed } = await wixClient.items
     .query("Shows")
@@ -212,4 +243,4 @@ const History = async ({ params }: PageProps) => {
   );
 };
 
-export default History;
+export default Credits;

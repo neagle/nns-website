@@ -23,7 +23,7 @@ export interface Person extends WixDataItem {
   firstName: string;
   middleName?: string;
   lastName: string;
-  headshot: string;
+  headshot?: string;
 }
 
 export interface Credit {

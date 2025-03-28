@@ -2,7 +2,7 @@ import React from "react";
 import wixClient from "@/lib/wixClient";
 import type { Show, ShowWithData, Photo } from "@/app/types";
 import { media } from "@wix/sdk";
-import { fullName } from "@/app/utils";
+import { fullName, nameSlug } from "@/app/utils";
 import {
   getImageWithDimensions,
   getScaledImageByHeight,
@@ -76,7 +76,7 @@ const Season = async ({ params }: PageProps) => {
           <h2>Director</h2>
 
           <p className="mb-4">
-            <Link href={`/history/${show.director._id}`} className="link">
+            <Link href={`/credits/${nameSlug(show.director)}`} className="link">
               {fullName(show.director)}
             </Link>
           </p>
@@ -128,7 +128,7 @@ const Season = async ({ params }: PageProps) => {
                           ])}
                         >
                           <Link
-                            href={`/history/${crew[0].person._id}`}
+                            href={`/credits/${nameSlug(crew[0].person)}`}
                             className={classnames([
                               "link",
                               // "text-sm",
@@ -183,7 +183,7 @@ const Season = async ({ params }: PageProps) => {
                   <li key={credit._id}>
                     {credit.person.aboutTheArtists ? (
                       <Link
-                        href={`/history/${credit.person._id}`}
+                        href={`/credits/${nameSlug(credit.person)}`}
                         className="link text-primary/70 hover:text-primary transition-all"
                       >
                         {fullName(credit.person)}
