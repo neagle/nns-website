@@ -12,6 +12,7 @@ type Props = {
   adjustStarsToWindowWidth?: boolean;
   nebularClouds?: boolean;
   clouds?: boolean;
+  distort?: number;
 };
 
 // Type for our star objects
@@ -33,6 +34,7 @@ const NightskyCanvas = ({
   starRadius = 2,
   starBrightnessCeiling = 70,
   starBrightnessFloor = 30,
+  distort = 1,
   adjustStarsToWindowWidth = true,
   nebularClouds = true,
   clouds = true,
@@ -55,6 +57,8 @@ const NightskyCanvas = ({
   starBrightnessFloor = starbrightnessFloorParam
     ? parseInt(starbrightnessFloorParam, 10)
     : starBrightnessFloor;
+  const distortParam = searchParams.get("distort");
+  distort = distortParam ? parseInt(distortParam, 10) : distort;
 
   if (adjustStarsToWindowWidth) {
     // If we're using the default, adjust the number of stars according to
@@ -94,7 +98,8 @@ const NightskyCanvas = ({
       if (!parent) return;
 
       canvas.width = parent.clientWidth;
-      canvas.height = parent.clientHeight;
+      // Distort canvas
+      canvas.height = parent.clientHeight * distort;
 
       // Fade zone is some portion of canvas width
       fadeZoneRef.current = canvas.width * 0.3; // 30% of width
