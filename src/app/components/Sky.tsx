@@ -13,6 +13,9 @@ type Props = {
   nebularClouds?: boolean;
   clouds?: boolean;
   distort?: number;
+  // An additional way to distort the canvas to try to compensate for the
+  // projection
+  rotateX?: number;
 };
 
 // Type for our star objects
@@ -29,12 +32,23 @@ interface Star {
 const DEFAULT_NUM_STARS = 500;
 const NARROW_WIDTH = 600;
 
+const getQueryParam = (
+  searchParams: URLSearchParams,
+  key: string,
+  defaultValue: number
+): number => {
+  const param = searchParams.get(key);
+
+  return param ? parseInt(param, 10) : defaultValue;
+};
+
 const NightskyCanvas = ({
   numStars = DEFAULT_NUM_STARS,
   starRadius = 2,
   starBrightnessCeiling = 70,
   starBrightnessFloor = 30,
   distort = 1,
+  rotateX = 0,
   adjustStarsToWindowWidth = true,
   nebularClouds = true,
   clouds = true,
@@ -45,20 +59,21 @@ const NightskyCanvas = ({
 
   // Get various params from the query string or use the default if not provided
   const searchParams = useSearchParams();
-  const starsParam = searchParams.get("stars");
-  numStars = starsParam ? parseInt(starsParam, 10) : numStars;
-  const radiusParam = searchParams.get("radius");
-  starRadius = radiusParam ? parseInt(radiusParam, 10) : starRadius;
-  const starbrightnessCeilParam = searchParams.get("ceiling");
-  starBrightnessCeiling = starbrightnessCeilParam
-    ? parseInt(starbrightnessCeilParam, 10)
-    : starBrightnessCeiling;
-  const starbrightnessFloorParam = searchParams.get("floor");
-  starBrightnessFloor = starbrightnessFloorParam
-    ? parseInt(starbrightnessFloorParam, 10)
-    : starBrightnessFloor;
-  const distortParam = searchParams.get("distort");
-  distort = distortParam ? parseInt(distortParam, 10) : distort;
+
+  numStars = getQueryParam(searchParams, "stars", numStars);
+  starRadius = getQueryParam(searchParams, "radius", starRadius);
+  starBrightnessCeiling = getQueryParam(
+    searchParams,
+    "ceiling",
+    starBrightnessCeiling
+  );
+  starBrightnessFloor = getQueryParam(
+    searchParams,
+    "floor",
+    starBrightnessFloor
+  );
+  distort = getQueryParam(searchParams, "distort", distort);
+  rotateX = getQueryParam(searchParams, "rotateX", 0);
 
   if (adjustStarsToWindowWidth) {
     // If we're using the default, adjust the number of stars according to
@@ -319,6 +334,10 @@ const NightskyCanvas = ({
     numStars,
     windowDimensions.width,
     windowDimensions.height,
+    distort,
+    starRadius,
+    starBrightnessCeiling,
+    starBrightnessFloor,
   ]);
 
   return (
@@ -333,6 +352,8 @@ const NightskyCanvas = ({
         height: "100%", // fill parent
         pointerEvents: "none", // so it doesn't intercept clicks
         zIndex: 0,
+        transform: `rotateX(${rotateX}deg)`,
+        transformOrigin: "bottom center",
       }}
     />
   );

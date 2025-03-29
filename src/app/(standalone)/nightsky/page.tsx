@@ -19,7 +19,15 @@ const Page = () => {
       <FullscreenWrapper>
         <Suspense fallback={<div>Loading...</div>}>
           <div
-            className={classnames(["p-4", "relative", "bg-gray-900", "h-full"])}
+            className={classnames([
+              "p-4",
+              "relative",
+              "bg-gray-900",
+              "h-full",
+              "perspective-[800px]",
+              "transform-3d",
+              "overflow-hidden",
+            ])}
           >
             <Sky
               numStars={2000}
