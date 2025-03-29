@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import classnames from "classnames";
 
 type Props = {
   children: React.ReactNode;
@@ -59,7 +60,11 @@ export default function FullscreenWrapper({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full"
+      className={classnames({ "cursor-pointer": !isFullscreen }, [
+        "relative",
+        "w-full",
+        "h-full",
+      ])}
       onClick={() => enterFullscreen()}
     >
       {showButton && (

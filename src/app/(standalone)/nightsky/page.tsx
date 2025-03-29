@@ -6,6 +6,7 @@ import classnames from "classnames";
 import FullscreenWrapper from "@/app/components/FullscreenWrapper";
 import Sky from "@/app/components/Sky";
 import Fireflies from "@/app/components/Fireflies";
+import SkyControls from "@/app/components/SkyControls";
 
 export const metadata: Metadata = {
   title: "Starry Night Sky",
@@ -36,6 +37,7 @@ const Page = () => {
               nebularClouds={true}
               clouds={false}
             />
+            <SkyControls />
             {/* <Fireflies /> */}
           </div>
         </Suspense>
