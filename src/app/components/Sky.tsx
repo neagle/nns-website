@@ -112,9 +112,11 @@ const NightskyCanvas = ({
       const parent = canvas.parentElement;
       if (!parent) return;
 
-      canvas.width = parent.clientWidth;
+      canvas.width =
+        rotateX === 0 ? parent.clientWidth : parent.clientWidth * 2;
       // Distort canvas
       canvas.height = parent.clientHeight * distort;
+      // console.log("canvas.height", canvas.height);
 
       // Fade zone is some portion of canvas width
       fadeZoneRef.current = canvas.width * 0.3; // 30% of width
@@ -338,7 +340,9 @@ const NightskyCanvas = ({
     starRadius,
     starBrightnessCeiling,
     starBrightnessFloor,
+    rotateX,
   ]);
+  // console.log("rotateX", rotateX, rotateX === 0);
 
   return (
     <canvas
@@ -347,13 +351,14 @@ const NightskyCanvas = ({
         // Adjust style as needed to position behind children
         position: "absolute",
         top: 0,
-        left: 0,
-        width: "100%", // fill parent
-        height: "100%", // fill parent
-        pointerEvents: "none", // so it doesn't intercept clicks
+        // left: 0,
+        left: rotateX === 0 ? "0" : "-50%",
+        width: rotateX === 0 ? "100%" : "200%",
+        height: rotateX === 0 ? "100%" : "200%",
+        pointerEvents: "none",
         zIndex: 0,
         transform: `rotateX(${rotateX}deg)`,
-        transformOrigin: "bottom center",
+        transformOrigin: "top center",
       }}
     />
   );

@@ -25,7 +25,7 @@ const Page = () => {
               "relative",
               "bg-gray-900",
               "h-full",
-              "perspective-[800px]",
+              "perspective-[1000px]",
               "transform-3d",
               "overflow-hidden",
             ])}

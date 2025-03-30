@@ -3,12 +3,8 @@ import wixClient from "@/lib/wixClient";
 import type { Credit, Show, ShowWithData, Photo } from "@/app/types";
 import { media } from "@wix/sdk";
 import { manualSort, fullName, nameSlug } from "@/app/utils";
-import {
-  getImageWithDimensions,
-  getScaledImageByHeight,
-} from "@/app/actions/media";
+import { getImageWithDimensions } from "@/app/actions/media";
 import WixImage from "@/app/components/WixImage";
-import Image from "next/image";
 import classnames from "classnames";
 import Link from "next/link";
 import { getShowsWithData } from "@/app/actions/shows";
@@ -212,25 +208,18 @@ const Season = async ({ params }: PageProps) => {
       {show.photos && (
         <div className="carousel mt-4 mb-4 group">
           {show.photos.map(async (photo: Photo) => {
-            // const image = await getImageWithDimensions(photo.src);
-            // console.log("photo", photo);
-            const image = await getScaledImageByHeight(photo.src, 300);
-            // const fullImage = await getImageWithDimensions(photo.src);
-            // console.log("fullImage", fullImage.url);
-
             return (
               <div key={photo.slug} className="carousel-item mr-4">
                 <PhotoModal photo={photo}>
-                  <Image
+                  <WixImage
                     className={classnames([
                       "transition-all",
                       "group-hover:opacity-50",
                       "hover:opacity-100",
                     ])}
-                    src={image.url}
+                    src={photo.src}
                     alt={`${photo.title}: ${photo.description}`}
-                    width={image.width}
-                    height={image.height}
+                    targetHeight={300}
                   />
                 </PhotoModal>
               </div>

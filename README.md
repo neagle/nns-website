@@ -55,7 +55,7 @@ What needs to be done for launch?
 Optional next steps:
 
 - [ ] Feed from Facebook and Instagram accounts
-- [ ] Individual credits pages for all individuals
+- [x] Individual credits pages for all individuals
 - [ ] Support us page? Verify that we want this
 - [ ] Add video to venue page showing entrance
 
