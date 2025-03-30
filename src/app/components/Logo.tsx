@@ -15,6 +15,7 @@ const Logo = () => {
         "leading-none",
         "hover:[&_svg]:transform hover:[&_svg]:scale-x-120 hover:[&_svg]:scale-y-120 hover:[&_svg]:rotate-180 hover:[&_svg>path]:fill-[hsl(37,100%,90%)]",
         "inline-block",
+        "filter drop-shadow-[0_0_5px_rgba(0,0,0,0.7)]!",
       ])}
     >
       <span>N</span>
@@ -36,7 +37,6 @@ const Logo = () => {
             "m-0",
             "transition-all",
             "duration-1000",
-            "filter drop-shadow-[0_0_5px_rgba(0,0,0,0.7)]",
           ])}
         >
           <path
