@@ -1,10 +1,8 @@
-import React from "react";
+import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import type { Show } from "@/app/types";
-import { getImageWithDimensions } from "@/app/actions/media";
-import WixImage from "@/app/components/WixImage";
 import classnames from "classnames";
-import Link from "next/link";
+import ShowPanel from "./ShowPanel";
 
 interface PageProps {
   params: Promise<{
@@ -12,13 +10,12 @@ interface PageProps {
   }>;
 }
 
-const Season = async ({ params }: PageProps) => {
-  const { year } = await params;
+interface ShowsProps {
+  startOfYear: Date;
+  endOfYear: Date;
+}
 
-  // Construct the start and end dates for the year
-  const startOfYear = new Date(`${year}-01-01T00:00:00.000Z`);
-  const endOfYear = new Date(`${year}-12-31T23:59:59.999Z`);
-
+const Shows = async ({ startOfYear, endOfYear }: ShowsProps) => {
   const { items } = await wixClient.items
     .query("Shows")
     .ge("openingDate", startOfYear.toISOString()) // Greater than or equal to start of the year
@@ -27,77 +24,46 @@ const Season = async ({ params }: PageProps) => {
     .find();
 
   const shows = items as Show[];
+
+  return (
+    <>
+      {shows.map(async (show) => {
+        return <ShowPanel key={show._id} show={show} />;
+      })}
+    </>
+  );
+};
+
+const Season = async ({ params }: PageProps) => {
+  const { year } = await params;
+
+  // Construct the start and end dates for the year
+  const startOfYear = new Date(`${year}-01-01T00:00:00.000Z`);
+  const endOfYear = new Date(`${year}-12-31T23:59:59.999Z`);
+
   return (
     <div className="">
       <h1 className="p-4 text-2xl text-primary/70! font-normal!">
         Season <b className="text-primary! text-3xl">{year}</b>
       </h1>
       <div className="flex flex-row flex-wrap group">
-        {shows.map(async (show) => {
-          // Todo: refactor background texture into reusable component
-          const backgroundTexture = show.backgroundTexture
-            ? await getImageWithDimensions(show.backgroundTexture)
-            : null;
-
-          const styleBlock = {
-            backgroundImage: backgroundTexture
-              ? `url(${backgroundTexture.url})`
-              : "none",
-            backgroundColor: show.backgroundColor || "transparent",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          };
-
-          return (
-            <section
-              key={show._id}
-              style={styleBlock}
+        <Suspense
+          fallback={
+            <div
               className={classnames([
-                "w-full",
-                "sm:w-1/2",
-                "md:w-1/3",
-                "lg:w-1/4",
-                "flex",
-                "items-center",
-                "opacity-100",
-                "peer",
-                "transition-all",
-                // Dim all sections when hovering over the parent
-                "group-has-[section:hover]:opacity-50",
-                "group-has-[section:hover]:scale-90",
-                "hover:scale-100!",
-                "ease-in-out",
-                "duration-500",
-                "hover:opacity-100!",
+                "absolute",
+                "left-1/2",
+                "text-primary",
+                "loading",
+                "loading-spinner",
+                "loading-lg",
+                "text-primary",
               ])}
-            >
-              <Link
-                href={`/shows/${show.slug}`}
-                className="w-full h-full flex items-center"
-              >
-                {show.logo ? (
-                  <WixImage
-                    src={show.logo}
-                    alt={show.title}
-                    className="w-full"
-                  />
-                ) : (
-                  <div
-                    className={classnames([
-                      // "items-center",
-                      // "min-h-400",
-                      // "min-w-400",
-                      "border-2",
-                      "border-accent",
-                    ])}
-                  >
-                    {show.title}
-                  </div>
-                )}
-              </Link>
-            </section>
-          );
-        })}
+            ></div>
+          }
+        >
+          <Shows startOfYear={startOfYear} endOfYear={endOfYear} />
+        </Suspense>
       </div>
     </div>
   );

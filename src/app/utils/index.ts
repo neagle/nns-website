@@ -64,3 +64,8 @@ export const manualSort = (arr: any) => {
     return aSortValue.localeCompare(bSortValue);
   });
 };
+
+// Simple delay function to simulate async operations
+// Used only for development and testing
+export const delay = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));

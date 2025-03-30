@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import type { Credit, Show } from "@/app/types";
 import { fullName } from "@/app/utils";
@@ -29,32 +29,12 @@ const getFirstMiddleLastNamesFromSlug = (slug: string) => {
   };
 };
 
-const Credits = async ({ params }: PageProps) => {
-  const { slug } = await params;
-  // const person = (await wixClient.items.get("People", id)) as Person;
-  const { firstName, lastName, middleName } = getFirstMiddleLastNamesFromSlug(
-    decodeURIComponent(slug)
-  );
+interface CreditsContentProps {
+  id: string;
+  person: Person;
+}
 
-  let personQuery = wixClient.items
-    .query("People")
-    .eq("firstName", firstName)
-    .eq("lastName", lastName);
-
-  if (middleName) {
-    personQuery = personQuery.eq("middleName", middleName);
-  }
-
-  const { items: people } = await personQuery.find();
-
-  const person = people[0] as Person;
-
-  if (!person) {
-    notFound();
-  }
-
-  const id = person._id;
-
+const CreditsContent = async ({ id, person }: CreditsContentProps) => {
   const { items: directed } = await wixClient.items
     .query("Shows")
     .eq("director", id)
@@ -119,6 +99,114 @@ const Credits = async ({ params }: PageProps) => {
   });
 
   return (
+    <>
+      {sortedCredits.map(([showId, credits]) => {
+        // We can just use the first show since all credits are for the same
+        // show
+        const show = credits[0].show;
+
+        // Single out directorship -- they're the captain of the ship!
+        const wasDirector = credits.some(
+          (credit) => credit.category === "crew" && credit.role === "Director"
+        );
+
+        const cast = credits.filter((credit) => credit.category === "cast");
+        const crew = credits.filter(
+          (credit) => credit.category === "crew" && credit.role !== "Director"
+        );
+
+        return (
+          <div
+            key={showId}
+            className={classnames([
+              "grid",
+              "md:grid-cols-[auto_1fr]",
+              "gap-4",
+              "mb-4",
+              "w-full",
+            ])}
+          >
+            <div>
+              {show.logo && (
+                <ShowLogo
+                  show={show}
+                  targetWidth={300}
+                  className="text-center"
+                />
+              )}
+            </div>
+            <div>
+              <h2 className="text-xl">
+                <Link href={`/shows/${show.slug}`}>{show.title}</Link>
+              </h2>
+              <p className="mb-4">
+                {dayjs(show.openingDate).format("MMMM YYYY")}
+              </p>
+              <div className="text-sm">
+                {wasDirector ? (
+                  <p className="text-lg mb-2 text-primary/80">Director</p>
+                ) : null}
+
+                {cast.length ? (
+                  <>
+                    <h3>Cast</h3>
+                    <ul className="mb-4">
+                      {cast.map((credit) => (
+                        <li key={credit._id} className="mr-2 uppercase">
+                          {credit.role}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : null}
+                {crew.length ? (
+                  <>
+                    <h3>Crew</h3>
+                    <ul className="">
+                      {crew.map((credit) => (
+                        <li key={credit._id} className="mr-2">
+                          {credit.role}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </>
+  );
+};
+
+const Credits = async ({ params }: PageProps) => {
+  const { slug } = await params;
+  // const person = (await wixClient.items.get("People", id)) as Person;
+  const { firstName, lastName, middleName } = getFirstMiddleLastNamesFromSlug(
+    decodeURIComponent(slug)
+  );
+
+  let personQuery = wixClient.items
+    .query("People")
+    .eq("firstName", firstName)
+    .eq("lastName", lastName);
+
+  if (middleName) {
+    personQuery = personQuery.eq("middleName", middleName);
+  }
+
+  const { items: people } = await personQuery.find();
+
+  const person = people[0] as Person;
+
+  if (!person) {
+    notFound();
+  }
+
+  const id = person._id;
+
+  return (
     <div className="p-4">
       <h1 className="text-2xl">{fullName(person)}</h1>
 
@@ -150,84 +238,24 @@ const Credits = async ({ params }: PageProps) => {
         </section>
 
         <section className={classnames([])}>
-          {sortedCredits.map(([showId, credits]) => {
-            // We can just use the first show since all credits are for the same
-            // show
-            const show = credits[0].show;
-
-            // Single out directorship -- they're the captain of the ship!
-            const wasDirector = credits.some(
-              (credit) =>
-                credit.category === "crew" && credit.role === "Director"
-            );
-
-            const cast = credits.filter((credit) => credit.category === "cast");
-            const crew = credits.filter(
-              (credit) =>
-                credit.category === "crew" && credit.role !== "Director"
-            );
-
-            return (
+          <Suspense
+            fallback={
               <div
-                key={showId}
                 className={classnames([
-                  "grid",
-                  "md:grid-cols-[auto_1fr]",
-                  "gap-4",
-                  "mb-4",
-                  "w-full",
+                  // "absolute",
+                  // "left-1/2",
+                  "ml-20",
+                  "text-primary",
+                  "loading",
+                  "loading-bars",
+                  "loading-lg",
+                  "text-primary",
                 ])}
-              >
-                <div>
-                  {show.logo && (
-                    <ShowLogo
-                      show={show}
-                      targetWidth={300}
-                      className="text-center"
-                    />
-                  )}
-                </div>
-                <div>
-                  <h2 className="text-xl">
-                    <Link href={`/shows/${show.slug}`}>{show.title}</Link>
-                  </h2>
-                  <p className="mb-4">
-                    {dayjs(show.openingDate).format("MMMM YYYY")}
-                  </p>
-                  <div className="text-sm">
-                    {wasDirector ? (
-                      <p className="text-lg mb-2 text-primary/80">Director</p>
-                    ) : null}
-
-                    {cast.length ? (
-                      <>
-                        <h3>Cast</h3>
-                        <ul className="mb-4">
-                          {cast.map((credit) => (
-                            <li key={credit._id} className="mr-2 uppercase">
-                              {credit.role}
-                            </li>
-                          ))}
-                        </ul>
-                      </>
-                    ) : null}
-                    {crew.length ? (
-                      <>
-                        <h3>Crew</h3>
-                        <ul className="">
-                          {crew.map((credit) => (
-                            <li key={credit._id} className="mr-2">
-                              {credit.role}
-                            </li>
-                          ))}
-                        </ul>
-                      </>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+              ></div>
+            }
+          >
+            <CreditsContent id={id} person={person} />
+          </Suspense>
         </section>
       </div>
 
