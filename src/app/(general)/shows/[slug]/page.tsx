@@ -176,16 +176,12 @@ const Season = async ({ params }: PageProps) => {
               <ul className="mb-4">
                 {manualSort(show.cast).map((credit: Credit) => (
                   <li key={credit._id}>
-                    {credit.person.aboutTheArtists ? (
-                      <Link
-                        href={`/credits/${nameSlug(credit.person)}`}
-                        className="link text-primary/70 hover:text-primary transition-all"
-                      >
-                        {fullName(credit.person)}
-                      </Link>
-                    ) : (
-                      fullName(credit.person)
-                    )}{" "}
+                    <Link
+                      href={`/credits/${nameSlug(credit.person)}`}
+                      className="link text-primary/70 hover:text-primary transition-all"
+                    >
+                      {fullName(credit.person)}
+                    </Link>{" "}
                     as{" "}
                     <b className="uppercase text-primary/70">{credit.role}</b>
                   </li>
