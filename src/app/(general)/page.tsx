@@ -1,21 +1,18 @@
+import { Suspense } from "react";
 import FeaturedShow from "@/app/components/FeaturedShow";
-// import classnames from "classnames";
-// import Facebook from "@/app/components/Facebook";
-// import Instagram from "@/app/components/Instagram";
 
 export default function Home() {
   return (
     <div className="bg-base-100 h-full">
-      <FeaturedShow />
-      {/* Placeholder for potential social media widgets */}
-      {/* <div>
-        <div className="facebook">
-          <Facebook />
-        </div>
-        <div className="instagram">
-          <Instagram />
-        </div>
-      </div> */}
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center h-full">
+            <div className="loading loading-spinner loading-xl text-primary"></div>
+          </div>
+        }
+      >
+        <FeaturedShow />
+      </Suspense>
     </div>
   );
 }
