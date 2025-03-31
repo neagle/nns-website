@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import ShowTime from "@/app/components/ShowTime";
 // import type { Event } from "@/app/types";
@@ -6,7 +6,7 @@ import type { V3Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import classnames from "classnames";
 import WixImage from "@/app/components/WixImage";
 
-const BoxOffice = async () => {
+const BoxOfficeContent = async () => {
   const { items: events } = await wixClient.wixEventsV2
     .queryEvents()
     .eq("status", "UPCOMING")
@@ -30,8 +30,7 @@ const BoxOffice = async () => {
   );
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl mb-4">Box Office</h1>
+    <>
       {Object.keys(shows).map(async (show) => {
         const imageUrl = shows[show][0].mainImage;
 
@@ -86,6 +85,21 @@ const BoxOffice = async () => {
           </div>
         );
       })}
+    </>
+  );
+};
+
+const BoxOffice = async () => {
+  return (
+    <div className="p-4">
+      <h1 className="text-xl mb-4">Box Office</h1>
+      <Suspense
+        fallback={
+          <div className="loading loading-spinner loading-2xl text-primary"></div>
+        }
+      >
+        <BoxOfficeContent />
+      </Suspense>
     </div>
   );
 };
