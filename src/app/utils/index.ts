@@ -69,3 +69,16 @@ export const manualSort = (arr: any) => {
 // Used only for development and testing
 export const delay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
+
+// Convert a srcSet string to a CSS image-set() value
+// @see https://nextjs.org/docs/pages/api-reference/components/image#background-css
+export const getBackgroundImage = (srcSet = "") => {
+  const imageSet = srcSet
+    .split(", ")
+    .map((str) => {
+      const [url, dpi] = str.split(" ");
+      return `url("${url}") ${dpi}`;
+    })
+    .join(", ");
+  return `image-set(${imageSet})`;
+};

@@ -26,6 +26,8 @@ const Nightsky = ({
       <div
         className={classnames(className, [
           "p-4",
+          "lg:p-6",
+          "xl:p-8",
           "relative",
           "bg-gray-900",
           "h-full",
