@@ -20,7 +20,7 @@ const Page = async () => {
 
   return (
     <div>
-      <section className="mb-4 p-4">
+      <section className="mb-4 p-4 md:p-6 xl:p-8">
         <h1 className="text-xl mb-4">About Us</h1>
         <Nightsky
           className={classnames(

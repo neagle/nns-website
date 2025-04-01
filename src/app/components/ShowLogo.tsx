@@ -45,7 +45,7 @@ const ShowLogo = ({
     );
   } else {
     return (
-      <div style={styleBlock} className={className}>
+      <div style={styleBlock} className={classnames(className)}>
         <WixImage
           src={show.logo}
           alt={show.title}

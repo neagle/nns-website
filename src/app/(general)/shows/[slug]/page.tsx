@@ -10,6 +10,7 @@ import Link from "next/link";
 import { getShowsWithData } from "@/app/actions/shows";
 import PhotoModal from "@/app/components/PhotoModal";
 import { BookImage } from "lucide-react";
+import PhotoGallery from "@/app/components/PhotoGallery";
 
 interface PageProps {
   params: Promise<{
@@ -45,7 +46,7 @@ const Season = async ({ params }: PageProps) => {
 
   return (
     <div className="">
-      <h1 className="p-4 text-2xl">{show.title}</h1>
+      <h1 className="p-4 md:p-6 xl:p-8 text-2xl">{show.title}</h1>
       <div className="flex flex-col md:flex-row">
         {show.logo && (
           <section
@@ -62,7 +63,7 @@ const Season = async ({ params }: PageProps) => {
             )}
           </section>
         )}
-        <section className="p-4">
+        <section className="p-4 md:p-6 xl:p-8">
           <h2 className="text-2xl mb-4">
             <b className="text-xl text-primary/50 font-normal">by</b>{" "}
             {show.author}
@@ -201,7 +202,8 @@ const Season = async ({ params }: PageProps) => {
           )}
         </section>
       </div>
-      {show.photos && (
+      {show.photos && <PhotoGallery photos={show.photos} />}
+      {/* {show.photos && (
         <div className="carousel mt-4 mb-4 group">
           {show.photos.map(async (photo: Photo) => {
             return (
@@ -222,7 +224,7 @@ const Season = async ({ params }: PageProps) => {
             );
           })}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

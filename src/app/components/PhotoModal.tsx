@@ -9,7 +9,10 @@ import React, {
 } from "react";
 import { media } from "@wix/sdk";
 import classnames from "classnames";
+import { createPortal } from "react-dom";
+import Image from "next/image";
 import type { Photo } from "@/app/types";
+import { X } from "lucide-react";
 
 interface PhotoModalProps {
   photo: Photo;
@@ -21,6 +24,8 @@ const PhotoModal = ({ photo, children }: PhotoModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [scaledUrl, setScaledUrl] = useState("");
+  const [finalWidth, setFinalWidth] = useState(0);
+  const [finalHeight, setFinalHeight] = useState(0);
 
   const [windowWidth, setWindowWidth] = useState(0);
   const [windowHeight, setWindowHeight] = useState(0);
@@ -32,7 +37,6 @@ const PhotoModal = ({ photo, children }: PhotoModalProps) => {
   }, []);
 
   useEffect(() => {
-    // Measure once at mount
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => {
@@ -53,13 +57,9 @@ const PhotoModal = ({ photo, children }: PhotoModalProps) => {
     };
   }, []);
 
-  /**
-   * Compute scaled image URL only once the modal is open
-   * or if the window is resized while the modal is open.
-   */
+  // Calculate scaled dimensions when modal opens or window size changes
   useEffect(() => {
     if (!isOpen) {
-      // If the modal is closed, clear out the scaled URL so we don't preload
       setScaledUrl("");
       setIsLoading(true);
       return;
@@ -70,42 +70,121 @@ const PhotoModal = ({ photo, children }: PhotoModalProps) => {
     const { width: originalW, height: originalH } = photo.settings;
     if (!originalW || !originalH) return;
 
-    // Our bounding box: 90% of the viewport
+    // Bounding box: 90% of the viewport
     const containerW = Math.round(windowWidth * 0.9);
     const containerH = Math.round(windowHeight * 0.9);
 
-    // Determine how much we can scale the image down
-    // so it fits entirely inside containerW x containerH
+    // Calculate scale factor to maintain aspect ratio
     const scaleFactor = Math.min(
       containerW / originalW,
       containerH / originalH
     );
 
-    // Final requested size
-    const finalWidth = Math.round(originalW * scaleFactor);
-    const finalHeight = Math.round(originalH * scaleFactor);
+    // Scaled dimensions
+    const calculatedWidth = Math.round(originalW * scaleFactor);
+    const calculatedHeight = Math.round(originalH * scaleFactor);
 
-    // Grab the scaled image from Wix (no cropping)
+    setFinalWidth(calculatedWidth);
+    setFinalHeight(calculatedHeight);
+
+    // Get the scaled image URL from Wix (no cropping)
     const newUrl = media.getScaledToFillImageUrl(
       photo.src,
-      finalWidth,
-      finalHeight,
+      calculatedWidth,
+      calculatedHeight,
       {}
     );
     setScaledUrl(newUrl);
     setIsLoading(true);
   }, [isOpen, photo, windowWidth, windowHeight]);
 
-  // Close modal when user clicks the backdrop
+  // Close modal when clicking the backdrop
   const handleBackdropClick = (e: MouseEvent<HTMLDialogElement>) => {
     if (e.target === e.currentTarget) {
       setIsOpen(false);
     }
   };
 
+  const modalContent = (
+    <dialog
+      className={classnames({ "modal-open": isOpen, "bg-black/90!": isOpen }, [
+        "modal",
+      ])}
+      onClick={handleBackdropClick}
+    >
+      <div
+        className={classnames([
+          "modal-box",
+          "relative",
+          "w-auto",
+          "max-w-none",
+          "h-auto",
+          "p-0",
+          "shadow-lg",
+          "shadow-yellow-500/50",
+        ])}
+      >
+        {/* Close button */}
+        {!isLoading && (
+          <button
+            type="button"
+            className={classnames([
+              "btn",
+              "btn-sm",
+              "btn-circle",
+              "absolute",
+              "right-2",
+              "top-2",
+              "z-10",
+              "bg-base-100/0",
+              "border-0",
+              "hover:bg-base-100",
+              "transition-all",
+              "font-bold",
+            ])}
+            onClick={() => setIsOpen(false)}
+          >
+            <X />
+          </button>
+        )}
+
+        {/* Image Container */}
+        <div className="flex justify-center items-center">
+          {isLoading && (
+            <span className="loading loading-spinner loading-lg m-8" />
+          )}
+          {!isLoading && scaledUrl && (
+            <div
+              style={{
+                position: "relative",
+                width: `${finalWidth}px`,
+                height: `${finalHeight}px`,
+                maxWidth: "90vw",
+                maxHeight: "90vh",
+              }}
+            >
+              <Image
+                src={scaledUrl}
+                alt={photo.alt || "Enlarged Image"}
+                width={finalWidth}
+                height={finalHeight}
+                style={{
+                  objectFit: "contain",
+                }}
+                className="rounded-lg"
+                onLoadingComplete={() => setIsLoading(false)}
+                priority={true}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </dialog>
+  );
+
   return (
     <>
-      {/* Wrap the child element(s). Clicking them opens the modal. */}
+      {/* Trigger: Click to open modal */}
       <div
         role="button"
         tabIndex={0}
@@ -116,71 +195,19 @@ const PhotoModal = ({ photo, children }: PhotoModalProps) => {
         {children}
       </div>
 
-      {/* Daisy UI modal */}
-      <dialog
-        className={classnames(
-          { "modal-open": isOpen, "bg-black/90!": isOpen },
-          ["modal"]
-        )}
-        onClick={handleBackdropClick}
-      >
-        {/**
-         * By default, DaisyUI’s .modal-box has max-w-lg or similar constraints.
-         * We override with w-auto / max-w-none / h-auto / p-0 to let the box
-         * fit around the image naturally.
-         */}
-        <div
-          className={classnames([
-            "modal-box",
-            "relative",
-            "w-auto",
-            "max-w-none",
-            "h-auto",
-            "p-0",
-            "shadow-lg",
-            "shadow-yellow-500/50",
-          ])}
-        >
-          {/* Close button in the top corner */}
-          <button
-            type="button"
-            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            onClick={() => setIsOpen(false)}
-          >
-            ✕
-          </button>
+      {/* Render modal using React Portal */}
+      {isOpen && createPortal(modalContent, document.body)}
 
-          {/* Center the image (or spinner) */}
-          <div className="flex justify-center items-center">
-            {isLoading && (
-              <span className="loading loading-spinner loading-lg m-8" />
-            )}
-            {!isLoading && scaledUrl && (
-              <img
-                src={scaledUrl}
-                alt={photo.alt || "Enlarged Image"}
-                // Ensures the image doesn’t overflow the screen
-                style={{
-                  maxWidth: "90vw",
-                  maxHeight: "90vh",
-                  objectFit: "contain",
-                }}
-              />
-            )}
-          </div>
-        </div>
-      </dialog>
-
-      {/**
-       * Hidden preloader. We mark the image as loaded
-       * before actually displaying it in the modal
-       */}
+      {/* Preload the image */}
       {scaledUrl && (
-        <img
+        <Image
           src={scaledUrl}
           alt=""
+          width={finalWidth}
+          height={finalHeight}
           style={{ display: "none" }}
-          onLoad={() => setIsLoading(false)}
+          onLoadingComplete={() => setIsLoading(false)}
+          priority={true}
         />
       )}
     </>

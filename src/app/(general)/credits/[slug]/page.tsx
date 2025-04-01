@@ -7,8 +7,7 @@ import type { Person } from "@/app/types";
 import Link from "next/link";
 import WixImage from "@/app/components/WixImage";
 import classnames from "classnames";
-import ShowLogo from "@/app/components/ShowLogo";
-import dayjs from "dayjs";
+import ShowPanel from "./ShowPanel";
 
 interface PageProps {
   params: Promise<{
@@ -98,86 +97,9 @@ const CreditsContent = async ({ id, person }: CreditsContentProps) => {
     return 0;
   });
 
-  return (
-    <>
-      {sortedCredits.map(([showId, credits]) => {
-        // We can just use the first show since all credits are for the same
-        // show
-        const show = credits[0].show;
-
-        // Single out directorship -- they're the captain of the ship!
-        const wasDirector = credits.some(
-          (credit) => credit.category === "crew" && credit.role === "Director"
-        );
-
-        const cast = credits.filter((credit) => credit.category === "cast");
-        const crew = credits.filter(
-          (credit) => credit.category === "crew" && credit.role !== "Director"
-        );
-
-        return (
-          <div
-            key={showId}
-            className={classnames([
-              "grid",
-              "md:grid-cols-[auto_1fr]",
-              "gap-4",
-              "mb-4",
-              "w-full",
-            ])}
-          >
-            <div>
-              {show.logo && (
-                <ShowLogo
-                  show={show}
-                  targetWidth={300}
-                  className="text-center"
-                />
-              )}
-            </div>
-            <div>
-              <h2 className="text-xl">
-                <Link href={`/shows/${show.slug}`}>{show.title}</Link>
-              </h2>
-              <p className="mb-4">
-                {dayjs(show.openingDate).format("MMMM YYYY")}
-              </p>
-              <div className="text-sm">
-                {wasDirector ? (
-                  <p className="text-lg mb-2 text-primary/80">Director</p>
-                ) : null}
-
-                {cast.length ? (
-                  <>
-                    <h3>Cast</h3>
-                    <ul className="mb-4">
-                      {cast.map((credit) => (
-                        <li key={credit._id} className="mr-2 uppercase">
-                          {credit.role}
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                ) : null}
-                {crew.length ? (
-                  <>
-                    <h3>Crew</h3>
-                    <ul className="">
-                      {crew.map((credit) => (
-                        <li key={credit._id} className="mr-2">
-                          {credit.role}
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                ) : null}
-              </div>
-            </div>
-          </div>
-        );
-      })}
-    </>
-  );
+  return sortedCredits.map(([showId, credits]) => (
+    <ShowPanel key={showId} credits={credits} />
+  ));
 };
 
 const Credits = async ({ params }: PageProps) => {
@@ -207,15 +129,15 @@ const Credits = async ({ params }: PageProps) => {
   const id = person._id;
 
   return (
-    <div className="p-4">
+    <div className="p-4 md:p-6 xl:p-8">
       <h1 className="text-2xl">{fullName(person)}</h1>
 
       <div
         className={classnames({ "gap-4": person.headshot }, [
-          "mt-4",
+          "mt-4 md:mt-6 xl:mt-8",
           "grid",
           "md:grid-cols-[auto_1fr]",
-          // "gap-4",
+          "gap-8",
           "w-2/3",
           "w-full",
         ])}
@@ -237,13 +159,11 @@ const Credits = async ({ params }: PageProps) => {
           )}
         </section>
 
-        <section className={classnames([])}>
+        <section className={classnames(["grid", "xl:grid-cols-2", "gap-8"])}>
           <Suspense
             fallback={
               <div
                 className={classnames([
-                  // "absolute",
-                  // "left-1/2",
                   "ml-20",
                   "text-primary",
                   "loading",

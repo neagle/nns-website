@@ -10,6 +10,10 @@ type Props = {
   className?: string;
   targetWidth?: number;
   targetHeight?: number;
+  wrapper?: (
+    children: React.ReactNode,
+    dimensions: { width: number; height: number; src: string }
+  ) => React.ReactNode;
 };
 
 /* Output an optimized image scaled to match a target width OR height */
@@ -20,6 +24,7 @@ const WixImage = ({
   className = "",
   targetWidth,
   targetHeight,
+  wrapper,
 }: Props) => {
   const { width, height } = getWixImageDimensions(src);
   const ratio = width / height;
@@ -45,7 +50,7 @@ const WixImage = ({
     {}
   );
 
-  return (
+  const imageElement = (
     <Image
       id={id}
       src={scaledImage}
@@ -55,6 +60,15 @@ const WixImage = ({
       height={scaledHeight}
     />
   );
+
+  // If a wrapper is provided, pass the image element and dimensions to it
+  return wrapper
+    ? wrapper(imageElement, {
+        width: scaledWidth,
+        height: scaledHeight,
+        src: scaledImage,
+      })
+    : imageElement;
 };
 
 export default WixImage;
