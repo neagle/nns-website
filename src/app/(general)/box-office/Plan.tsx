@@ -38,7 +38,7 @@ const Plan = ({ plan }: PlanProps) => {
     });
     console.log("redirect", redirect);
 
-    window.location = redirect.redirectSession.fullUrl;
+    // window.location = redirect.redirectSession.fullUrl;
   };
 
   return (

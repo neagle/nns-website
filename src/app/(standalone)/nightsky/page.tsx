@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 import React from "react";
 import { Suspense } from "react";
 import classnames from "classnames";
-// import Nightsky from "@/app/components/Nightsky";
 import FullscreenWrapper from "@/app/components/FullscreenWrapper";
 import Sky from "@/app/components/Sky";
-import Fireflies from "@/app/components/Fireflies";
 import SkyControls from "@/app/components/SkyControls";
 
 export const metadata: Metadata = {
@@ -38,14 +36,8 @@ const Page = () => {
               clouds={false}
             />
             <SkyControls />
-            {/* <Fireflies /> */}
           </div>
         </Suspense>
-        {/* <Nightsky
-          adjustStarsToWindowWidth={false}
-          nebularClouds={true}
-          clouds={false}
-        /> */}
       </FullscreenWrapper>
     </div>
   );

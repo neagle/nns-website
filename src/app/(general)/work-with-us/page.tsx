@@ -1,8 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import classnames from "classnames";
-import { getImageProps } from "next/image";
-import { getBackgroundImage } from "@/app/utils";
 import HeroSection from "@/app/components/HeroSection";
 
 const Page = () => {
@@ -194,15 +192,6 @@ const Page = () => {
             .
           </p>
         </section>
-        {/* <section>
-          <Image
-            src="/images/photographs/general/volunteer-prop-making-2.jpg"
-            alt="Image of a volunteer painting props"
-            width={631}
-            height={1024}
-            className="rounded"
-          />
-        </section> */}
       </div>
       <HeroSection
         imageUrl="/images/photographs/general/light-and-sound-table.jpg"

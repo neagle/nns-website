@@ -1,6 +1,6 @@
 import React from "react";
 import wixClient from "@/lib/wixClient";
-import type { Credit, Show, ShowWithData, Photo } from "@/app/types";
+import type { Credit, Show, ShowWithData } from "@/app/types";
 import { media } from "@wix/sdk";
 import { manualSort, fullName, nameSlug } from "@/app/utils";
 import { getImageWithDimensions } from "@/app/actions/media";
@@ -8,7 +8,6 @@ import WixImage from "@/app/components/WixImage";
 import classnames from "classnames";
 import Link from "next/link";
 import { getShowsWithData } from "@/app/actions/shows";
-import PhotoModal from "@/app/components/PhotoModal";
 import { BookImage } from "lucide-react";
 import PhotoGallery from "@/app/components/PhotoGallery";
 
@@ -203,28 +202,6 @@ const Season = async ({ params }: PageProps) => {
         </section>
       </div>
       {show.photos && <PhotoGallery photos={show.photos} />}
-      {/* {show.photos && (
-        <div className="carousel mt-4 mb-4 group">
-          {show.photos.map(async (photo: Photo) => {
-            return (
-              <div key={photo.slug} className="carousel-item mr-4">
-                <PhotoModal photo={photo}>
-                  <WixImage
-                    className={classnames([
-                      "transition-all",
-                      "group-hover:opacity-50",
-                      "hover:opacity-100",
-                    ])}
-                    src={photo.src}
-                    alt={`${photo.title}: ${photo.description}`}
-                    targetHeight={300}
-                  />
-                </PhotoModal>
-              </div>
-            );
-          })}
-        </div>
-      )} */}
     </div>
   );
 };
