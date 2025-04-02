@@ -3,34 +3,14 @@ import Link from "next/link";
 import classnames from "classnames";
 import { getImageProps } from "next/image";
 import { getBackgroundImage } from "@/app/utils";
+import HeroSection from "@/app/components/HeroSection";
 
 const Page = () => {
-  const {
-    props: { srcSet },
-  } = getImageProps({
-    alt: "",
-    width: 4032,
-    height: 1731,
-    src: "/images/photographs/general/fool-set-construction.jpg",
-  });
-  const backgroundImage = getBackgroundImage(srcSet);
-  const style = { backgroundImage };
-
   return (
     <div className={classnames([])}>
-      <div
-        style={style}
-        className={classnames([
-          "bg-cover",
-          "bg-left",
-          "h-[40vh]",
-          "xl:h-[60vh]",
-          "flex",
-          "items-end",
-          "p-4",
-          "md:p-6",
-          "xl:p-8",
-        ])}
+      <HeroSection
+        imageUrl="/images/photographs/general/fool-set-construction.jpg"
+        className={classnames(["h-[40vh]", "xl:h-[60vh]"])}
       >
         <h1
           className={classnames([
@@ -42,7 +22,7 @@ const Page = () => {
         >
           Work With Us
         </h1>
-      </div>
+      </HeroSection>
 
       <div
         className={classnames([
@@ -224,6 +204,15 @@ const Page = () => {
           />
         </section> */}
       </div>
+      <HeroSection
+        imageUrl="/images/photographs/general/light-and-sound-table.jpg"
+        className={classnames([
+          "h-[40vh]",
+          "xl:h-[60vh]",
+          "bg-cover",
+          "bg-center",
+        ])}
+      />
     </div>
   );
 };

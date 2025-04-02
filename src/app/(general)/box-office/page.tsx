@@ -5,6 +5,8 @@ import ShowTime from "@/app/components/ShowTime";
 import type { V3Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import classnames from "classnames";
 import WixImage from "@/app/components/WixImage";
+import Subscriptions from "./Subscriptions";
+import Participant from "./Participant";
 
 const BoxOfficeContent = async () => {
   const { items: events } = await wixClient.wixEventsV2
@@ -99,6 +101,22 @@ const BoxOffice = async () => {
         }
       >
         <BoxOfficeContent />
+      </Suspense>
+
+      <Suspense
+        fallback={
+          <div className="loading loading-spinner loading-2xl text-primary"></div>
+        }
+      >
+        <Subscriptions />
+      </Suspense>
+
+      <Suspense
+        fallback={
+          <div className="loading loading-spinner loading-2xl text-primary"></div>
+        }
+      >
+        <Participant />
       </Suspense>
     </div>
   );

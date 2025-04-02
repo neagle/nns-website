@@ -18,7 +18,7 @@ const Nightsky = ({
   className = "",
   fireflies = false,
   nebularClouds = true,
-  clouds = true,
+  clouds,
   adjustStarsToWindowWidth = true,
 }: Props) => {
   return (

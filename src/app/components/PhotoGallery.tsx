@@ -33,14 +33,8 @@ const PhotoGallery = ({ photos }: PhotoGalleryProps) => {
           onBeforeInit={(swiper) => {
             swiperRef.current = swiper;
           }}
-          modules={[
-            Navigation,
-            Pagination,
-            //Scrollbar,
-            // A11y,
-          ]}
+          modules={[Navigation, Pagination]}
           spaceBetween={30}
-          // centeredSlides={true}
           slidesPerView={"auto"}
           navigation={{
             nextEl: ".swiper-button-next-custom",

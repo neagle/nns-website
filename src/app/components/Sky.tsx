@@ -51,7 +51,7 @@ const NightskyCanvas = ({
   rotateX = 0,
   adjustStarsToWindowWidth = true,
   nebularClouds = true,
-  clouds = true,
+  clouds = false,
 }: Props) => {
   const [windowDimensions, setWindowDimensions] = useState<
     Record<string, number>
