@@ -5,6 +5,7 @@ import wixClient from "@/lib/wixClient";
 import type { Show } from "@/app/types";
 import Person from "./Person";
 import Link from "next/link";
+import EasterEgg from "./EasterEgg";
 
 export const metadata: Metadata = {
   title: "About Us - NOVA Nightsky Theater",
@@ -95,8 +96,8 @@ const Page = async () => {
             photosFolderId="f9121230e78c499bbc214a7faa968714"
           >
             <p>
-              Jaclyn is a producer, actress, mom of three, and a serial
-              entrepreneur. After graduating from the{" "}
+              <EasterEgg>Jaclyn</EasterEgg> is a producer, actress, mom of
+              three, and a serial entrepreneur. After graduating from the{" "}
               <Link className="link" href="https://www.amda.edu/">
                 American Musical and Dramatic Academy
               </Link>
