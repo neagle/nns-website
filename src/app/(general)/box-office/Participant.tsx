@@ -23,7 +23,7 @@ const Subscriptions = async () => {
 
   return (
     <div>
-      <h1>Show Participant</h1>
+      <h1 className="text-2xl mb-4">Show Participant</h1>
       <Plan plan={plan} />
     </div>
   );

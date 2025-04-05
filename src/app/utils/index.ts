@@ -1,4 +1,4 @@
-import type { Person } from "@/app/types";
+import type { Person, Photo } from "@/app/types";
 
 export const fullName = ({
   firstName = "",
@@ -81,4 +81,23 @@ export const getBackgroundImage = (srcSet = "") => {
     })
     .join(", ");
   return `image-set(${imageSet})`;
+};
+
+export const normalizeWixFilesToPhotos = (
+  files: Array<{ media: { image: { image: string } }; displayName: string }>
+): Photo[] => {
+  return files.map((file) => {
+    const wixImage = file.media.image.image;
+    const { width, height } = getWixImageDimensions(wixImage);
+    return {
+      src: wixImage,
+      alt: file.displayName,
+      slug: file.displayName,
+      description: file.displayName,
+      title: file.displayName,
+      type: "image",
+      width,
+      height,
+    };
+  });
 };

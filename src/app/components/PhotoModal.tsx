@@ -67,8 +67,10 @@ const PhotoModal = ({ photo, children }: PhotoModalProps) => {
 
     if (!photo?.src || !windowWidth || !windowHeight) return;
 
+    if (!photo.settings) {
+      return;
+    }
     const { width: originalW, height: originalH } = photo.settings;
-    if (!originalW || !originalH) return;
 
     // Bounding box: 90% of the viewport
     const containerW = Math.round(windowWidth * 0.9);

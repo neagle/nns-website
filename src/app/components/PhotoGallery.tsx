@@ -30,6 +30,13 @@ const PhotoGallery = ({ photos }: PhotoGalleryProps) => {
     <div>
       <div className="relative">
         <Swiper
+          className={classnames([
+            "w-full",
+            "select-none",
+            "my-4",
+            "md:my-6",
+            "xl:my-8",
+          ])}
           onBeforeInit={(swiper) => {
             swiperRef.current = swiper;
           }}
@@ -59,7 +66,6 @@ const PhotoGallery = ({ photos }: PhotoGalleryProps) => {
           }}
           onSlideChange={() => console.log("slide change")}
           onSwiper={(swiper) => console.log(swiper)}
-          className={classnames(["select-none", "my-4", "md:my-6", "xl:my-8"])}
         >
           {photos.map((photo) => {
             const { width, height } = getWixImageDimensions(photo.src);

@@ -15,6 +15,7 @@
     "@wix/data": "^1.0.211",
     "@wix/events": "^1.0.452",
     "@wix/forms": "^1.0.231",
+    "@wix/media": "^1.0.150",
     "@wix/pricing-plans": "^1.0.128",
     "@wix/redirects": "^1.0.76",
     "@wix/sdk": "^1.15.14",

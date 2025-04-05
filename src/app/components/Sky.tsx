@@ -16,6 +16,7 @@ type Props = {
   // An additional way to distort the canvas to try to compensate for the
   // projection
   rotateX?: number;
+  twinkle?: boolean;
 };
 
 // Type for our star objects
@@ -52,6 +53,7 @@ const NightskyCanvas = ({
   adjustStarsToWindowWidth = true,
   nebularClouds = true,
   clouds = false,
+  twinkle = true,
 }: Props) => {
   const [windowDimensions, setWindowDimensions] = useState<
     Record<string, number>
@@ -252,7 +254,9 @@ const NightskyCanvas = ({
       drawClouds();
 
       // Loop
-      requestAnimationFrame(drawStars);
+      if (twinkle) {
+        requestAnimationFrame(drawStars);
+      }
     };
 
     // ==== Draw clouds ====
@@ -341,6 +345,7 @@ const NightskyCanvas = ({
     starBrightnessCeiling,
     starBrightnessFloor,
     rotateX,
+    twinkle,
   ]);
   // console.log("rotateX", rotateX, rotateX === 0);
 

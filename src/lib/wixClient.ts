@@ -5,6 +5,7 @@ import { wixEventsV2 } from "@wix/events";
 import { forms, submissions } from "@wix/forms";
 import { plans } from "@wix/pricing-plans";
 import { redirects } from "@wix/redirects";
+import { files } from "@wix/media";
 
 const wixClient = createClient({
   auth: ApiKeyStrategy({
@@ -12,6 +13,7 @@ const wixClient = createClient({
     siteId: process.env.WIX_SITE_ID || "",
   }),
   modules: {
+    files,
     collections,
     items,
     wixEventsV2,

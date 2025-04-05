@@ -106,5 +106,5 @@ export interface Photo {
   src: string;
   title: string;
   type: "image";
-  settings: PhotoSettings;
+  settings?: PhotoSettings;
 }

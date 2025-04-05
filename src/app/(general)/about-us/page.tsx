@@ -3,7 +3,6 @@ import classnames from "classnames";
 import wixClient from "@/lib/wixClient";
 import type { Show } from "@/app/types";
 import Person from "./Person";
-import Nightsky from "@/app/components/Nightsky";
 import Link from "next/link";
 
 const Page = async () => {
@@ -22,79 +21,71 @@ const Page = async () => {
     <div>
       <section className="mb-4 p-4 md:p-6 xl:p-8">
         <h1 className="text-xl mb-4">About Us</h1>
-        <Nightsky
-          className={classnames(
-            "rounded-lg",
-            "overflow-hidden",
-            "shadow-md",
-            "shadow-accent",
-            "p-2!",
-            "md:p-4!"
-          )}
-        >
-          <div
-            className={classnames([
-              "m-2",
-              "mb-0",
-              "rounded-lg",
-              "overflow-hidden",
-            ])}
-          >
-            <div className="md:columns-2 drop-shadow-lg!">
-              <p
-                className={classnames([
-                  "text-sm",
-                  "md:text-lg",
-                  "mb-4",
-                  "leading-tight",
-                ])}
-              >
-                <span className="font-bold text-accent uppercase">
-                  NOVA Nightsky Theater
-                </span>{" "}
-                was founded in later summer of 2021 by actor / producer{" "}
-                <strong className="text-primary">Jaclyn Robertson</strong> and
-                playwright / director{" "}
-                <strong className="text-primary">Ward Kay</strong>. Both had
-                worked in the local theater scene for years but wanted to bring
-                something a little different to the community. While our first
-                show was performed outdoors in the height of the COVID-19
-                pandemic, we have performed {numberOfProducedShows} productions
-                in all different types of venues aligning with our mission of
-                producing theater in unconventional spaces. ​Unlike other
-                community theater companies who rely on grants or donations to
-                operate, we rely on ticket sales to produce our shows. As such,
-                we maintain tight budgets and create shows utilizing the amazing
-                talents of our company members and&nbsp;casts.
-              </p>
-            </div>
+        <div className={classnames([])}>
+          <div className="">
             <p
               className={classnames([
                 "text-sm",
-                "md:mt-4",
                 "md:text-lg",
                 "mb-4",
-                "md:text-right",
                 "leading-tight",
               ])}
             >
-              Thank you for supporting us on this&nbsp;journey!
+              <span className="font-bold text-accent uppercase">
+                NOVA Nightsky Theater
+              </span>{" "}
+              was founded in later summer of 2021 by actor / producer{" "}
+              <strong className="text-primary">Jaclyn Robertson</strong> and
+              playwright / director{" "}
+              <strong className="text-primary">Ward Kay</strong>. Both had
+              worked in the local theater scene for years but wanted to bring
+              something a little different to the community.
             </p>
-
-            <p className="text-sm md:text-lg text-primary text-right">
-              &mdash; NOVA Nightsky Theater&nbsp;Company
+            <p
+              className={classnames([
+                "text-sm",
+                "md:text-lg",
+                "mb-4",
+                "leading-tight",
+              ])}
+            >
+              While our first show was performed outdoors in the height of the
+              COVID-19 pandemic, we have performed {numberOfProducedShows}{" "}
+              productions in all different types of venues aligning with our
+              mission of producing theater in unconventional spaces. ​Unlike
+              other community theater companies who rely on grants or donations
+              to operate, we rely on ticket sales to produce our shows. As such,
+              we maintain tight budgets and create shows utilizing the amazing
+              talents of our company members and&nbsp;casts.
             </p>
           </div>
-        </Nightsky>
-      </section>
-      <section className="grid md:grid-cols-[1fr_2fr] gap-4 mb-4">
-        <div className="bg-accent/60 p-4">
-          <h1 className="text-3xl md:text-right">Board Members</h1>
+          <p
+            className={classnames([
+              "text-sm",
+              "md:mt-4",
+              "md:text-lg",
+              "mb-4",
+              "md:text-right",
+              "leading-tight",
+            ])}
+          >
+            Thank you for supporting us on this&nbsp;journey!
+          </p>
+
+          <p className="text-sm md:text-lg text-primary text-right">
+            &mdash; NOVA Nightsky Theater&nbsp;Company
+          </p>
         </div>
-        <div className={classnames(["p-4"])}>
+      </section>
+      <section className="">
+        <div className="bg-accent/60 p-4 md:p-6 xl:p-8">
+          <h1 className="text-3xl">Board Members</h1>
+        </div>
+        <div className={classnames(["p-4", "md:p-6", "xl:p-8"])}>
           <Person
             name="Jaclyn Robertson"
-            title="Producing Director / Co-Founder / Actress"
+            title="Producing Director / Co&#x2011;Founder / Actress"
+            photosFolderId="f9121230e78c499bbc214a7faa968714"
           >
             <p>
               Jaclyn is a producer, actress, mom of three, and a serial
@@ -138,7 +129,8 @@ const Page = async () => {
           </Person>
           <Person
             name="Adam Ressa"
-            title="Design and Technical Director / Actor"
+            title="Design and Technical&nbsp;Director / Actor"
+            photosFolderId="fee4187d32d04283aa0fe811e416387a"
           >
             <p className="mb-4">
               Adam has held a variety of creative and technical roles in
@@ -185,12 +177,13 @@ const Page = async () => {
               >
                 Levi
               </span>{" "}
-              is an adequate assistant lighting designer.
+              is an adequate assistant lighting&nbsp;designer.
             </p>
           </Person>
           <Person
             name="Sarah Baczewski"
-            title="Administrative Director / Actress / Director"
+            title="Administrative&nbsp;Director / Actress / Director"
+            photosFolderId="4f9a71dd9d2e49f4a9792b5244b51cdd"
           >
             <p className="mb-4">
               Sarah Baczewski is a director, stage manager and (occasional)
@@ -226,27 +219,28 @@ const Page = async () => {
           </Person>
         </div>
       </section>
-      <section className="grid md:grid-cols-[1fr_2fr] gap-4 mb-4">
-        <div className="bg-info/60 p-4 ">
-          <h1 className="text-3xl md:text-right">Company Members</h1>
-          <div
-            className={classnames([
-              "text-sm",
-              "text-info-content",
-              "[&>p]:text-right [&>p]:leading-tight [&>p]:mb-4",
-            ])}
-          ></div>
+      <section className="">
+        <div className="bg-info/60 p-4 md:p-6 xl:p-8">
+          <h1 className="text-3xl">Company Members</h1>
         </div>
-        <div className="p-4">
-          <div className="alert alert-info mb-4 text-neutral">
-            Theater is a team sport, and NOVA Nightsky relies on the hard work
-            and dedication of volunteers to make our shows&nbsp;successful.
-            Company Members are individuals who are tackling larger technical
-            roles in our 2025&nbsp;season.
-          </div>
+        <div
+          className={classnames([
+            "p-4 md:p-6 xl:p-8",
+            "text-sm",
+            "md:text-lg",
+            "leading-tight",
+          ])}
+        >
+          Theater is a team sport, and NOVA Nightsky relies on the hard work and
+          dedication of volunteers to make our shows&nbsp;successful. Company
+          Members are individuals who are tackling larger technical roles in our
+          2025&nbsp;season.
+        </div>
+        <div className={classnames(["p-4", "md:p-6", "xl:p-8"])}>
           <Person
             name="Hannah Ruth Blackwell"
             title="Actor / Director / Playwright"
+            photosFolderId="cad84141f3f745cfbb78efa1ed945eb7"
           >
             <p>
               Hannah Ruth Blackwell is an actor, director, and playwright
@@ -264,7 +258,11 @@ const Page = async () => {
               home with her wife and their two cats.
             </p>
           </Person>
-          <Person name="Fosse Thornton" title="Dancer / Actress">
+          <Person
+            name="Fosse Thornton"
+            title="Dancer / Actress"
+            photosFolderId="26e8bbe1612b4b03b5d29169d8d2564c"
+          >
             <p>
               Fosse is an actor / dancer / singer born and raised in Northern
               Virginia. She loves the classics-with-an-in-your-face-twist, and
@@ -277,12 +275,16 @@ const Page = async () => {
           </Person>
         </div>
       </section>
-      <section className="grid md:grid-cols-[1fr_2fr] gap-4">
-        <div className="bg-secondary/60 p-4">
-          <h1 className="text-3xl md:text-right">Technical Crew</h1>
+      <section className="">
+        <div className="bg-secondary/60 p-4 md:p-6 xl:p-8">
+          <h1 className="text-3xl">Technical Crew</h1>
         </div>
-        <div className="p-4">
-          <Person name="Nate Eagle" title="Webmaster / Actor">
+        <div className={classnames(["p-4", "md:p-6", "xl:p-8"])}>
+          <Person
+            name="Nate Eagle"
+            title="Webmaster / Actor"
+            photosFolderId="62068bde83d34dc280bdc8b00c17b8f4"
+          >
             <p>
               Nate Eagle is a software engineer, actor, and amateur mixologist.
               He&rsquo;s a proud alum of{" "}
@@ -290,10 +292,10 @@ const Page = async () => {
                 St. John&rsquo;s College
               </Link>{" "}
               in Annapolis, Maryland, the weird Great Books school, where he
-              studied liberal arts and philosophy. A Washington State native,
-              he&rsquo;d still call soda &ldquo;pop&rdquo; if he could get away
-              with it. He returned to acting in 2024 after 21 years away and has
-              no intention of stopping.
+              studied liberal arts and philosophy. <em>Also</em> a Washington
+              State native, he&rsquo;d still call soda &ldquo;pop&rdquo; if he
+              could get away with it. He returned to acting in 2024 after 21
+              years away and has no intention of stopping.
             </p>
           </Person>
         </div>

@@ -11,6 +11,7 @@ type Props = {
   adjustStarsToWindowWidth?: boolean;
   nebularClouds?: boolean;
   clouds?: boolean;
+  twinkle?: boolean;
 };
 
 const Nightsky = ({
@@ -20,6 +21,7 @@ const Nightsky = ({
   nebularClouds = true,
   clouds,
   adjustStarsToWindowWidth = true,
+  twinkle = true,
 }: Props) => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -38,6 +40,7 @@ const Nightsky = ({
           adjustStarsToWindowWidth={adjustStarsToWindowWidth}
           nebularClouds={nebularClouds}
           clouds={clouds}
+          twinkle={twinkle}
         />
         <div className="relative">{children}</div>
         {fireflies && <Fireflies />}

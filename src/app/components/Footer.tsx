@@ -14,7 +14,7 @@ const Footer = () => {
         "border-base-300",
       ])}
     >
-      <Nightsky>
+      <Nightsky twinkle={false}>
         <div className="flex flex-col md:flex-row items-center">
           <p className="uppercase tracking-wider grow-1 mb-2 md:mb-0 text-sm md:text-lg">
             &copy; NOVA Nightsky Theater

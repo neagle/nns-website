@@ -14,11 +14,13 @@ const Subscriptions = async () => {
   const { items: plans } = planList;
 
   return (
-    <div>
-      <h1>Subscriptions</h1>
-      {plans.map((plan) => (
-        <Plan key={plan._id} plan={plan} />
-      ))}
+    <div className="mt-8 mb-8">
+      <h1 className="text-2xl mb-4">Subscriptions</h1>
+      <div className="flex flex-wrap lg:flex-nowrap gap-4">
+        {plans.map((plan) => (
+          <Plan key={plan._id} plan={plan} className="w-full lg:w-1/2" />
+        ))}
+      </div>
     </div>
   );
 };
