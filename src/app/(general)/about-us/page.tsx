@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import React from "react";
 import classnames from "classnames";
 import wixClient from "@/lib/wixClient";
 import type { Show } from "@/app/types";
 import Person from "./Person";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "About Us - NOVA Nightsky Theater",
+  description:
+    "Learn more about NOVA Nightsky Theater, our board members, our company members, and our technical crew.",
+};
 
 const Page = async () => {
   const now = new Date().toISOString();
