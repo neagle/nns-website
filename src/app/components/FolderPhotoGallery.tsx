@@ -1,6 +1,5 @@
 import React from "react";
 import wixClient from "@/lib/wixClient";
-// import dynamic from "next/dynamic";
 import PhotoStrip from "@/app/components/PhotoStrip";
 import classNames from "classnames";
 
