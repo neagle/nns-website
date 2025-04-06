@@ -310,6 +310,7 @@ const NightskyCanvas = ({
       width: window.innerWidth,
       height: window.innerHeight,
     });
+
     const handleResize = debounce(() => {
       if (
         window.innerWidth !== windowDimensions.width ||
