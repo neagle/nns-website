@@ -26,6 +26,7 @@
     "lucide-react": "^0.482.0",
     "next": "^15.2.4",
     "probe-image-size": "^7.2.3",
+    "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "swiper": "^11.2.6"
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^20",
     "@types/probe-image-size": "^7.2.5",
     "@types/react": "^19",

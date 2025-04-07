@@ -1,4 +1,4 @@
-import type { Person, Photo } from "@/app/types";
+import type { Person } from "@/app/types";
 
 export const fullName = ({
   firstName = "",
@@ -83,21 +83,11 @@ export const getBackgroundImage = (srcSet = "") => {
   return `image-set(${imageSet})`;
 };
 
-export const normalizeWixFilesToPhotos = (
-  files: Array<{ media: { image: { image: string } }; displayName: string }>
-): Photo[] => {
-  return files.map((file) => {
-    const wixImage = file.media.image.image;
-    const { width, height } = getWixImageDimensions(wixImage);
-    return {
-      src: wixImage,
-      alt: file.displayName,
-      slug: file.displayName,
-      description: file.displayName,
-      title: file.displayName,
-      type: "image",
-      width,
-      height,
-    };
-  });
-};
+export async function getSvgDataUrl(src: string): Promise<string> {
+  const response = await fetch(src);
+  const svgText = await response.text();
+  const encoded = encodeURIComponent(svgText)
+    .replace(/'/g, "%27")
+    .replace(/"/g, "%22");
+  return `data:image/svg+xml;charset=UTF-8,${encoded}`;
+}

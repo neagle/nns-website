@@ -168,7 +168,7 @@ const Season = async ({ params }: PageProps) => {
             </>
           ) : null}
         </section>
-        <section className="md:w-1/3 p-4">
+        <section className="md:w-1/3 p-4 md:p-6 xl:p-8">
           {show.cast?.length ? (
             <>
               <h2>Cast</h2>

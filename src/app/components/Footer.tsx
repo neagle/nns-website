@@ -1,7 +1,8 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Nightsky from "@/app/components/Nightsky";
 import classnames from "classnames";
 import Link from "next/link";
+import LinkToQrCode from "@/app/components/LinkToQrCode";
 
 const Footer = () => {
   return (
@@ -17,7 +18,10 @@ const Footer = () => {
       <Nightsky twinkle={false}>
         <div className="flex flex-col md:flex-row items-center">
           <p className="uppercase tracking-wider grow-1 mb-2 md:mb-0 text-sm md:text-lg">
-            &copy; NOVA Nightsky Theater
+            &copy;{" "}
+            <Suspense>
+              <LinkToQrCode>NOVA Nightsky Theater</LinkToQrCode>
+            </Suspense>
           </p>
           <div className="grow-0 text-md btn btn-xs md:btn-sm btn-outline mr-5 mb-2 md:mb-0">
             <Link href="/contact">Contact Us</Link>

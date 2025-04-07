@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import localFont from "next/font/local";
-import React from "react";
+import React, { Suspense } from "react";
 import Header from "@/app/components/Header";
 import Footer from "@/app/components/Footer";
+import QRCode from "@/app/components/QRCode";
 
 const dunbarLow = localFont({
   src: [
@@ -54,12 +55,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Check if the qrCode query param is present
+
   return (
     <html lang="en" className="h-full">
       <body
         className={`${dunbarLow.variable} ${noah.variable} font-sans h-full flex flex-col`}
       >
         <Header />
+        <Suspense>
+          <QRCode />
+        </Suspense>
         <main className="flex-grow bg-base-100">{children}</main>
         <Footer />
       </body>

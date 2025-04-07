@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  rewrites: async () => {
+    return [
+      {
+        // Serve up all SVGs with an .svg extension
+        source: "/svg/:path*.svg",
+        destination: "/svg/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
