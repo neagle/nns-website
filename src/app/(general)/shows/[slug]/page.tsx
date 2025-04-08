@@ -1,15 +1,15 @@
-import React from "react";
+import { Metadata } from "next";
+import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import type { Credit, Show, ShowWithData } from "@/app/types";
 import { media } from "@wix/sdk";
 import { manualSort, fullName, nameSlug } from "@/app/utils";
-import { getImageWithDimensions } from "@/app/actions/media";
-import WixImage from "@/app/components/WixImage";
 import classnames from "classnames";
 import Link from "next/link";
 import { getShowsWithData } from "@/app/actions/shows";
 import { BookImage } from "lucide-react";
 import PhotoGallery from "@/app/components/PhotoGallery";
+import ShowLogo from "@/app/components/ShowLogo";
 
 interface PageProps {
   params: Promise<{
@@ -17,8 +17,7 @@ interface PageProps {
   }>;
 }
 
-const Season = async ({ params }: PageProps) => {
-  const { slug } = await params;
+const getShowData = async (slug: string) => {
   const { items } = await wixClient.items
     .query("Shows")
     .include("director")
@@ -27,40 +26,36 @@ const Season = async ({ params }: PageProps) => {
 
   const showsWithData = await getShowsWithData({ shows: items as Show[] });
 
-  const show = showsWithData[0] as ShowWithData;
+  return showsWithData[0] as ShowWithData;
+};
 
-  const backgroundTexture = show.backgroundTexture
-    ? await getImageWithDimensions(show.backgroundTexture)
-    : null;
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const show = await getShowData(slug);
 
-  const styleBlock = {
-    backgroundImage: backgroundTexture
-      ? `url(${backgroundTexture.url})`
-      : "none",
-    backgroundColor: show.backgroundColor || "transparent",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
+  return {
+    title: `${show.title}`,
+    description: show.description
+      ? `${show.description.replace(/<[^>]+>/g, "").slice(0, 160)}...`
+      : "Learn more about this show at NOVA Nightsky Theater.",
   };
-  // console.log("show.crew", show.crew);
+}
+
+const ShowContent = async ({ slug }: { slug: string }) => {
+  const show = await getShowData(slug);
 
   return (
     <div className="">
       <h1 className="p-4 md:p-6 xl:p-8 text-2xl">{show.title}</h1>
       <div className="flex flex-col md:flex-row">
         {show.logo && (
-          <section
-            key={show._id}
-            style={styleBlock}
-            className={classnames(["md:w-1/3"])}
-          >
-            {show.program ? (
-              <Link href={media.getDocumentUrl(show.program).url}>
-                <WixImage src={show.logo} alt={show.title} />
-              </Link>
-            ) : (
-              <WixImage src={show.logo} alt={show.title} />
-            )}
-          </section>
+          <ShowLogo
+            show={show}
+            className="md:w-1/3"
+            link={show.program ? media.getDocumentUrl(show.program).url : false}
+          />
         )}
         <section className="p-4 md:p-6 xl:p-8">
           <h2 className="text-2xl mb-4">
@@ -203,6 +198,20 @@ const Season = async ({ params }: PageProps) => {
       </div>
       {show.photos && <PhotoGallery photos={show.photos} />}
     </div>
+  );
+};
+
+const Season = async ({ params }: PageProps) => {
+  const { slug } = await params;
+
+  return (
+    <Suspense
+      fallback={
+        <div className="loading loading-spinner loading-lg text-primary absolute left-1/2 top-1/2" />
+      }
+    >
+      <ShowContent slug={slug} />
+    </Suspense>
   );
 };
 

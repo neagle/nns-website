@@ -45,7 +45,10 @@ const noah = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "NOVA Nightsky Theater",
+  title: {
+    template: "%s | NOVA Nightsky Theater",
+    default: "NOVA Nightsky Theater",
+  },
   description:
     "NOVA Nightsky Theater is community theater group in Falls Church VA performing outdoors and indoors in unconventional places.",
 };
@@ -55,8 +58,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Check if the qrCode query param is present
-
   return (
     <html lang="en" className="h-full">
       <body
@@ -64,6 +65,9 @@ export default function RootLayout({
       >
         <Header />
         <Suspense>
+          {/* Every page on the site can have a QR code if the query string
+          `qrCode` is present. This makes it possible for NOVA Nightsky staff to
+          use a link to any page for signs/flyers/whatever. */}
           <QRCode />
         </Suspense>
         <main className="flex-grow bg-base-100">{children}</main>

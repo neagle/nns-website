@@ -8,7 +8,7 @@ import Link from "next/link";
 import EasterEgg from "./EasterEgg";
 
 export const metadata: Metadata = {
-  title: "About Us - NOVA Nightsky Theater",
+  title: "About Us",
   description:
     "Learn more about NOVA Nightsky Theater, our board members, our company members, and our technical crew.",
 };

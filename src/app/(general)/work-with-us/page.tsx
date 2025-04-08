@@ -1,7 +1,14 @@
+import { Metadata } from "next";
 import React from "react";
 import Link from "next/link";
 import classnames from "classnames";
 import HeroSection from "@/app/components/HeroSection";
+
+export const metadata: Metadata = {
+  title: "Work With Us",
+  description:
+    "Find out more about volunteering and submitting shows to NOVA Nightsky Theater.",
+};
 
 const Page = () => {
   return (

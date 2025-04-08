@@ -10,7 +10,7 @@ type Props = {
   show: Show;
   targetWidth?: number;
   targetHeight?: number;
-  link?: boolean;
+  link?: boolean | string;
 };
 
 const ShowLogo = ({
@@ -32,7 +32,7 @@ const ShowLogo = ({
   if (link) {
     return (
       <div style={styleBlock} className={classnames(className)}>
-        <Link href={`/shows/${show.slug}`}>
+        <Link href={typeof link === "string" ? link : `/shows/${show.slug}`}>
           <WixImage
             src={show.logo}
             alt={show.title}
