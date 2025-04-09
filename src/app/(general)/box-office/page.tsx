@@ -34,10 +34,11 @@ const BoxOfficeContent = async () => {
   return (
     <>
       {Object.keys(shows).map(async (show) => {
+        const id = shows[show][0]._id;
         const imageUrl = shows[show][0].mainImage;
 
         return (
-          <div key="show">
+          <section key={id} className="last-of-type:mt-8">
             <div className={classnames(["flex", "flex-col", "md:flex-row"])}>
               {imageUrl && (
                 <div
@@ -83,8 +84,7 @@ const BoxOfficeContent = async () => {
                 </div>
               </div>
             </div>
-            {/* <h2 className={classnames(["mt-4"])}>Become a Subscriber</h2> */}
-          </div>
+          </section>
         );
       })}
     </>

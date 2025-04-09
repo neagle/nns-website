@@ -6,17 +6,8 @@ import { useSearchParams } from "next/navigation";
 
 type Props = {
   numStars?: number;
-  starRadius?: number;
-  starBrightnessCeiling?: number;
-  starBrightnessFloor?: number;
-  adjustStarsToWindowWidth?: boolean;
   nebularClouds?: boolean;
   clouds?: boolean;
-  distort?: number;
-  // An additional way to distort the canvas to try to compensate for the
-  // projection
-  rotateX?: number;
-  twinkle?: boolean;
 };
 
 // Type for our star objects
@@ -30,62 +21,18 @@ interface Star {
   twinkleOffset: number;
 }
 
-const DEFAULT_NUM_STARS = 500;
-const NARROW_WIDTH = 600;
-
-const getQueryParam = (
-  searchParams: URLSearchParams,
-  key: string,
-  defaultValue: number
-): number => {
-  const param = searchParams.get(key);
-
-  return param ? parseInt(param, 10) : defaultValue;
-};
-
 const NightskyCanvas = ({
-  numStars = DEFAULT_NUM_STARS,
-  starRadius = 2,
-  starBrightnessCeiling = 70,
-  starBrightnessFloor = 30,
-  distort = 1,
-  rotateX = 0,
-  adjustStarsToWindowWidth = true,
+  numStars = 500,
   nebularClouds = true,
-  clouds = false,
-  twinkle = true,
+  clouds = true,
 }: Props) => {
   const [windowDimensions, setWindowDimensions] = useState<
     Record<string, number>
   >({ width: 0, height: 0 });
-
-  // Get various params from the query string or use the default if not provided
+  // Get numStars from the query string or use the default if not provided
   const searchParams = useSearchParams();
-
-  numStars = getQueryParam(searchParams, "stars", numStars);
-  starRadius = getQueryParam(searchParams, "radius", starRadius);
-  starBrightnessCeiling = getQueryParam(
-    searchParams,
-    "ceiling",
-    starBrightnessCeiling
-  );
-  starBrightnessFloor = getQueryParam(
-    searchParams,
-    "floor",
-    starBrightnessFloor
-  );
-  distort = getQueryParam(searchParams, "distort", distort);
-  rotateX = getQueryParam(searchParams, "rotateX", 0);
-
-  if (adjustStarsToWindowWidth) {
-    // If we're using the default, adjust the number of stars according to
-    // window width
-
-    // If we're in a narrow (ish) view, halve the number of stars
-    if (windowDimensions.width < NARROW_WIDTH) {
-      numStars = numStars / 2;
-    }
-  }
+  const starsParam = searchParams.get("stars");
+  numStars = starsParam ? parseInt(starsParam, 10) : numStars;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // We store some references as mutable refs so we can update them without re-render:
@@ -114,11 +61,8 @@ const NightskyCanvas = ({
       const parent = canvas.parentElement;
       if (!parent) return;
 
-      canvas.width =
-        rotateX === 0 ? parent.clientWidth : parent.clientWidth * 2;
-      // Distort canvas
-      canvas.height = parent.clientHeight * distort;
-      // console.log("canvas.height", canvas.height);
+      canvas.width = parent.clientWidth;
+      canvas.height = parent.clientHeight;
 
       // Fade zone is some portion of canvas width
       fadeZoneRef.current = canvas.width * 0.3; // 30% of width
@@ -127,9 +71,8 @@ const NightskyCanvas = ({
       starsRef.current = Array.from({ length: numStars }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * starRadius,
-        baseBrightness:
-          Math.random() * starBrightnessCeiling + starBrightnessFloor,
+        radius: Math.random() * 2,
+        baseBrightness: Math.random() * 70 + 30,
         brightness: 0,
         twinkleSpeed: Math.random() * 0.002,
         twinkleOffset: Math.random() * Math.PI * 2,
@@ -254,9 +197,7 @@ const NightskyCanvas = ({
       drawClouds();
 
       // Loop
-      if (twinkle) {
-        requestAnimationFrame(drawStars);
-      }
+      requestAnimationFrame(drawStars);
     };
 
     // ==== Draw clouds ====
@@ -310,7 +251,6 @@ const NightskyCanvas = ({
       width: window.innerWidth,
       height: window.innerHeight,
     });
-
     const handleResize = debounce(() => {
       if (
         window.innerWidth !== windowDimensions.width ||
@@ -335,20 +275,7 @@ const NightskyCanvas = ({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [
-    clouds,
-    nebularClouds,
-    numStars,
-    windowDimensions.width,
-    windowDimensions.height,
-    distort,
-    starRadius,
-    starBrightnessCeiling,
-    starBrightnessFloor,
-    rotateX,
-    twinkle,
-  ]);
-  // console.log("rotateX", rotateX, rotateX === 0);
+  }, []);
 
   return (
     <canvas
@@ -357,14 +284,11 @@ const NightskyCanvas = ({
         // Adjust style as needed to position behind children
         position: "absolute",
         top: 0,
-        // left: 0,
-        left: rotateX === 0 ? "0" : "-50%",
-        width: rotateX === 0 ? "100%" : "200%",
-        height: rotateX === 0 ? "100%" : "200%",
-        pointerEvents: "none",
+        left: 0,
+        width: "100%", // fill parent
+        height: "100%", // fill parent
+        pointerEvents: "none", // so it doesn't intercept clicks
         zIndex: 0,
-        transform: `rotateX(${rotateX}deg)`,
-        transformOrigin: "top center",
       }}
     />
   );
