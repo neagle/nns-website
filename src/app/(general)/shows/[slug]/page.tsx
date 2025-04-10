@@ -49,7 +49,13 @@ const ShowContent = async ({ slug }: { slug: string }) => {
   return (
     <div className="">
       <h1 className="p-4 md:p-6 xl:p-8 text-2xl">{show.title}</h1>
-      <div className="flex flex-col md:flex-row">
+      <div
+        className={classnames({ "mb-8": !show.photos }, [
+          "flex",
+          "flex-col",
+          "md:flex-row",
+        ])}
+      >
         {show.logo && (
           <ShowLogo
             show={show}
