@@ -33,7 +33,6 @@ const Page = () => {
               starRadius={4}
               adjustStarsToWindowWidth={false}
               nebularClouds={true}
-              clouds={false}
             />
             <SkyControls />
           </div>

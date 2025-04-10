@@ -1,12 +1,10 @@
 import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import ShowTime from "@/app/components/ShowTime";
-// import type { Event } from "@/app/types";
 import type { V3Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import classnames from "classnames";
 import WixImage from "@/app/components/WixImage";
-import Subscriptions from "./Subscriptions";
-import Participant from "./Participant";
+import Link from "next/link";
 
 const BoxOfficeContent = async () => {
   const { items: events } = await wixClient.wixEventsV2
@@ -93,7 +91,7 @@ const BoxOfficeContent = async () => {
 
 const BoxOffice = async () => {
   return (
-    <div className="p-4">
+    <div className="p-4 md:p-6 xl:p-8">
       <h1 className="text-xl mb-4">Box Office</h1>
       <Suspense
         fallback={
@@ -103,21 +101,20 @@ const BoxOffice = async () => {
         <BoxOfficeContent />
       </Suspense>
 
-      <Suspense
-        fallback={
-          <div className="loading loading-spinner loading-2xl text-primary"></div>
-        }
-      >
-        <Subscriptions />
-      </Suspense>
+      <hr className="mt-8 mb-4" />
 
-      <Suspense
-        fallback={
-          <div className="loading loading-spinner loading-2xl text-primary"></div>
-        }
-      >
-        <Participant />
-      </Suspense>
+      <p>
+        Looking for season tickets?{" "}
+        <Link href="/box-office/subscriptions">
+          Check out our subscriptions.
+        </Link>
+      </p>
+      <p>
+        Have you been cast in a show?{" "}
+        <Link href="/box-office/participant">
+          Here&rsquo;s where you can pay your participant fee.
+        </Link>
+      </p>
     </div>
   );
 };

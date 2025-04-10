@@ -10,7 +10,6 @@ type Props = {
   fireflies?: boolean;
   adjustStarsToWindowWidth?: boolean;
   nebularClouds?: boolean;
-  clouds?: boolean;
   twinkle?: boolean;
 };
 
@@ -19,7 +18,6 @@ const Nightsky = ({
   className = "",
   fireflies = false,
   nebularClouds = true,
-  clouds,
   adjustStarsToWindowWidth = true,
   twinkle = true,
 }: Props) => {
@@ -39,7 +37,6 @@ const Nightsky = ({
           numStars={2000}
           adjustStarsToWindowWidth={adjustStarsToWindowWidth}
           nebularClouds={nebularClouds}
-          clouds={clouds}
           twinkle={twinkle}
         />
         <div className="relative">{children}</div>
