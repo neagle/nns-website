@@ -36,7 +36,7 @@ const Navigation = ({ seasons }: Props) => {
       children: [
         { label: "Box Office", href: "/box-office" },
         { label: "Become a Subscriber", href: "/box-office/subscriptions" },
-        { label: "Show Participants", href: "/box-office/participants" },
+        { label: "Show Participants", href: "/box-office/participant" },
       ],
     },
     {

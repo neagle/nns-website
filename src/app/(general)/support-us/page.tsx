@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import classnames from "classnames";
+import HeroSection from "@/app/components/HeroSection";
 
 export const metadata: Metadata = {
   title: "Support Us",
@@ -15,8 +16,10 @@ const Page = () => {
       <h1 className="text-2xl mb-4">
         Support NOVA Nightsky Theater with a donation
       </h1>
-      <div className={classnames(["md:grid", "md:grid-cols-2", "gap-8"])}>
-        <div className="prose mb-8 md:mb-0">
+      <div
+        className={classnames(["md:grid", "md:grid-cols-[3fr_2fr]", "gap-8"])}
+      >
+        <div className="prose xl:prose-xl mb-8 md:mb-0">
           <p>
             We are an unconventional community theater company powered by
             unconventional people in our community.
@@ -52,10 +55,10 @@ const Page = () => {
         <div className={classnames([])}>
           <Image
             className="w-full rounded-lg shadow-md mb-4 shadow-primary"
-            src="/images/photographs/general/all-the-board.jpg"
-            width="1336"
-            height="726"
-            alt="NOVA Nightsky's Board: Adam Ressa, Jaclyn Robertson, and Sarah Baczewski"
+            src="/images/photographs/general/the-gulf-cast-and-crew.jpg"
+            width="1382"
+            height="1036"
+            alt="The cast and crew of The Gulf"
           />
           <div className={classnames(["flex", "gap-4"])}>
             <Link

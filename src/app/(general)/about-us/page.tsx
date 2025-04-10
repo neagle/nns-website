@@ -6,6 +6,7 @@ import type { Show } from "@/app/types";
 import Person from "./Person";
 import Link from "next/link";
 import EasterEgg from "./EasterEgg";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -28,61 +29,74 @@ const Page = async () => {
   return (
     <div>
       <section className="mb-4 p-4 md:p-6 xl:p-8">
-        <h1 className="text-xl mb-4">About Us</h1>
-        <div className={classnames([])}>
-          <div className="">
+        <h1 className="text-2xl mb-4">About Us</h1>
+        <div
+          className={classnames(["md:grid", "md:grid-cols-[3fr_2fr]", "gap-8"])}
+        >
+          <div className={classnames(["mb-8", "md:mb-0"])}>
+            <div className="">
+              <p
+                className={classnames([
+                  "text-sm",
+                  "md:text-lg",
+                  "mb-4",
+                  "leading-tight",
+                ])}
+              >
+                <span className="font-bold text-accent uppercase">
+                  NOVA Nightsky Theater
+                </span>{" "}
+                was founded in later summer of 2021 by actor / producer{" "}
+                <strong className="text-primary">Jaclyn Robertson</strong> and
+                playwright / director{" "}
+                <strong className="text-primary">Ward Kay</strong>. Both had
+                worked in the local theater scene for years but wanted to bring
+                something a little different to the community.
+              </p>
+              <p
+                className={classnames([
+                  "text-sm",
+                  "md:text-lg",
+                  "mb-4",
+                  "leading-tight",
+                ])}
+              >
+                While our first show was performed outdoors in the height of the
+                COVID-19 pandemic, we have performed {numberOfProducedShows}{" "}
+                productions in all different types of venues aligning with our
+                mission of producing theater in unconventional spaces. ​Unlike
+                other community theater companies who rely on grants or
+                donations to operate, we rely on ticket sales to produce our
+                shows. As such, we maintain tight budgets and create shows
+                utilizing the amazing talents of our company members
+                and&nbsp;casts.
+              </p>
+            </div>
             <p
               className={classnames([
                 "text-sm",
+                "md:mt-4",
                 "md:text-lg",
                 "mb-4",
+                "md:text-right",
                 "leading-tight",
               ])}
             >
-              <span className="font-bold text-accent uppercase">
-                NOVA Nightsky Theater
-              </span>{" "}
-              was founded in later summer of 2021 by actor / producer{" "}
-              <strong className="text-primary">Jaclyn Robertson</strong> and
-              playwright / director{" "}
-              <strong className="text-primary">Ward Kay</strong>. Both had
-              worked in the local theater scene for years but wanted to bring
-              something a little different to the community.
+              Thank you for supporting us on this&nbsp;journey!
             </p>
-            <p
-              className={classnames([
-                "text-sm",
-                "md:text-lg",
-                "mb-4",
-                "leading-tight",
-              ])}
-            >
-              While our first show was performed outdoors in the height of the
-              COVID-19 pandemic, we have performed {numberOfProducedShows}{" "}
-              productions in all different types of venues aligning with our
-              mission of producing theater in unconventional spaces. ​Unlike
-              other community theater companies who rely on grants or donations
-              to operate, we rely on ticket sales to produce our shows. As such,
-              we maintain tight budgets and create shows utilizing the amazing
-              talents of our company members and&nbsp;casts.
+
+            <p className="text-sm md:text-lg text-primary text-right">
+              &mdash; NOVA Nightsky Theater&nbsp;Company
             </p>
           </div>
-          <p
-            className={classnames([
-              "text-sm",
-              "md:mt-4",
-              "md:text-lg",
-              "mb-4",
-              "md:text-right",
-              "leading-tight",
-            ])}
-          >
-            Thank you for supporting us on this&nbsp;journey!
-          </p>
 
-          <p className="text-sm md:text-lg text-primary text-right">
-            &mdash; NOVA Nightsky Theater&nbsp;Company
-          </p>
+          <Image
+            className="w-full rounded-lg shadow-md mb-4 shadow-primary"
+            src="/images/photographs/general/all-the-board.jpg"
+            width="2930"
+            height="1496"
+            alt="NOVA Nightsky's Board: Adam Ressa, Jaclyn Robertson, and Sarah Baczewski"
+          />
         </div>
       </section>
       <section className="">
