@@ -63,50 +63,66 @@ const ShowContent = async ({ slug }: { slug: string }) => {
             link={show.program ? media.getDocumentUrl(show.program).url : false}
           />
         )}
-        <section className="p-4 md:p-6 xl:p-8">
-          <h2 className="text-2xl mb-4">
+        <section
+          className={classnames([
+            "md:pt-0!",
+            "p-4",
+            "md:p-6",
+            "xl:p-8",
+            "flex",
+            "flex-col",
+            "gap-8",
+          ])}
+        >
+          <h2 className="text-2xl">
             <b className="text-xl text-primary/50 font-normal">by</b>{" "}
             {show.author}
           </h2>
 
-          <h2>Director</h2>
+          <section>
+            <h2>Director</h2>
 
-          <p className="mb-4">
-            <Link href={`/credits/${nameSlug(show.director)}`} className="link">
-              {fullName(show.director)}
-            </Link>
-          </p>
+            <p>
+              <Link
+                href={`/credits/${nameSlug(show.director)}`}
+                className="link"
+              >
+                {fullName(show.director)}
+              </Link>
+            </p>
+          </section>
 
           {show.program && (
-            <Link
-              href={media.getDocumentUrl(show.program).url}
-              className={classnames([
-                "flex",
-                "mb-4",
-                "ml-[-3px]",
-                "items-center",
-                "link",
-                "text-primary/70",
-                "hover:text-primary",
-                "transition-all",
-                "duration-250",
-                "hover:[&>svg]:scale-120",
-              ])}
-            >
-              <BookImage
-                size={32}
+            <section>
+              <Link
+                href={media.getDocumentUrl(show.program).url}
                 className={classnames([
-                  "mr-1",
+                  "flex",
+                  "ml-[-3px]",
+                  "items-center",
+                  "link",
+                  "text-primary/70",
+                  "hover:text-primary",
+                  "transition-all",
                   "duration-250",
-                  "transition-transform",
+                  "hover:[&>svg]:scale-120",
                 ])}
-              />
-              <span className="link">Download Program</span>
-            </Link>
+              >
+                <BookImage
+                  size={32}
+                  className={classnames([
+                    "mr-1",
+                    "duration-250",
+                    "transition-transform",
+                  ])}
+                />
+                <span className="link">Download Program</span>
+              </Link>
+            </section>
           )}
 
           {show.crew?.length ? (
-            <>
+            <section>
               <h2>Crew</h2>
               <table className="mt-1 mb-4">
                 <tbody>
@@ -166,15 +182,26 @@ const ShowContent = async ({ slug }: { slug: string }) => {
                   })}
                 </tbody>
               </table>
-            </>
+            </section>
           ) : null}
         </section>
-        <section className="md:w-1/3 p-4 md:p-6 xl:p-8">
+        <section
+          className={classnames([
+            "md:pt-0!",
+            "md:w-1/3",
+            "p-4",
+            "md:p-6",
+            "xl:p-8",
+            "flex",
+            "flex-col",
+            "gap-8",
+          ])}
+        >
           {show.cast?.length ? (
-            <>
+            <section>
               <h2>Cast</h2>
 
-              <ul className="mb-4">
+              <ul>
                 {manualSort(show.cast).map((credit: Credit) => (
                   <li key={credit._id}>
                     <Link
@@ -188,17 +215,27 @@ const ShowContent = async ({ slug }: { slug: string }) => {
                   </li>
                 ))}
               </ul>
-            </>
+            </section>
           ) : null}
 
           {show.description && (
-            <>
+            <section>
               <h2 className="text-lg">Description</h2>
               <div
-                className="leading-tight"
+                className="prose"
                 dangerouslySetInnerHTML={{ __html: show.description }}
               ></div>
-            </>
+            </section>
+          )}
+
+          {show.reviews && (
+            <section>
+              <h2 className="text-lg">Reviews</h2>
+              <div
+                className={classnames(["prose", "[&_p:first-child]:mt-0"])}
+                dangerouslySetInnerHTML={{ __html: show.reviews }}
+              ></div>
+            </section>
           )}
         </section>
       </div>

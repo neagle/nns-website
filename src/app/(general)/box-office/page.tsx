@@ -50,6 +50,7 @@ const BoxOfficeContent = async () => {
                   ])}
                 >
                   <WixImage
+                    priority={true}
                     className="rounded-lg"
                     src={imageUrl}
                     alt={show}
@@ -71,13 +72,7 @@ const BoxOfficeContent = async () => {
                   ])}
                 >
                   {shows[show].map((event) => {
-                    return (
-                      <ShowTime
-                        key={event._id}
-                        event={event}
-                        className={classnames(["h-full"])}
-                      />
-                    );
+                    return <ShowTime key={event._id} event={event} />;
                   })}
                 </div>
               </div>

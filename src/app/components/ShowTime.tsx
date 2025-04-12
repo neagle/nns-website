@@ -1,10 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState, MouseEvent } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import type { V3Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import dayjs from "dayjs";
 import classnames from "classnames";
-import Link from "next/link";
+import wixClient from "@/lib/wixClient";
+import { Ticket } from "@/app/types";
+import { X, Plus, Minus } from "lucide-react";
 
 type Props = {
   event: V3Event;
@@ -12,7 +15,56 @@ type Props = {
 };
 
 const ShowTime = ({ event, className = "" }: Props) => {
+  const [ticketInfo, setTicketInfo] = useState<Ticket | null>(null);
+  const [numTickets, setNumTickets] = useState(1);
+  const [redirecting, setRedirecting] = useState(false);
+
+  // The first step in the ticket purchase flow is to check if tickets are
+  // available
+  const fetchTicketsAvailability = async (event: V3Event) => {
+    const tickets = await wixClient.orders.queryAvailableTickets({
+      filter: { eventId: event._id },
+      limit: 100,
+    });
+
+    const ticket = tickets.definitions[0] as unknown as Ticket;
+    setTicketInfo(ticket);
+  };
+
+  const createRedirect = async (
+    event: V3Event,
+    ticket: Ticket,
+    quantity: number
+  ) => {
+    setRedirecting(true);
+    const reservation = await wixClient.orders.createReservation(
+      ticket.eventId,
+      {
+        ticketQuantities: [
+          {
+            ticketDefinitionId: ticket._id,
+            quantity,
+          },
+        ],
+      }
+    );
+
+    const redirect = await wixClient.redirects.createRedirectSession({
+      eventsCheckout: { eventSlug: event.slug, reservationId: reservation._id },
+      callbacks: { postFlowUrl: window.location.href },
+    });
+
+    if (!redirect.redirectSession) {
+      console.error("No redirect session found");
+      setRedirecting(false);
+      return;
+    }
+
+    window.location.href = redirect.redirectSession.fullUrl;
+  };
+
   if (!event.dateAndTimeSettings) {
+    setRedirecting(false);
     return;
   }
 
@@ -20,18 +72,43 @@ const ShowTime = ({ event, className = "" }: Props) => {
   // Set showType based on whether the startDate is before or after 5 PM
   const showType = startDate.hour() < 17 ? "Matinee" : "Night";
 
-  const EventComponent = () => (
+  const handleClick = async (e: MouseEvent) => {
+    e.preventDefault();
+
+    if (!event._id) {
+      console.error("Event ID is missing");
+      setRedirecting(false);
+      return;
+    }
+
+    fetchTicketsAvailability(event);
+  };
+
+  return (
     <div
       className={classnames(
         className,
+        { "cursor-pointer": !ticketInfo, "cursor-default": ticketInfo },
         {
           "bg-info/25": event.status !== "CANCELED",
           "hover:bg-info/40": event.status !== "CANCELED",
           "bg-error/25": event.status === "CANCELED",
           "hover:bg-error/25": event.status === "CANCELED",
+          "scale-105": ticketInfo,
+          "opacity-50": redirecting,
         },
-        ["rounded-lg", "transition-all", "py-2", "px-3"]
+        [
+          "rounded-lg",
+          "transition-all",
+          "py-2",
+          "px-3",
+
+          "transition-all",
+          "hover:scale-105",
+          "focus:scale-105",
+        ]
       )}
+      onClick={handleClick}
     >
       <div
         className={classnames(className, [
@@ -104,29 +181,110 @@ const ShowTime = ({ event, className = "" }: Props) => {
           </div>
         </div>
       </div>
+      <AnimatePresence initial={false}>
+        {ticketInfo && (
+          <motion.div
+            key="ticket-info"
+            initial={{ opacity: 0, scale: 0, height: 0, marginTop: 0 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              height: "auto",
+              marginTop: "0.5rem",
+            }}
+            exit={{ opacity: 0, scale: 0, height: 0, marginTop: 0 }}
+            transition={{
+              duration: 0.1,
+              scale: { type: "spring", visualDuration: 0.2, bounce: 0.2 },
+            }}
+            className={classnames([
+              "text-sm",
+              "flex",
+              "w-full",
+              "overflow-hidden",
+            ])}
+          >
+            <button
+              className={classnames([
+                "text-xs",
+                "btn",
+                "btn-xs",
+                "btn-ghost",
+                "p-1",
+              ])}
+              onClick={(e: MouseEvent) => {
+                e.stopPropagation();
+                setTicketInfo(null);
+              }}
+            >
+              <X size={14} />
+            </button>
+            <div
+              className={classnames([
+                "flex",
+                "gap-1",
+                "items-center",
+                "grow-1",
+                "justify-end",
+              ])}
+            >
+              <button>
+                <Minus
+                  className={classnames(
+                    {
+                      "cursor-pointer text-primary": numTickets > 1,
+                      "opacity-50": numTickets === 1,
+                    },
+                    [
+                      "transition-all",
+                      "scale-80",
+                      "hover:scale-110",
+                      "focus:scale-110",
+                    ]
+                  )}
+                  onClick={() => setNumTickets(Math.max(numTickets - 1, 1))}
+                />
+              </button>
+              <button
+                className={classnames(["btn", "btn-xs", "btn-primary"])}
+                onClick={() => createRedirect(event, ticketInfo, numTickets)}
+              >
+                {redirecting ? (
+                  "Loading..."
+                ) : (
+                  <span>
+                    Buy <b className="font-mono">{numTickets}</b>{" "}
+                    {numTickets === 1 ? "Ticket" : "Tickets"}
+                  </span>
+                )}
+              </button>
+              <button>
+                <Plus
+                  className={classnames(
+                    {
+                      "cursor-pointer text-primary":
+                        numTickets < ticketInfo.limitPerCheckout,
+                      "opacity-50": numTickets === ticketInfo.limitPerCheckout,
+                    },
+                    [
+                      "transition-all",
+                      "scale-80",
+                      "hover:scale-110",
+                      "focus:scale-110",
+                    ]
+                  )}
+                  onClick={() =>
+                    setNumTickets(
+                      Math.min(numTickets + 1, ticketInfo.limitPerCheckout)
+                    )
+                  }
+                />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
-  );
-
-  return event.status === "CANCELED" ? (
-    <div key={event._id} className="canceled">
-      <EventComponent />
-    </div>
-  ) : (
-    <Link
-      key={event._id}
-      href={event.eventPageUrl || ""}
-      className={classnames([
-        "block",
-        // "group-hover:scale-95",
-        "transition-all",
-        // "duration-500",
-        "hover:scale-105",
-        "focus:scale-105",
-        "rounded-lg",
-      ])}
-    >
-      <EventComponent />
-    </Link>
   );
 };
 

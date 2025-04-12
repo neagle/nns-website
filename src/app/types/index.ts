@@ -108,3 +108,25 @@ export interface Photo {
   type: "image";
   settings?: PhotoSettings;
 }
+
+export interface Price {
+  amount: string;
+  currency: string; // "USD"
+  value: string; // "25.00"
+}
+export interface Ticket {
+  _id: string;
+  eventId: string;
+  limitPerCheckout: number;
+  description: string;
+  free: boolean;
+  name: string;
+  orderIndex: number;
+  policy: string;
+  price: Price;
+  pricing: {
+    fixedPrice: Price;
+    pricingType: string; // "STANDARD"
+  };
+  saleStatus: string; // "SALE_STARTED"
+}

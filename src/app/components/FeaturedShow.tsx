@@ -117,11 +117,11 @@ const FeaturedShow = async () => {
                       "mx-auto",
                     ])}
                   >
-                    Buy Tickets
+                    Box Office
                   </a>
                 </div>
                 <h3 className="text-xl mb-2 md:text-center">Showtimes</h3>
-                <div className="grid gap-2 text-left text-xs">
+                <div className={classnames(["gap-2", "flex", "flex-col"])}>
                   {show.shows.map((event) => {
                     // console.log(event);
 

@@ -31,8 +31,6 @@ const ShowPanel = ({ credits }: ShowPanelProps) => {
         "gap-4",
         "mb-4",
         "w-full",
-        // "outline-2",
-        // "outline-red-500",
       ])}
     >
       <div>

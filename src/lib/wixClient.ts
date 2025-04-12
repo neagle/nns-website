@@ -1,16 +1,19 @@
-import { createClient, ApiKeyStrategy } from "@wix/sdk";
+import { createClient, ApiKeyStrategy, OAuthStrategy } from "@wix/sdk";
 import { collections, items } from "@wix/data";
 import { contacts } from "@wix/crm";
-import { wixEventsV2 } from "@wix/events";
+import { wixEventsV2, orders } from "@wix/events";
 import { forms, submissions } from "@wix/forms";
 import { plans } from "@wix/pricing-plans";
 import { redirects } from "@wix/redirects";
 import { files } from "@wix/media";
 
 const wixClient = createClient({
-  auth: ApiKeyStrategy({
-    apiKey: process.env.WIX_API_KEY || "",
-    siteId: process.env.WIX_SITE_ID || "",
+  // auth: ApiKeyStrategy({
+  //   apiKey: process.env.WIX_API_KEY || "",
+  //   siteId: process.env.WIX_SITE_ID || "",
+  // }),
+  auth: OAuthStrategy({
+    clientId: process.env.NEXT_PUBLIC_WIX_CLIENT_ID || "",
   }),
   modules: {
     files,
@@ -22,6 +25,7 @@ const wixClient = createClient({
     submissions,
     plans,
     redirects,
+    orders,
   },
 });
 

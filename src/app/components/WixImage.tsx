@@ -5,6 +5,7 @@ import { getWixImageDimensions } from "@/app/utils";
 
 type Props = {
   id?: string;
+  priority?: boolean;
   src: string;
   alt: string;
   className?: string;
@@ -19,6 +20,7 @@ type Props = {
 /* Output an optimized image scaled to match a target width OR height */
 const WixImage = ({
   id = "",
+  priority = false,
   src,
   alt,
   className = "",
@@ -52,6 +54,7 @@ const WixImage = ({
 
   const imageElement = (
     <Image
+      priority={priority}
       id={id}
       src={scaledImage}
       className={className}

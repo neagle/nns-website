@@ -30,18 +30,19 @@ const Price = ({ price }: PriceProps) => {
 };
 
 const Plan = ({ plan, className = "" }: PlanProps) => {
-  // console.log("plan", plan);
-
-  // console.log("perks", perks);
   const perks = plan.perks?.values;
   const createRedirect = async (plan: plans.Plan) => {
     const redirect = await wixClient.redirects.createRedirectSession({
       paidPlansCheckout: { planId: plan._id },
       callbacks: { postFlowUrl: window.location.href },
     });
-    console.log("redirect", redirect);
 
-    // window.location = redirect.redirectSession.fullUrl;
+    if (!redirect.redirectSession) {
+      console.error("No redirect session found");
+      return;
+    }
+
+    window.location.href = redirect.redirectSession.fullUrl;
   };
 
   return (

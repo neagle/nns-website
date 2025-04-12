@@ -2,11 +2,15 @@ import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import Plan from "../Plan";
 import Link from "next/link";
+import classnames from "classnames";
 
 const PageContent = async () => {
-  const plan = await wixClient.plans.getPlan(
-    "2f001f40-9097-4c0c-b43b-7fb65d0f0f3b"
-  );
+  const planList = await wixClient.plans
+    .queryPublicPlans()
+    .eq("slug", "show-participant-1")
+    .find();
+
+  const plan = planList.items[0];
 
   return <Plan plan={plan} className="h-fit" />;
 };
@@ -16,7 +20,7 @@ const Page = async () => {
     <div className="p-4 md:p-6 xl:p-8">
       <h1 className="text-2xl mb-4">Show Participant</h1>
       <div className="md:grid md:grid-cols-2 gap-8">
-        <div className="prose">
+        <div className={classnames(["prose", "mb-8", "md:mb-0"])}>
           <p>
             NOVA Nightsky Theater is committed to keeping costs low to encourage
             actors to participate in theatre. We charge a $25 fee to each cast
@@ -42,7 +46,7 @@ const Page = async () => {
         </div>
         <Suspense
           fallback={
-            <div className="loading loading-spinner loading-2xl text-primary"></div>
+            <div className="loading loading-spinner loading-2xl text-primary mx-auto"></div>
           }
         >
           <PageContent />
