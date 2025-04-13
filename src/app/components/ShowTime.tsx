@@ -18,10 +18,14 @@ const ShowTime = ({ event, className = "" }: Props) => {
   const [ticketInfo, setTicketInfo] = useState<Ticket | null>(null);
   const [numTickets, setNumTickets] = useState(1);
   const [redirecting, setRedirecting] = useState(false);
+  const [showTicketInfo, setShowTicketInfo] = useState(false);
 
   // The first step in the ticket purchase flow is to check if tickets are
   // available
   const fetchTicketsAvailability = async (event: V3Event) => {
+    // Wait -- used for debugging
+    // await new Promise((resolve) => setTimeout(resolve, 10000));
+
     const tickets = await wixClient.orders.queryAvailableTickets({
       filter: { eventId: event._id },
       limit: 100,
@@ -81,6 +85,7 @@ const ShowTime = ({ event, className = "" }: Props) => {
       return;
     }
 
+    setShowTicketInfo(true);
     fetchTicketsAvailability(event);
   };
 
@@ -182,9 +187,9 @@ const ShowTime = ({ event, className = "" }: Props) => {
         </div>
       </div>
       <AnimatePresence initial={false}>
-        {ticketInfo && (
+        {showTicketInfo && !ticketInfo && (
           <motion.div
-            key="ticket-info"
+            key="loading-ticket-info"
             initial={{ opacity: 0, scale: 0, height: 0, marginTop: 0 }}
             animate={{
               opacity: 1,
@@ -192,9 +197,32 @@ const ShowTime = ({ event, className = "" }: Props) => {
               height: "auto",
               marginTop: "0.5rem",
             }}
-            exit={{ opacity: 0, scale: 0, height: 0, marginTop: 0 }}
+            // exit={{ opacity: 0, scale: 0, height: 0, marginTop: 0 }}
             transition={{
-              duration: 0.1,
+              duration: 0.3,
+              scale: { type: "spring", visualDuration: 0.2, bounce: 0.2 },
+            }}
+            className={classnames(["text-center"])}
+          >
+            <div
+              className={classnames([
+                "loading",
+                "loading-bars",
+                "loading-xs",
+                "text-primary",
+                "text-center",
+              ])}
+            ></div>
+          </motion.div>
+        )}
+        {showTicketInfo && ticketInfo && (
+          <motion.div
+            key="ticket-info"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: 0.3,
               scale: { type: "spring", visualDuration: 0.2, bounce: 0.2 },
             }}
             className={classnames([
@@ -202,6 +230,7 @@ const ShowTime = ({ event, className = "" }: Props) => {
               "flex",
               "w-full",
               "overflow-hidden",
+              "mt-2",
             ])}
           >
             <button
@@ -214,6 +243,7 @@ const ShowTime = ({ event, className = "" }: Props) => {
               ])}
               onClick={(e: MouseEvent) => {
                 e.stopPropagation();
+                setShowTicketInfo(false);
                 setTicketInfo(null);
               }}
             >
