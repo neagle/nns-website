@@ -4,10 +4,13 @@ import React, { useState, MouseEvent } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { V3Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import classnames from "classnames";
 import wixClient from "@/lib/wixClient";
-import { Ticket } from "@/app/types";
+import type { Ticket } from "@/app/types";
 import { X, Plus, Minus } from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   event: V3Event;
@@ -15,6 +18,9 @@ type Props = {
 };
 
 const ShowTime = ({ event, className = "" }: Props) => {
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
+
   const [ticketInfo, setTicketInfo] = useState<Ticket | null>(null);
   const [numTickets, setNumTickets] = useState(1);
   const [redirecting, setRedirecting] = useState(false);
@@ -72,7 +78,9 @@ const ShowTime = ({ event, className = "" }: Props) => {
     return;
   }
 
-  const startDate = dayjs(event.dateAndTimeSettings.startDate);
+  const startDate = dayjs(event.dateAndTimeSettings.startDate).tz(
+    "America/New_York"
+  );
   // Set showType based on whether the startDate is before or after 5 PM
   const showType = startDate.hour() < 17 ? "Matinee" : "Night";
 
@@ -89,11 +97,20 @@ const ShowTime = ({ event, className = "" }: Props) => {
     fetchTicketsAvailability(event);
   };
 
+  // Try to anticipate clicks a little bit by fetching ticket info on mouse
+  // hover
+  const handleHover = () => {
+    if (!ticketInfo) {
+      fetchTicketsAvailability(event);
+    }
+  };
+
   return (
     <div
+      onMouseEnter={handleHover}
       className={classnames(
         className,
-        { "cursor-pointer": !ticketInfo, "cursor-default": ticketInfo },
+        { "cursor-pointer": !showTicketInfo, "cursor-default": showTicketInfo },
         {
           "bg-info/25": event.status !== "CANCELED",
           "hover:bg-info/40": event.status !== "CANCELED",
@@ -148,6 +165,7 @@ const ShowTime = ({ event, className = "" }: Props) => {
                 "leading-[0.75em]",
                 "whitespace-nowrap",
                 "font-bold",
+                "mb-1",
               ]
             )}
           >
@@ -229,17 +247,24 @@ const ShowTime = ({ event, className = "" }: Props) => {
               "text-sm",
               "flex",
               "w-full",
-              "overflow-hidden",
               "mt-2",
+              "relative",
             ])}
           >
             <button
               className={classnames([
                 "text-xs",
-                "btn",
-                "btn-xs",
-                "btn-ghost",
                 "p-1",
+                "absolute",
+                "top-0",
+                "-translate-y-full",
+                "right-0",
+                "cursor-pointer",
+                "rounded-full",
+                "bg-base-100",
+                "opacity-50",
+                "hover:opacity-100",
+                "transition-all",
               ])}
               onClick={(e: MouseEvent) => {
                 e.stopPropagation();
@@ -249,6 +274,13 @@ const ShowTime = ({ event, className = "" }: Props) => {
             >
               <X size={14} />
             </button>
+            <Link
+              className="btn btn-xs btn-info"
+              href={`/box-office/${event._id}`}
+            >
+              Info
+            </Link>
+
             <div
               className={classnames([
                 "flex",

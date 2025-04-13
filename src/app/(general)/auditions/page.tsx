@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import wixClient from "@/lib/wixClient";
+import wixApiKeyClient from "@/lib/wixClient";
 import type { Show } from "@/app/types";
 import classnames from "classnames";
 import ShowLogo from "@/app/components/ShowLogo";
@@ -45,14 +45,13 @@ const Page = async () => {
 const AuditionContent = async () => {
   // Get all future shows that do not have `noLongerAuditioning` set to true
   const now = new Date();
-  const { items } = await wixClient.items
+  const { items } = await wixApiKeyClient.items
     .query("Shows")
     .ge("openingDate", now.toISOString())
     .eq("noLongerAuditioning", false)
     .find();
 
   const shows = items as Show[];
-  // console.log("shows", shows);
 
   return (
     <div className="">

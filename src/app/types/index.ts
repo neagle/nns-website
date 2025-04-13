@@ -41,6 +41,19 @@ export interface ShowWithData extends Show {
   shows: Show[];
 }
 
+export interface Address {
+  city: string;
+  country: string;
+  formatted: string; // "225 E Broad St, Falls Church, VA 22046, USA"
+  postalCode: string;
+  streetAddress: {
+    apt: string;
+    name: string;
+    number: string;
+  };
+  subdivision: string; // "VA"
+}
+
 /* Probably deprecated by V3Event type */
 export interface Event extends WixDataItem {
   title: string;
@@ -51,18 +64,7 @@ export interface Event extends WixDataItem {
   eventPageUrl: string;
   location: {
     name: string;
-    address: {
-      city: string;
-      country: string;
-      formatted: string; // "225 E Broad St, Falls Church, VA 22046, USA"
-      postalCode: string;
-      streetAddress: {
-        apt: string;
-        name: string;
-        number: string;
-      };
-      subdivision: string; // "VA"
-    };
+    address: Address;
     locationTbd: boolean;
     type: string; // "VENUE"
   };
