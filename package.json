@@ -23,7 +23,6 @@
     "@wix/stores": "^1.0.386",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
-    "js-cookie": "^3.0.5",
     "lucide-react": "^0.482.0",
     "motion": "^12.6.5",
     "next": "^15.2.4",
