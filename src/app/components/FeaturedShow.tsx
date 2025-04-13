@@ -10,6 +10,7 @@ import FeaturedCastMember from "./FeaturedCastMember";
 import { getShowsWithData } from "@/app/actions/shows";
 import ShowTime from "./ShowTime";
 import WixImage from "@/app/components/WixImage";
+import Link from "next/link";
 
 const FeaturedShow = async () => {
   const { items } = await wixClient.items
@@ -105,7 +106,7 @@ const FeaturedShow = async () => {
                 className={classnames(["grow-1", "bg-base-200", "text-center"])}
               >
                 <div className="mb-4">
-                  <a
+                  <Link
                     href="/box-office"
                     className={classnames([
                       "btn",
@@ -118,7 +119,7 @@ const FeaturedShow = async () => {
                     ])}
                   >
                     Box Office
-                  </a>
+                  </Link>
                 </div>
                 <h3 className="text-xl mb-2 md:text-center">Showtimes</h3>
                 <div className={classnames(["gap-2", "flex", "flex-col"])}>
