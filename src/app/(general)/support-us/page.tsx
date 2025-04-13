@@ -3,7 +3,6 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import classnames from "classnames";
-import HeroSection from "@/app/components/HeroSection";
 
 export const metadata: Metadata = {
   title: "Support Us",

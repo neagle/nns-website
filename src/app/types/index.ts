@@ -109,11 +109,6 @@ export interface Photo {
   settings?: PhotoSettings;
 }
 
-export interface Price {
-  amount: string;
-  currency: string; // "USD"
-  value: string; // "25.00"
-}
 export interface Ticket {
   _id: string;
   eventId: string;

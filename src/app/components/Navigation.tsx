@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Menu as MenuIcon, X as CloseIcon } from "lucide-react";
+import { X as CloseIcon } from "lucide-react";
 import classnames from "classnames";
 import { SiFacebook, SiInstagram } from "@icons-pack/react-simple-icons";
 
