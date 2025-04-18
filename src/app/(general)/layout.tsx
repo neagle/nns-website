@@ -5,6 +5,7 @@ import React, { Suspense } from "react";
 import Header from "@/app/components/Header";
 import Footer from "@/app/components/Footer";
 import QRCode from "@/app/components/QRCode";
+import NextTopLoader from "nextjs-toploader";
 
 const dunbarLow = localFont({
   src: [
@@ -63,6 +64,8 @@ export default function RootLayout({
       <body
         className={`${dunbarLow.variable} ${noah.variable} font-sans h-full flex flex-col`}
       >
+        <NextTopLoader color="var(--color-primary)" />
+
         <Header />
         <Suspense>
           {/* Every page on the site can have a QR code if the query string
