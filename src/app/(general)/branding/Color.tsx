@@ -32,6 +32,7 @@ const convertedColor = (hex: string, format: string) => {
 
 const Color = ({ hex, format, className = "" }: Props) => {
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
+  const [delayFlip, setDelayFlip] = useState<boolean>(false);
   const converted = convertedColor(hex, format);
   return (
     <div
@@ -58,7 +59,7 @@ const Color = ({ hex, format, className = "" }: Props) => {
       <div
         className={classnames(
           {
-            "rotate-y-180": isFlipped,
+            "rotate-y-180": isFlipped || delayFlip,
           },
           [
             "absolute",
@@ -82,6 +83,12 @@ const Color = ({ hex, format, className = "" }: Props) => {
                 "text/plain": converted,
               });
               navigator.clipboard.write([clipboardItem]);
+              // Prevent the card from flipping back around immediately -- it
+              // looks a bit jarring, and makes it impossible to read
+              setDelayFlip(true);
+              setTimeout(() => {
+                setDelayFlip(false);
+              }, 2000);
             }
             return !prev;
           })
