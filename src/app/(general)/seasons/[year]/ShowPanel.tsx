@@ -4,10 +4,38 @@ import { getImageWithDimensions } from "@/app/actions/media";
 import classnames from "classnames";
 import WixImage from "@/app/components/WixImage";
 import Link from "next/link";
+import { random, textColor, scheme } from "colorizr";
+import { fullName } from "@/app/utils";
 
 interface ShowPanelProps {
   show: Show;
 }
+
+// If no show logo -- hopefully only a placeholder till we get data entered for all shows
+const TextPanel = ({ show }: ShowPanelProps) => {
+  const backgroundColor = show.backgroundColor || random();
+  const color = textColor(backgroundColor);
+  const complementary = scheme(backgroundColor, "triadic");
+  return (
+    <div
+      className={classnames([
+        "w-full",
+        "h-full",
+        "flex",
+        "flex-col",
+        "justify-center",
+        "items-center",
+      ])}
+      style={{ backgroundColor, color }}
+    >
+      <h2 className="text-2xl opacity-70 mb-2" style={{ color }}>
+        {show.title}
+      </h2>
+      <p className="opacity-50">by {show.author}</p>
+      <p className="opacity-50">directed by {fullName(show.director)}</p>
+    </div>
+  );
+};
 
 const ShowPanel = async ({ show }: ShowPanelProps) => {
   const backgroundTexture = show.backgroundTexture
@@ -22,6 +50,7 @@ const ShowPanel = async ({ show }: ShowPanelProps) => {
     backgroundSize: "cover",
     backgroundPosition: "center",
   };
+
   return (
     <section
       style={styleBlock}
@@ -46,22 +75,19 @@ const ShowPanel = async ({ show }: ShowPanelProps) => {
     >
       <Link
         href={`/shows/${show.slug}`}
-        className="w-full h-full flex items-center"
+        className={classnames([
+          "w-full",
+          "h-full",
+          "flex",
+          "items-center",
+          "justify-center",
+          "min-h-[300px]",
+        ])}
       >
         {show.logo ? (
           <WixImage src={show.logo} alt={show.title} className="w-full" />
         ) : (
-          <div
-            className={classnames([
-              // "items-center",
-              // "min-h-400",
-              // "min-w-400",
-              "border-2",
-              "border-accent",
-            ])}
-          >
-            {show.title}
-          </div>
+          <TextPanel show={show} />
         )}
       </Link>
     </section>

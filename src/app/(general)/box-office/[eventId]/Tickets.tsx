@@ -16,9 +16,10 @@ const WIX_SERVICE_FEE = 0.025;
 
 interface Props {
   event: V3Event;
+  className?: string;
 }
 
-const Tickets = ({ event }: Props) => {
+const Tickets = ({ event, className = "" }: Props) => {
   const [ticketInfo, setTicketInfo] = useState<Ticket | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [redirecting, setRedirecting] = useState<boolean>(false);
@@ -80,16 +81,16 @@ const Tickets = ({ event }: Props) => {
   const total = ticketInfo ? price + serviceFee : 0;
 
   return ticketInfo ? (
-    <div className="">
+    <div className={classnames(className)}>
       <h3>Tickets</h3>
-      <div className="mt-4 flex gap-8">
+      <div className="flex gap-8">
         <section>
-          <p className="uppercase text-sm opacity-70">Ticket type</p>
-          <p className="text-lg font-bold">{ticketInfo.name}</p>
+          <p className="uppercase text-sm opacity-70">Type</p>
+          <p className="text-lg font-bold leading-tight">{ticketInfo.name}</p>
         </section>
         <section className="grow-1">
           <p className="uppercase text-sm opacity-70">Price</p>
-          <div className="text-lg">
+          <div className="text-lg leading-tight">
             <span>{currencySymbol}</span>
             <span>{price.toFixed(2)}</span>
             <span className="text-xs block">

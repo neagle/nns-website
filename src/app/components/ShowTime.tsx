@@ -110,13 +110,17 @@ const ShowTime = ({ event, className = "" }: Props) => {
       onMouseEnter={handleHover}
       className={classnames(
         className,
-        { "cursor-pointer": !showTicketInfo, "cursor-default": showTicketInfo },
+        {
+          "cursor-pointer": !showTicketInfo,
+          "cursor-default": showTicketInfo,
+          "hover:scale-105": !showTicketInfo,
+        },
         {
           "bg-info/25": event.status !== "CANCELED",
           "hover:bg-info/40": event.status !== "CANCELED",
           "bg-error/25": event.status === "CANCELED",
           "hover:bg-error/25": event.status === "CANCELED",
-          "scale-105": ticketInfo,
+          "scale-105": showTicketInfo,
           "opacity-50": redirecting,
         },
         [

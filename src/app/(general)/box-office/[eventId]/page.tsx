@@ -3,11 +3,18 @@ import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import Link from "next/link";
 import WixImage from "@/app/components/WixImage";
+import { getScaledToFitImageUrl } from "@/app/utils/wix/media";
 import FormattedDateTime from "@/app/components/FormattedDateTime";
 import type { Address } from "@/app/types";
 import Tickets from "./Tickets";
-import { Info } from "lucide-react";
+import { CalendarPlus2, Accessibility } from "lucide-react";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+// import Ricos from "@/app/components/Ricos";
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
 interface PageProps {
   params: Promise<{
     eventId: string;
@@ -28,15 +35,25 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { eventId } = await params;
   const event = await getEventData(eventId);
+  const startDate = event.dateAndTimeSettings!.startDate;
+  const timeZone = event.dateAndTimeSettings!.timeZoneId || "America/New_York";
+  // TODO: Finish setting up ogImage
+  const ogImage = getScaledToFitImageUrl(event.mainImage!, 1200, 630, {});
+  // console.log("ogImage", ogImage);
 
   return {
-    title: `${event.title}: `,
-    description: "Description",
+    title: `${event.title}: ${dayjs(startDate)
+      .tz(timeZone)
+      .format("dddd, MMMM D")}`,
+    description: event.shortDescription,
   };
 }
 
 const EventContent = async ({ eventId }: { eventId: string }) => {
   const event = await getEventData(eventId);
+  console.log("event", event);
+
+  // console.log("event description", event.description);
 
   const startDate = event.dateAndTimeSettings!.startDate;
   const endDate = event.dateAndTimeSettings!.endDate;
@@ -55,7 +72,7 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
     <div className="p-4 md:p-6 xl:p-8 md:grid md:grid-cols-[auto_1fr] md:gap-8">
       <WixImage
         priority={true}
-        className="rounded-lg"
+        className="rounded-lg mx-auto mb-8 md:mb-0"
         src={event.mainImage!}
         alt={event.title!}
         targetHeight={400}
@@ -105,6 +122,8 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
           </Link>
         </section>
 
+        {event.shortDescription && <section>{event.shortDescription}</section>}
+
         <section>
           <h3>Location</h3>
           <address className="not-italic">
@@ -113,12 +132,12 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
 
           <p>
             <Link href="/venue" className="link">
-              More information about our venue and how to find the right
-              entrance once you&rsquo;re here.
+              Read more about our venue and how to find the right entrance once
+              you&rsquo;re here.
             </Link>
           </p>
           <div role="alert" className="alert alert-info alert-soft mt-4">
-            <Info />
+            <Accessibility />
             <span>
               If you need handicap access, you must contact us beforehand so we
               can escort you into the building. Send an email to{" "}
@@ -130,6 +149,10 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
           </div>
         </section>
 
+        {/* <section>
+          <Ricos richContent={event.description!} />
+        </section> */}
+
         <section>
           <Suspense
             fallback={<div className="loading loading-bars loading-sm"></div>}
@@ -140,7 +163,9 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
 
         {event.calendarUrls && (
           <section>
-            <h3>Add to Your Calendar</h3>
+            <h3 className="flex items-center">
+              <CalendarPlus2 className="mr-2" /> Add to Your Calendar
+            </h3>
             <ul className="pl-4">
               <li className="list-disc">
                 <Link href={event.calendarUrls.google!} className="link">

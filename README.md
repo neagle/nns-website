@@ -42,8 +42,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 What needs to be done for launch?
 
 - [ ] Appropriate og:images on different pages
-- [ ] Be able to buy subscriptions
-- [ ] Be able to buy tickets
+- [x] Be able to buy subscriptions
+- [x] Be able to buy tickets
 - [ ] Complete seasons archive
 - [x] Add photos to "About Us" page
 - [x] Auditions page
@@ -56,7 +56,7 @@ Optional next steps:
 
 - [ ] Feed from Facebook and Instagram accounts
 - [x] Individual credits pages for all individuals
-- [ ] Support us page? Verify that we want this
+- [x] Support us page? Verify that we want this
 - [ ] Add video to venue page showing entrance
 
 Assets needed / desired:
