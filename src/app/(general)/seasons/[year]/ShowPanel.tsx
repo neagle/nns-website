@@ -4,7 +4,7 @@ import { getImageWithDimensions } from "@/app/actions/media";
 import classnames from "classnames";
 import WixImage from "@/app/components/WixImage";
 import Link from "next/link";
-import { random, textColor, scheme } from "colorizr";
+import { random, textColor } from "colorizr";
 import { fullName } from "@/app/utils";
 
 interface ShowPanelProps {
@@ -15,7 +15,6 @@ interface ShowPanelProps {
 const TextPanel = ({ show }: ShowPanelProps) => {
   const backgroundColor = show.backgroundColor || random();
   const color = textColor(backgroundColor);
-  const complementary = scheme(backgroundColor, "triadic");
   return (
     <div
       className={classnames([

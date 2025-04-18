@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useLocalStorage } from "usehooks-ts";
 import Color from "./Color";
 
