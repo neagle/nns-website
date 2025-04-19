@@ -5,6 +5,7 @@ import { plans } from "@wix/pricing-plans";
 import wixClient from "@/lib/wixClient";
 import classnames from "classnames";
 import Nightsky from "@/app/components/Nightsky";
+import { useTopLoader } from "nextjs-toploader";
 
 interface PlanProps {
   plan: plans.Plan;
@@ -30,8 +31,11 @@ const Price = ({ price }: PriceProps) => {
 };
 
 const Plan = ({ plan, className = "" }: PlanProps) => {
+  const loader = useTopLoader();
+
   const perks = plan.perks?.values;
   const createRedirect = async (plan: plans.Plan) => {
+    loader.start();
     const redirect = await wixClient.redirects.createRedirectSession({
       paidPlansCheckout: { planId: plan._id },
       callbacks: { postFlowUrl: window.location.href },
@@ -39,6 +43,7 @@ const Plan = ({ plan, className = "" }: PlanProps) => {
 
     if (!redirect.redirectSession) {
       console.error("No redirect session found");
+      loader.done();
       return;
     }
 

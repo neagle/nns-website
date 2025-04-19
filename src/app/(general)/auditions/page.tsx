@@ -55,39 +55,66 @@ const AuditionContent = async () => {
 
   return (
     <div className="">
-      {shows.map(async (show) => {
-        return (
-          <section
-            key={show._id}
-            className={classnames([
-              "grid",
-              "md:gap-4",
-              "lg:gap-6",
-              "xl:gap-8",
-              "md:grid-cols-[1fr_2fr]",
-              "h-full",
-              "bg-base-300",
-              "p-4",
-            ])}
-          >
-            <section>
-              <ShowLogo show={show} />
-              {show.auditionLink && (
-                <Link
-                  href={show.auditionLink}
-                  className="mt-4 btn btn-primary btn-wide hover:scale-110 transition-all"
-                >
-                  Sign Up to Audition
-                </Link>
-              )}
-            </section>
+      {shows.length ? (
+        shows.map(async (show) => {
+          return (
+            <section
+              key={show._id}
+              className={classnames([
+                "grid",
+                "md:gap-4",
+                "lg:gap-6",
+                "xl:gap-8",
+                "md:grid-cols-[1fr_2fr]",
+                "h-full",
+                "bg-base-300",
+                "p-4",
+              ])}
+            >
+              <section>
+                <ShowLogo show={show} />
+                {show.auditionLink && (
+                  <Link
+                    href={show.auditionLink}
+                    className="mt-4 btn btn-primary btn-wide hover:scale-110 transition-all"
+                  >
+                    Sign Up to Audition
+                  </Link>
+                )}
+              </section>
 
-            <section>
-              <div dangerouslySetInnerHTML={{ __html: show.auditions }} />
+              <section>
+                {show.auditions ? (
+                  <div dangerouslySetInnerHTML={{ __html: show.auditions }} />
+                ) : (
+                  <p className="text-lg">Audition information coming soon!</p>
+                )}
+              </section>
             </section>
-          </section>
-        );
-      })}
+          );
+        })
+      ) : (
+        <div>
+          <h2 className="text-xl mb-4">Nothing right now</h2>
+          <p>
+            But stay tuned! Follow us on{" "}
+            <Link
+              className="link"
+              href="https://www.instagram.com/novanightskytheater/"
+            >
+              Instagram
+            </Link>{" "}
+            or{" "}
+            <Link
+              className="link"
+              href="https://www.facebook.com/novanightskytheater"
+            >
+              Facebook
+            </Link>{" "}
+            for audition announcements.
+          </p>
+        </div>
+      )}
     </div>
   );
 };

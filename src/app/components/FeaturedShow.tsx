@@ -5,7 +5,7 @@ import classnames from "classnames";
 
 import type { Credit, Show } from "@/app/types";
 
-import { fullName, manualSort } from "@/app/utils";
+import { fullName, manualSort, nameSlug } from "@/app/utils";
 import FeaturedCastMember from "./FeaturedCastMember";
 import { getShowsWithData } from "@/app/actions/shows";
 import ShowTime from "./ShowTime";
@@ -27,7 +27,7 @@ const FeaturedShow = async () => {
 
   return (
     <div className="h-full">
-      <ul className="h-full">
+      <ul className="h-full flex flex-col">
         {showsWithData.map(async (show) => {
           let backgroundStyle: React.CSSProperties = {
             backgroundColor: show.backgroundColor || "transparent",
@@ -48,13 +48,15 @@ const FeaturedShow = async () => {
               key={show._id}
               className={classnames([
                 "flex",
-                "h-full",
+                "grow-1",
                 "flex-col",
                 "md:flex-row",
-                "[&>section]:p-8",
               ])}
             >
-              <section className="grow-1 md:w-2/3" style={backgroundStyle}>
+              <section
+                className={classnames(["p-4", "md:p-6", "xl:p-8", "md:w-2/3"])}
+                style={backgroundStyle}
+              >
                 <section className={classnames(["text-center"])}>
                   <div className="rounded-lg">
                     <WixImage
@@ -78,15 +80,25 @@ const FeaturedShow = async () => {
                         ])}
                       >
                         Directed by <br className="md:hidden" />
-                        <b className="text-primary">
+                        <Link
+                          className="text-primary link"
+                          href={`/credits/${nameSlug(show.director)}`}
+                        >
                           {fullName(show.director)}
-                        </b>
+                        </Link>
                       </p>
                     </div>
                     <h3 className="text-xl text-primary mb-6 drop-shadow-lg text-center">
                       Featuring
                     </h3>
-                    <div className="grid gap-2 md:grid-cols-2 items-start">
+                    <div
+                      className={classnames(
+                        {
+                          "xl:grid-cols-3": show.cast.length > 2,
+                        },
+                        ["grid", "gap-8", "md:grid-cols-2", "items-start"]
+                      )}
+                    >
                       {manualSort(show.cast).map(async (cast: Credit) => {
                         return (
                           <FeaturedCastMember
@@ -103,7 +115,14 @@ const FeaturedShow = async () => {
                 </section>
               </section>
               <section
-                className={classnames(["grow-1", "bg-base-200", "text-center"])}
+                className={classnames([
+                  "grow-1",
+                  "bg-base-200",
+                  "text-center",
+                  "p-4",
+                  "md:p-6",
+                  "xl:p-8",
+                ])}
               >
                 <div className="mb-4">
                   <Link
@@ -123,11 +142,15 @@ const FeaturedShow = async () => {
                 </div>
                 <h3 className="text-xl mb-2 md:text-center">Showtimes</h3>
                 <div className={classnames(["gap-2", "flex", "flex-col"])}>
-                  {show.shows.map((event) => {
-                    // console.log(event);
-
-                    return <ShowTime key={event._id} event={event} />;
-                  })}
+                  {show.shows?.length ? (
+                    show.shows.map((event) => {
+                      return <ShowTime key={event._id} event={event} />;
+                    })
+                  ) : (
+                    <p className="text-center text-lg">
+                      No showtimes available
+                    </p>
+                  )}
                 </div>
               </section>
             </li>

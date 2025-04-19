@@ -1,8 +1,10 @@
 import React from "react";
 import type { Person } from "@/app/types";
-import { fullName } from "@/app/utils";
+import { fullName, nameSlug } from "@/app/utils";
 import classnames from "classnames";
 import WixImage from "@/app/components/WixImage";
+import Link from "next/link";
+import { User } from "lucide-react";
 
 type Props = {
   role: string;
@@ -18,26 +20,43 @@ const FeaturedCastMember = ({
   className = "",
 }: Props) => {
   return (
-    <div className={classnames([className, ""])}>
-      {headshot && (
+    <div className={classnames(className, [""])}>
+      {headshot ? (
         <WixImage
           alt={fullName(castMember)}
           src={headshot}
           targetHeight={200}
-          className="mb-2 border-4 border-primary shadow-lg"
+          className="mb-2 outline-4 outline-primary shadow-lg rounded"
         />
+      ) : (
+        <div
+          className={classnames([
+            "w-[160px]",
+            "h-[200px]",
+            "outline-4",
+            "outline-primary",
+            "rounded",
+            "shadow-lg",
+            "bg-base-100",
+            "mb-2",
+            "flex",
+            "items-end",
+            "justify-center",
+            "opacity-30",
+          ])}
+        >
+          {/* <User color="var(--color-primary)" size={150} /> */}
+        </div>
       )}
-      {/* <Image
-        src={headshot.url}
-        width={headshot.width}
-        height={headshot.height}
-        alt={fullName(castMember)}
-        className="mb-2 border-4 border-primary shadow-lg"
-      /> */}
       <div className="leading-tight drop-shadow-lg">
-        <span className="text-primary font-bold">{fullName(castMember)}</span>{" "}
+        <Link
+          className="text-primary font-bold link"
+          href={`/credits/${nameSlug(castMember)}`}
+        >
+          {fullName(castMember)}
+        </Link>{" "}
         <span className="text-primary/80">as</span>{" "}
-        <span className="text-primary font-bold uppercase"> {role}</span>
+        <span className="text-primary font-bold"> {role}</span>
       </div>
     </div>
   );

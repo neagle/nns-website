@@ -183,6 +183,7 @@ const ShowTime = ({ event, className = "" }: Props) => {
               "leading-[1em]",
               "mb-1",
               "text-primary",
+              "text-left",
             ])}
           >
             <span
@@ -201,7 +202,7 @@ const ShowTime = ({ event, className = "" }: Props) => {
               {
                 "opacity-50": event.status === "CANCELED",
               },
-              ["leading-[1em]"]
+              ["leading-[1em]", "text-left"]
             )}
           >
             {startDate.format("h:mm")} <span>{startDate.format("A")}</span>
