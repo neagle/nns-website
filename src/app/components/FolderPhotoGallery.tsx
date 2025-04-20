@@ -1,5 +1,5 @@
 import React from "react";
-import { wixApiKeyClient } from "@/lib/wixClient";
+import { wixApiClient } from "@/lib/wixClient";
 import PhotoStrip from "@/app/components/PhotoStrip";
 import classNames from "classnames";
 
@@ -17,7 +17,7 @@ const FolderPhotoGallery = async ({
   folderId,
   className = "",
 }: FolderPhotoGalleryProps) => {
-  const { files } = await wixApiKeyClient.files.listFiles({
+  const { files } = await wixApiClient.files.listFiles({
     parentFolderId: folderId,
     sort: { fieldName: "displayName", order: SortOrder.ASC },
   });

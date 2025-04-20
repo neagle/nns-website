@@ -26,7 +26,7 @@ const wixClient = createClient({
 });
 
 // Some things, like accessing files from the media manager, require an API key
-export const wixApiKeyClient = createClient({
+export const wixApiClient = createClient({
   auth: ApiKeyStrategy({
     apiKey: process.env.WIX_API_KEY || "",
     siteId: process.env.WIX_SITE_ID || "",

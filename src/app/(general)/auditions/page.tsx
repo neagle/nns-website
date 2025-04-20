@@ -1,9 +1,10 @@
 import React, { Suspense } from "react";
-import wixApiKeyClient from "@/lib/wixClient";
+import wixClient from "@/lib/wixClient";
 import type { Show } from "@/app/types";
 import classnames from "classnames";
 import ShowLogo from "@/app/components/ShowLogo";
 import Link from "next/link";
+import CenterSpinner from "@/app/components/CenterSpinner";
 
 const Page = async () => {
   return (
@@ -30,11 +31,7 @@ const Page = async () => {
         </div>
       </section>
       <section className={classnames(["bg-base-300", "p-4"])}>
-        <Suspense
-          fallback={
-            <div className="loading loading-spinner loading-lg text-primary" />
-          }
-        >
+        <Suspense fallback={<CenterSpinner />}>
           <AuditionContent />
         </Suspense>
       </section>
@@ -45,7 +42,7 @@ const Page = async () => {
 const AuditionContent = async () => {
   // Get all future shows that do not have `noLongerAuditioning` set to true
   const now = new Date();
-  const { items } = await wixApiKeyClient.items
+  const { items } = await wixClient.items
     .query("Shows")
     .ge("openingDate", now.toISOString())
     .eq("noLongerAuditioning", false)
@@ -97,7 +94,7 @@ const AuditionContent = async () => {
         <div>
           <h2 className="text-xl mb-4">Nothing right now</h2>
           <p>
-            But stay tuned! Follow us on{" "}
+            ...but stay tuned! Follow us on{" "}
             <Link
               className="link"
               href="https://www.instagram.com/novanightskytheater/"

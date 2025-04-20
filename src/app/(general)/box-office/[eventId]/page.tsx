@@ -3,7 +3,7 @@ import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import Link from "next/link";
 import WixImage from "@/app/components/WixImage";
-import { getScaledToFitImageUrl } from "@/app/utils/wix/media";
+// import { getScaledToFitImageUrl } from "@/app/utils/wix/media";
 import FormattedDateTime from "@/app/components/FormattedDateTime";
 import type { Address } from "@/app/types";
 import Tickets from "./Tickets";

@@ -23,7 +23,6 @@ const Page = async () => {
     .find();
 
   const shows = items as Show[];
-  // console.log("shows", shows);
   const numberOfProducedShows = shows.length;
 
   return (
