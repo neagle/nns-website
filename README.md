@@ -66,7 +66,3 @@ Assets needed / desired:
 
 
 # Notes
-
-* For the "Contact Us" page, I now have it successfully creating submissions that can be viewed in Wix's dashboard, and I assume they're successfully being sent to the site owner email address. (Confirm with Jaclyn!) It doesn't seem like they're being surfaced in the site's unified Inbox, yet. I think the answer to that lies in "automations," but I'm wary about tinkering with something too much that's going to spam NNS folks with emails. This can be addressed later, after talking with Jaclyn about what she wants out of the Contact US form. (3-23-2025)
-
-* CACHING. Much of the site is dynamically generated from the CMS in Wix or from folders within the Media Manager. Next.js caches a lot of its queries, which is great for performance--it loads pages quickly for visitors! But it means that pages that we might expect to update might not update with altered content when we expect them to. We should talk about how to manage appropriate cache times for different pages, and how to give admins the ability to refresh data when needed.
