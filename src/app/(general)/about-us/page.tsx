@@ -8,6 +8,8 @@ import Link from "next/link";
 import EasterEgg from "./EasterEgg";
 import Image from "next/image";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "About Us",
   description:

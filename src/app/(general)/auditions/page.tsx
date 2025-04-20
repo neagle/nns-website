@@ -6,6 +6,8 @@ import ShowLogo from "@/app/components/ShowLogo";
 import Link from "next/link";
 import CenterSpinner from "@/app/components/CenterSpinner";
 
+export const dynamic = "force-dynamic";
+
 const Page = async () => {
   return (
     <div className="grid gap-4 md:grid-cols-[1fr_2fr] h-full">
