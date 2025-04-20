@@ -127,10 +127,16 @@ export default function ContactForm() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
               <div
                 id="recaptcha-inline-badge"
-                className="place-content-center justify-items-center md:justify-items-start"
+                className={classnames([
+                  "place-content-center",
+                  "justify-items-center",
+                  "md:justify-items-start",
+                  "order-1",
+                  "md:order-0",
+                ])}
               />
 
               <div className="">

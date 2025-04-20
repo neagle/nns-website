@@ -182,7 +182,7 @@ const Navigation = ({ seasons }: Props) => {
   };
 
   return (
-    <nav className="navbar p-0 min-h-0 text-primary">
+    <nav className="navbar p-0 min-h-0 text-primary relative">
       {/* Left: Mobile hamburger */}
       <div className="navbar-start">
         <button
@@ -229,7 +229,6 @@ const Navigation = ({ seasons }: Props) => {
             "absolute",
             "top-full",
             "right-0",
-            "mt-2",
             "z-50",
             "bg-base-300/95",
             "p-2",

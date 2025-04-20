@@ -10,6 +10,7 @@ import { getShowsWithData } from "@/app/actions/shows";
 import { BookImage } from "lucide-react";
 import PhotoGallery from "@/app/components/PhotoGallery";
 import ShowLogo from "@/app/components/ShowLogo";
+import CenterSpinner from "@/app/components/CenterSpinner";
 
 interface PageProps {
   params: Promise<{
@@ -247,11 +248,7 @@ const Season = async ({ params }: PageProps) => {
   const { slug } = await params;
 
   return (
-    <Suspense
-      fallback={
-        <div className="loading loading-spinner loading-lg text-primary absolute left-1/2 top-1/2" />
-      }
-    >
+    <Suspense fallback={<CenterSpinner />}>
       <ShowContent slug={slug} />
     </Suspense>
   );

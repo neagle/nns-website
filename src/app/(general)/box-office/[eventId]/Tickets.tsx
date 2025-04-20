@@ -83,7 +83,7 @@ const Tickets = ({ event, className = "" }: Props) => {
   return ticketInfo ? (
     <div className={classnames(className)}>
       <h3>Tickets</h3>
-      <div className="flex gap-8">
+      <div className="flex gap-4 md:gap-8 flex-wrap">
         <section>
           <p className="uppercase text-sm opacity-70">Type</p>
           <p className="text-lg font-bold leading-tight">{ticketInfo.name}</p>

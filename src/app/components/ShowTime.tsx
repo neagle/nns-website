@@ -254,6 +254,7 @@ const ShowTime = ({ event, className = "" }: Props) => {
               "w-full",
               "mt-2",
               "relative",
+              "flex-wrap",
             ])}
           >
             <button

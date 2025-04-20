@@ -1,4 +1,5 @@
 import ContactForm from "./ContactForm";
+import Link from "next/link";
 
 const ContactPage = async () => {
   /*
@@ -26,6 +27,13 @@ const ContactPage = async () => {
   return (
     <div className="p-4">
       <h1 className="text-3xl font-bold mb-4">Contact Us</h1>
+      <p className="mb-4 text-sm md:text-base">
+        You can also send us an email directly at{" "}
+        <Link href="mailto:novanightskytheater@gmail.com" className="link">
+          novanightskytheater@gmail.com
+        </Link>
+        .
+      </p>
       <ContactForm />
     </div>
   );

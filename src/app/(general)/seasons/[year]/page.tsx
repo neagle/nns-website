@@ -3,6 +3,7 @@ import wixClient from "@/lib/wixClient";
 import type { Show } from "@/app/types";
 import classnames from "classnames";
 import ShowPanel from "./ShowPanel";
+import CenterSpinner from "@/app/components/CenterSpinner";
 
 interface PageProps {
   params: Promise<{
@@ -57,21 +58,7 @@ const Season = async ({ params }: PageProps) => {
           "hover:[&>section]:opacity-50",
         ])}
       >
-        <Suspense
-          fallback={
-            <div
-              className={classnames([
-                "absolute",
-                "left-1/2",
-                "text-primary",
-                "loading",
-                "loading-spinner",
-                "loading-lg",
-                "text-primary",
-              ])}
-            ></div>
-          }
-        >
+        <Suspense fallback={<CenterSpinner />}>
           <Shows startOfYear={startOfYear} endOfYear={endOfYear} />
         </Suspense>
       </div>

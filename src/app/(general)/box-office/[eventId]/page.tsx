@@ -11,6 +11,7 @@ import { CalendarPlus2, Accessibility } from "lucide-react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import CenterSpinner from "@/app/components/CenterSpinner";
 // import Ricos from "@/app/components/Ricos";
 
 dayjs.extend(utc);
@@ -38,7 +39,7 @@ export async function generateMetadata({
   const startDate = event.dateAndTimeSettings!.startDate;
   const timeZone = event.dateAndTimeSettings!.timeZoneId || "America/New_York";
   // TODO: Finish setting up ogImage
-  const ogImage = getScaledToFitImageUrl(event.mainImage!, 1200, 630, {});
+  // const ogImage = getScaledToFitImageUrl(event.mainImage!, 1200, 630, {});
   // console.log("ogImage", ogImage);
 
   return {
@@ -140,10 +141,10 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
             <Accessibility />
             <span>
               If you need handicap access, you must contact us beforehand so we
-              can escort you into the building. Send an email to{" "}
-              <a href="mailto:novanightskytheater@gmail.com" className="link">
-                novanightskytheater@gmail.com
-              </a>{" "}
+              can escort you into the building.{" "}
+              <Link href="/contact" className="link">
+                Contact us
+              </Link>{" "}
               at least 24 hours before your scheduled performance.
             </span>
           </div>
@@ -189,11 +190,7 @@ const Event = async ({ params }: PageProps) => {
   const { eventId } = await params;
 
   return (
-    <Suspense
-      fallback={
-        <div className="loading loading-spinner loading-lg text-primary absolute left-1/2 top-1/2" />
-      }
-    >
+    <Suspense fallback={<CenterSpinner />}>
       <EventContent eventId={eventId} />
     </Suspense>
   );

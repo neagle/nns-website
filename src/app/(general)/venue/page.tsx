@@ -34,9 +34,9 @@ const Page = () => {
 
         <p className="mb-4">
           If you need handicap access, you must contact us beforehand so we can
-          escort you into the building. Send an email to{" "}
-          <Link href="mailto:novanightskytheater@gmail.com" className="link">
-            novanightskytheater@gmail.com
+          escort you into the building.{" "}
+          <Link href="/contact" className="link">
+            Contact us
           </Link>{" "}
           at least 24 hours before your scheduled performance.
         </p>
