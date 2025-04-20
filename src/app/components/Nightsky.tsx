@@ -8,7 +8,6 @@ type Props = {
   children?: React.ReactNode;
   className?: string;
   fireflies?: boolean;
-  adjustStarsToWindowWidth?: boolean;
   nebularClouds?: boolean;
   twinkle?: boolean;
 };
@@ -18,7 +17,6 @@ const Nightsky = ({
   className = "",
   fireflies = false,
   nebularClouds = true,
-  adjustStarsToWindowWidth = true,
   twinkle = true,
 }: Props) => {
   return (
@@ -33,12 +31,7 @@ const Nightsky = ({
           "h-full",
         ])}
       >
-        <Sky
-          numStars={2000}
-          adjustStarsToWindowWidth={adjustStarsToWindowWidth}
-          nebularClouds={nebularClouds}
-          twinkle={twinkle}
-        />
+        <Sky numStars={2000} nebularClouds={nebularClouds} twinkle={twinkle} />
         <div className="relative">{children}</div>
         {fireflies && <Fireflies />}
       </div>

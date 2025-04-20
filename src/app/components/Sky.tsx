@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { debounce } from "@/app/utils";
 import { useSearchParams } from "next/navigation";
 
@@ -9,12 +9,7 @@ type Props = {
   starRadius?: number;
   starBrightnessCeiling?: number;
   starBrightnessFloor?: number;
-  adjustStarsToWindowWidth?: boolean;
   nebularClouds?: boolean;
-  distort?: number;
-  // An additional way to distort the canvas to try to compensate for the
-  // projection
-  rotateX?: number;
   twinkle?: boolean;
 };
 
@@ -30,7 +25,6 @@ interface Star {
 }
 
 const DEFAULT_NUM_STARS = 500;
-const NARROW_WIDTH = 600;
 
 const getQueryParam = (
   searchParams: URLSearchParams,
@@ -47,16 +41,9 @@ const NightskyCanvas = ({
   starRadius = 2,
   starBrightnessCeiling = 70,
   starBrightnessFloor = 30,
-  distort = 1,
-  rotateX = 0,
-  adjustStarsToWindowWidth = true,
   nebularClouds = true,
   twinkle = true,
 }: Props) => {
-  const [windowDimensions, setWindowDimensions] = useState<
-    Record<string, number>
-  >({ width: 0, height: 0 });
-
   // Get various params from the query string or use the default if not provided
   const searchParams = useSearchParams();
 
@@ -72,106 +59,86 @@ const NightskyCanvas = ({
     "floor",
     starBrightnessFloor
   );
-  distort = getQueryParam(searchParams, "distort", distort);
-  rotateX = getQueryParam(searchParams, "rotateX", 0);
 
-  if (adjustStarsToWindowWidth) {
-    // If we're using the default, adjust the number of stars according to
-    // window width
-
-    // If we're in a narrow (ish) view, halve the number of stars
-    if (windowDimensions.width < NARROW_WIDTH) {
-      numStars = numStars / 2;
-    }
-  }
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // We store some references as mutable refs so we can update them without re-render:
   const starsRef = useRef<Star[]>([]);
   const nebulaCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Settings
-  // This will be recalculated to canvas width, so store in a ref or recalc as needed
-  const fadeZoneRef = useRef<number>(0);
+  const generateStars = useCallback(() => {
+    if (!canvasRef.current) return [];
 
-  useEffect(() => {
+    const { width, height } = canvasRef.current;
+    if (!width || !height) return [];
+
+    return Array.from({ length: numStars }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      radius: Math.random() * starRadius,
+      baseBrightness:
+        Math.random() * starBrightnessCeiling + starBrightnessFloor,
+      brightness: 0,
+      twinkleSpeed: Math.random() * 0.002,
+      twinkleOffset: Math.random() * Math.PI * 2,
+    }));
+  }, [
+    canvasRef,
+    numStars,
+    starRadius,
+    starBrightnessCeiling,
+    starBrightnessFloor,
+  ]);
+
+  // ==== Nebula generation ====
+  const generateNebula = useCallback(() => {
+    if (!canvasRef.current) return;
     const canvas = canvasRef.current;
-    if (!canvas) return; // If ref not set, do nothing
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    // Create an offscreen canvas for the nebula
+    const nebCanvas = document.createElement("canvas");
+    nebCanvas.width = canvas.width;
+    nebCanvas.height = canvas.height;
 
-    // ==== Initialization logic ====
-    const init = () => {
-      // Match canvas size to parent container
-      const parent = canvas.parentElement;
-      if (!parent) return;
+    const nebCtx = nebCanvas.getContext("2d");
+    if (!nebCtx) return;
 
-      canvas.width =
-        rotateX === 0 ? parent.clientWidth : parent.clientWidth * 2;
-      // Distort canvas
-      canvas.height = parent.clientHeight * distort;
-      // console.log("canvas.height", canvas.height);
+    nebulaCanvasRef.current = nebCanvas;
 
-      // Fade zone is some portion of canvas width
-      fadeZoneRef.current = canvas.width * 0.3; // 30% of width
+    const nebulaColors = [
+      "rgba(255, 0, 150, 0.2)",
+      "rgba(0, 150, 255, 0.2)",
+      "rgba(150, 255, 0, 0.2)",
+    ];
 
-      // Generate star data
-      starsRef.current = Array.from({ length: numStars }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * starRadius,
-        baseBrightness:
-          Math.random() * starBrightnessCeiling + starBrightnessFloor,
-        brightness: 0,
-        twinkleSpeed: Math.random() * 0.002,
-        twinkleOffset: Math.random() * Math.PI * 2,
-      }));
+    for (let i = 0; i < 5; i++) {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      const size = Math.random() * 300 + 200;
 
-      if (nebularClouds) {
-        generateNebula();
-      }
-    };
+      const gradient = nebCtx.createRadialGradient(x, y, 0, x, y, size);
+      const color =
+        nebulaColors[Math.floor(Math.random() * nebulaColors.length)];
+      gradient.addColorStop(0, color);
+      gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
 
-    // ==== Nebula generation ====
-    const generateNebula = () => {
-      // Create an offscreen canvas for the nebula
-      const nebCanvas = document.createElement("canvas");
-      nebCanvas.width = canvas.width;
-      nebCanvas.height = canvas.height;
+      nebCtx.fillStyle = gradient;
+      nebCtx.beginPath();
+      nebCtx.arc(x, y, size, 0, Math.PI * 2);
+      nebCtx.fill();
+    }
+  }, [canvasRef]);
 
-      const nebCtx = nebCanvas.getContext("2d");
-      if (!nebCtx) return;
+  // ==== Main draw function ====
+  const drawStars = useCallback(
+    (timestamp: number) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
 
-      nebulaCanvasRef.current = nebCanvas;
-
-      const nebulaColors = [
-        "rgba(255, 0, 150, 0.2)",
-        "rgba(0, 150, 255, 0.2)",
-        "rgba(150, 255, 0, 0.2)",
-      ];
-
-      for (let i = 0; i < 5; i++) {
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
-        const size = Math.random() * 300 + 200;
-
-        const gradient = nebCtx.createRadialGradient(x, y, 0, x, y, size);
-        const color =
-          nebulaColors[Math.floor(Math.random() * nebulaColors.length)];
-        gradient.addColorStop(0, color);
-        gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
-
-        nebCtx.fillStyle = gradient;
-        nebCtx.beginPath();
-        nebCtx.arc(x, y, size, 0, Math.PI * 2);
-        nebCtx.fill();
-      }
-    };
-
-    // ==== Main draw function ====
-    const drawStars = (timestamp: number) => {
+      const ctx = canvasRef.current?.getContext("2d");
+      if (!ctx) return;
       // Clear canvas
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw nebula
@@ -197,71 +164,103 @@ const NightskyCanvas = ({
       if (twinkle) {
         requestAnimationFrame(drawStars);
       }
+    },
+    [twinkle]
+  );
+
+  // ==== Resize observer ====
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const resizeObserver = new ResizeObserver(
+      debounce(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const parent = canvas.parentElement;
+        if (!parent) return;
+
+        // Resize only if the size has changed
+        if (
+          canvas.width === parent.clientWidth &&
+          canvas.height === parent.clientHeight
+        ) {
+          return;
+        }
+
+        canvas.width = parent.clientWidth;
+        canvas.height = parent.clientHeight;
+
+        starsRef.current = generateStars();
+        if (nebularClouds) {
+          generateNebula();
+        }
+        requestAnimationFrame(drawStars);
+      }, 250)
+    );
+
+    resizeObserver.observe(canvasRef.current.parentElement!);
+
+    return () => {
+      resizeObserver.disconnect();
     };
+  }, [canvasRef, generateStars, generateNebula, nebularClouds, drawStars]);
 
-    // ==== Resize logic ====
+  // Settings
 
-    // Store the window dimensions so we can know if we really need to
-    // reinitialize. On mobile, a lot of things can trigger resize that aren't a
-    // real resize, like bouncing at the top or bottom of the page after
-    // scrolling.
-    setWindowDimensions({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return; // If ref not set, do nothing
 
-    const handleResize = debounce(() => {
-      if (
-        window.innerWidth !== windowDimensions.width ||
-        window.innerHeight !== windowDimensions.height
-      ) {
-        setWindowDimensions({
-          width: window.innerWidth,
-          height: window.innerHeight,
-        });
-        init();
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // ==== Initialization logic ====
+    const init = () => {
+      // Match canvas size to parent container
+      const parent = canvas.parentElement;
+      if (!parent) return;
+
+      canvas.width = parent.clientWidth;
+      canvas.height = parent.clientHeight;
+
+      // Generate star data
+      starsRef.current = generateStars();
+
+      if (nebularClouds) {
+        generateNebula();
       }
-    }, 250);
+    };
 
     // Initialize and start
     init();
     requestAnimationFrame(drawStars);
 
-    // Listen for resize
-    window.addEventListener("resize", handleResize);
-
-    // Cleanup on unmount
     return () => {
-      window.removeEventListener("resize", handleResize);
+      // cleanup
     };
   }, [
+    generateNebula,
+    generateStars,
     nebularClouds,
     numStars,
-    windowDimensions.width,
-    windowDimensions.height,
-    distort,
     starRadius,
     starBrightnessCeiling,
     starBrightnessFloor,
-    rotateX,
     twinkle,
+    drawStars,
   ]);
 
   return (
     <canvas
       ref={canvasRef}
       style={{
-        // Adjust style as needed to position behind children
         position: "absolute",
         top: 0,
-        // left: 0,
-        left: rotateX === 0 ? "0" : "-50%",
-        width: rotateX === 0 ? "100%" : "200%",
-        height: rotateX === 0 ? "100%" : "200%",
+        left: "0",
+        width: "100%",
+        height: "100%",
         pointerEvents: "none",
         zIndex: 0,
-        transform: `rotateX(${rotateX}deg)`,
-        transformOrigin: "top center",
       }}
     />
   );

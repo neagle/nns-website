@@ -28,12 +28,7 @@ const Page = () => {
               "overflow-hidden",
             ])}
           >
-            <Sky
-              numStars={2000}
-              starRadius={4}
-              adjustStarsToWindowWidth={false}
-              nebularClouds={true}
-            />
+            <Sky numStars={2000} starRadius={4} nebularClouds={true} />
             <SkyControls />
           </div>
         </Suspense>

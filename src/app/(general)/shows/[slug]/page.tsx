@@ -210,8 +210,7 @@ const ShowContent = async ({ slug }: { slug: string }) => {
                     >
                       {fullName(credit.person)}
                     </Link>{" "}
-                    as{" "}
-                    <b className="uppercase text-primary/70">{credit.role}</b>
+                    as <b className="text-primary/70">{credit.role}</b>
                   </li>
                 ))}
               </ul>
