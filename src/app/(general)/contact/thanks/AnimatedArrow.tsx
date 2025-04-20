@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "motion/react";
-import { Minus, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import classnames from "classnames";
 
 interface Props {

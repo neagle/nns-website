@@ -47,7 +47,16 @@ const Season = async ({ params }: PageProps) => {
       <h1 className="p-4 text-2xl text-primary/70! font-normal!">
         Season <b className="text-primary! text-3xl">{year}</b>
       </h1>
-      <div className="flex flex-row flex-wrap group">
+      <div
+        className={classnames([
+          "flex",
+          "flex-row",
+          "flex-wrap",
+          "group",
+          "hover:[&>section]:scale-90",
+          "hover:[&>section]:opacity-50",
+        ])}
+      >
         <Suspense
           fallback={
             <div

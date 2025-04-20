@@ -4,7 +4,6 @@ import { fullName, nameSlug } from "@/app/utils";
 import classnames from "classnames";
 import WixImage from "@/app/components/WixImage";
 import Link from "next/link";
-import { User } from "lucide-react";
 
 type Props = {
   role: string;
