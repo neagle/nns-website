@@ -4,6 +4,7 @@ import { useState } from "react";
 import classnames from "classnames";
 import ReCaptchaForm from "@/app/components/ReCaptchaForm";
 import { submitContactForm } from "@/app/actions/contact";
+import FloatingLabelInput from "@/app/components/FloatingLabelInput";
 
 export default function ContactForm() {
   const [error, setError] = useState<string | null>(null);
@@ -30,101 +31,28 @@ export default function ContactForm() {
         <div className={classnames(["space-y-4", "required-asterisks"])}>
           <div className="md:max-w-1/2 [&_input]:mb-4">
             <div className="md:grid md:grid-cols-2 md:gap-4">
-              <div>
-                <label htmlFor="firstName" className="block font-medium">
-                  First Name
-                </label>
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  placeholder="Your first name"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="lastName" className="block font-medium">
-                  Last Name
-                </label>
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  placeholder="Your last name"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block font-medium">
-                  Email
-                </label>
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="Your email"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="phone" className="block font-medium">
-                  Phone
-                </label>
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  placeholder="Your phone number"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="address" className="block font-medium">
-                  Address
-                </label>
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="text"
-                  id="address"
-                  name="address"
-                  placeholder="Your address"
-                />
-              </div>
+              <FloatingLabelInput label="First Name" id="firstName" required />
+              <FloatingLabelInput label="Last Name" id="lastName" required />
+              <FloatingLabelInput label="Email" id="emailName" required />
+              <FloatingLabelInput
+                label="Phone"
+                id="phoneName"
+                type="tel"
+                mask="(___) ___-____"
+                replacement={{ _: /\d/ }}
+              />
+              <FloatingLabelInput label="Address" id="addressName" />
             </div>
 
             <div>
-              <div>
-                <label htmlFor="subject" className="block font-medium">
-                  Subject
-                </label>
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block font-medium">
-                  Message
-                </label>
-                <textarea
-                  className="w-full p-2 border border-gray-300 rounded"
-                  id="message"
-                  name="message"
-                  rows={5}
-                  required
-                />
-              </div>
+              <FloatingLabelInput label="Subject" id="subject" required />
+              <FloatingLabelInput
+                label="Message"
+                id="message"
+                type="textarea"
+                required
+                rows={5}
+              />
             </div>
 
             <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -134,6 +62,7 @@ export default function ContactForm() {
                   "place-content-center",
                   "justify-items-center",
                   "md:justify-items-start",
+                  // For mobile, put this after the send button
                   "order-1",
                   "md:order-0",
                 ])}
