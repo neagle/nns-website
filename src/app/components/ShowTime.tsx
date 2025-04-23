@@ -15,9 +15,14 @@ import Link from "next/link";
 type Props = {
   event: V3Event;
   className?: string;
+  animationDuration?: number;
 };
 
-const ShowTime = ({ event, className = "" }: Props) => {
+const ShowTime = ({
+  event,
+  className = "",
+  animationDuration = 0.2,
+}: Props) => {
   dayjs.extend(utc);
   dayjs.extend(timezone);
 
@@ -132,6 +137,9 @@ const ShowTime = ({ event, className = "" }: Props) => {
           "transition-all",
           "hover:scale-105",
           "focus:scale-105",
+          "overflow-hidden",
+          // "outline",
+          // "outline-red-500",
         ]
       )}
       onClick={handleClick}
@@ -212,47 +220,52 @@ const ShowTime = ({ event, className = "" }: Props) => {
       <AnimatePresence initial={false}>
         {showTicketInfo && !ticketInfo && (
           <motion.div
-            key="loading-ticket-info"
-            initial={{ opacity: 0, scale: 0, height: 0, marginTop: 0 }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-              height: "auto",
-              marginTop: "0.5rem",
-            }}
-            // exit={{ opacity: 0, scale: 0, height: 0, marginTop: 0 }}
-            transition={{
-              duration: 0.3,
-              scale: { type: "spring", visualDuration: 0.2, bounce: 0.2 },
-            }}
-            className={classnames(["text-center"])}
+            className={classnames([
+              "flex",
+              "justify-center",
+              "items-center",
+              "absolute",
+              "bg-base-100/70",
+              "top-0",
+              "right-0",
+              "bottom-0",
+              "left-0",
+            ])}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
           >
-            <div
-              className={classnames([
-                "loading",
-                "loading-bars",
-                "loading-xs",
-                "text-primary",
-                "text-center",
-              ])}
-            ></div>
+            <div className="loading loading-bars text-primary" />
           </motion.div>
         )}
         {showTicketInfo && ticketInfo && (
           <motion.div
             key="ticket-info"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{
-              duration: 0.3,
-              scale: { type: "spring", visualDuration: 0.2, bounce: 0.2 },
+            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+            animate={{
+              opacity: 1,
+              height: "auto",
+              marginTop: "0.5rem",
+              transition: {
+                duration: animationDuration,
+                opacity: { delay: animationDuration / 2 },
+              },
+            }}
+            exit={{
+              opacity: 0,
+              height: 0,
+              marginTop: 0,
+              transition: {
+                duration: animationDuration,
+                height: { delay: animationDuration / 2 },
+              },
             }}
             className={classnames([
               "text-sm",
               "flex",
               "w-full",
-              "mt-2",
+              // "mt-2",
               "relative",
               "flex-wrap",
             ])}

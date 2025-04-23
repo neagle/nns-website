@@ -125,28 +125,40 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
 
         {event.shortDescription && <section>{event.shortDescription}</section>}
 
-        <section>
-          <h3>Location</h3>
-          <address className="not-italic">
-            {location.name}, {locationAddress.formatted}
-          </address>
+        <section className="flex flex-col gap-4 md:flex-row">
+          <div>
+            <h3>Location</h3>
+            <address className="not-italic">
+              {location.name}, {locationAddress.formatted}
+            </address>
 
-          <p>
-            <Link href="/venue" className="link">
-              Read more about our venue and how to find the right entrance once
-              you&rsquo;re here.
-            </Link>
-          </p>
-          <div role="alert" className="alert alert-info alert-soft mt-4">
-            <Accessibility />
-            <span>
-              If you need handicap access, you must contact us beforehand so we
-              can escort you into the building.{" "}
-              <Link href="/contact" className="link">
-                Contact us
-              </Link>{" "}
-              at least 24 hours before your scheduled performance.
-            </span>
+            <p>
+              <Link href="/venue" className="link">
+                Read more about our venue and how to find the right entrance
+                once you&rsquo;re here.
+              </Link>
+            </p>
+            <div role="alert" className="alert alert-info alert-soft mt-4">
+              <Accessibility />
+              <span>
+                If you need handicap access, you must contact us beforehand so
+                we can escort you into the building.{" "}
+                <Link href="/contact" className="link">
+                  Contact us
+                </Link>{" "}
+                at least 24 hours before your scheduled performance.
+              </span>
+            </div>
+          </div>
+          <div>
+            <iframe
+              src={`https://www.google.com/maps/embed/v1/place?q=${encodeURI(
+                locationAddress.formatted
+              )}&key=${process.env.GOOGLE_MAPS_API_KEY}`}
+              allowFullScreen
+              loading="lazy"
+              className="w-full h-full border-0 rounded min-w-[300px]"
+            ></iframe>
           </div>
         </section>
 
