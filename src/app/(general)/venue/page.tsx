@@ -1,9 +1,16 @@
+import { Metadata } from "next";
 import React from "react";
 import Link from "next/link";
 import ParkingMap from "./ParkingMap";
 import classnames from "classnames";
 import Image from "next/image";
 import { Accessibility, MapPinned } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Our Venue",
+  description:
+    "How to find us and where to park at Falls Church Presbyterian Church.",
+};
 
 const Page = () => {
   return (

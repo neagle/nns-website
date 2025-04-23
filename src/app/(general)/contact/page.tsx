@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import ContactForm from "./ContactForm";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Contact Us",
+  description: "Send us a message!",
+};
 
 const ContactPage = async () => {
   /*

@@ -29,6 +29,7 @@
     "color-convert": "^3.0.1",
     "colorizr": "^3.0.7",
     "dayjs": "^1.11.13",
+    "html-to-image": "^1.11.13",
     "lucide-react": "^0.482.0",
     "motion": "^12.6.5",
     "next": "^15.2.4",

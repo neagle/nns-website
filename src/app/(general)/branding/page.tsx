@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import React from "react";
 import Colors from "./Colors";
 import Link from "next/link";
 import Image from "next/image";
+import LogoGenerator from "@/app/components/LogoGenerator";
+
+export const metadata: Metadata = {
+  title: "Branding & Style Guide",
+  description: "Branding & Style Guide for NOVA Nightsky Theater.",
+};
 
 const page = async () => {
   return (
@@ -33,6 +40,7 @@ const page = async () => {
 
       <section id="logos">
         <h2>Logos</h2>
+        <LogoGenerator />
       </section>
 
       <section id="colors">
