@@ -265,6 +265,15 @@ const ParkingMap = () => {
       memorialHall.innerHTML =
         "<h2>Memorial Hall</h2><p>Falls Church Presbyterian Church</p>";
 
+      registerAnimation(() => {
+        const zoom = map.getZoom() || 0;
+        if (zoom < 18 && memorialHall.style.opacity !== "0") {
+          memorialHall.style.opacity = "0";
+        } else if (zoom >= 18 && memorialHall.style.opacity !== "1") {
+          memorialHall.style.opacity = "1";
+        }
+      });
+
       new AdvancedMarkerElement({
         position: { lat: 38.880818123207796, lng: -77.16772499279008 },
         map,
