@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import CenterSpinner from "@/app/components/CenterSpinner";
+import classnames from "classnames";
 // import Ricos from "@/app/components/Ricos";
 
 dayjs.extend(utc);
@@ -138,7 +139,18 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
                 once you&rsquo;re here.
               </Link>
             </p>
-            <div role="alert" className="alert alert-info alert-soft mt-4">
+            <div
+              role="alert"
+              className={classnames([
+                "alert",
+                "alert-info",
+                "alert-soft",
+                "alert-vertical",
+                "md:alert-horizontal",
+                "text-left",
+                "mt-4",
+              ])}
+            >
               <Accessibility />
               <span>
                 If you need handicap access, you must contact us beforehand so
@@ -154,10 +166,17 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
             <iframe
               src={`https://www.google.com/maps/embed/v1/place?q=${encodeURI(
                 locationAddress.formatted
-              )}&key=${process.env.GOOGLE_MAPS_API_KEY}`}
+              )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
               allowFullScreen
               loading="lazy"
-              className="w-full h-full border-0 rounded min-w-[300px]"
+              className={classnames([
+                "w-full",
+                "h-full",
+                "border-0",
+                "rounded",
+                "min-w-[300px]",
+                "aspect-square",
+              ])}
             ></iframe>
           </div>
         </section>

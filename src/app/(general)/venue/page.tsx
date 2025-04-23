@@ -113,8 +113,8 @@ const Page = () => {
               Falls Church Presbyterian Church supports our local community in
               many ways, one of which is a Little Food Pantry. We are asking
               patrons to bring non-perishable items to keep the food pantry
-              stocked. Thank you for helping us support our new home and
-              community.
+              stocked. Thank you for helping us support our new home
+              and&nbsp;community.
             </p>
           </div>
         </div>
