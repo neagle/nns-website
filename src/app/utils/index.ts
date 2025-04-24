@@ -5,7 +5,7 @@ export const fullName = ({
   middleName = "",
   lastName = "",
 }) => {
-  return [firstName, middleName, lastName].join(" ");
+  return [firstName, middleName, lastName].filter(Boolean).join(" ");
 };
 
 export function debounce<T extends (...args: unknown[]) => void>(
@@ -91,3 +91,15 @@ export async function getSvgDataUrl(src: string): Promise<string> {
     .replace(/"/g, "%22");
   return `data:image/svg+xml;charset=UTF-8,${encoded}`;
 }
+
+export const formatList = (arr: string[]) => {
+  if (arr.length <= 1) {
+    return arr.join("");
+  } else if (arr.length === 2) {
+    return arr.join(" and ");
+  } else {
+    const allButLast = arr.slice(0, -1).join(", ");
+    const lastItem = arr.slice(-1);
+    return `${allButLast} and ${lastItem}`;
+  }
+};

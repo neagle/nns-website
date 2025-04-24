@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import type { Credit, Show, ShowWithData } from "@/app/types";
@@ -37,7 +37,9 @@ export async function generateMetadata({
   const show = await getShowData(slug);
 
   return {
-    title: `${show.title}`,
+    title: `${show.title}, by ${show.author}, directed by ${fullName(
+      show.director
+    )}`,
     description: show.description
       ? `${show.description.replace(/<[^>]+>/g, "").slice(0, 160)}...`
       : "Learn more about this show at NOVA Nightsky Theater.",

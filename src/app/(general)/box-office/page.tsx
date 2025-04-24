@@ -1,12 +1,26 @@
-import React, { Suspense } from "react";
+import type { Metadata } from "next";
+import React, { cache, Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import ShowTime from "@/app/components/ShowTime";
 import type { V3Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import classnames from "classnames";
 import WixImage from "@/app/components/WixImage";
 import Link from "next/link";
+import { formatList } from "@/app/utils";
 
-const BoxOfficeContent = async () => {
+export async function generateMetadata(): Promise<Metadata> {
+  const shows = await getBoxOfficeData();
+
+  const showTitles = Object.keys(shows);
+
+  return {
+    title: `Box Office: ${formatList(showTitles)}`,
+    description:
+      "Purchase tickets for upcoming shows at NOVA Nightsky Theater.",
+  };
+}
+
+const getBoxOfficeData = cache(async () => {
   const { items: events } = await wixClient.wixEventsV2
     .queryEvents()
     .eq("status", "UPCOMING")
@@ -28,6 +42,12 @@ const BoxOfficeContent = async () => {
     },
     {}
   );
+
+  return shows;
+});
+
+const BoxOfficeContent = async () => {
+  const shows = await getBoxOfficeData();
 
   return (
     <>

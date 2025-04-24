@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import type { Show } from "@/app/types";
@@ -7,6 +8,11 @@ import Link from "next/link";
 import CenterSpinner from "@/app/components/CenterSpinner";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Auditions",
+  description: "Audition for a show with NOVA Nightsky Theater.",
+};
 
 const Page = async () => {
   return (

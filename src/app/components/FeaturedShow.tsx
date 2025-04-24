@@ -65,7 +65,13 @@ const FeaturedShow = async () => {
                       }
                       alt={show.title}
                       targetWidth={show.logoHorizontal ? 800 : 400}
-                      className="mx-auto mb-5"
+                      className="hidden md:block mx-auto mb-5"
+                    />
+                    <WixImage
+                      src={show.logo}
+                      alt={show.title}
+                      targetWidth={400}
+                      className="block md:hidden mx-auto mb-5"
                     />
                   </div>
                   <section className={classnames(["text-left"])}>

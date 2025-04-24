@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import Plan from "../Plan";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Become a Subscriber",
+  description: "Buy a season subscription to NOVA Nightsky Theater.",
+};
 
 const SubscriptionsContent = async () => {
   const planList = await wixClient.plans

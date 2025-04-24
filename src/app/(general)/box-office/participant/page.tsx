@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import Plan from "../Plan";
 import Link from "next/link";
 import classnames from "classnames";
+
+export const metadata: Metadata = {
+  title: "Show Participant",
+  description: "Pay your show participant fee.",
+};
 
 const PageContent = async () => {
   const planList = await wixClient.plans

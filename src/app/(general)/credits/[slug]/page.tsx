@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import type { Credit, Show } from "@/app/types";
@@ -27,6 +28,18 @@ const getFirstMiddleLastNamesFromSlug = (slug: string) => {
     middleName,
   };
 };
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const { firstName, lastName } = getFirstMiddleLastNamesFromSlug(slug);
+
+  return {
+    title: `${firstName} ${lastName} - Credits`,
+    description: `NOVA Nightsky credits for ${firstName} ${lastName}.`,
+  };
+}
 
 interface CreditsContentProps {
   id: string;

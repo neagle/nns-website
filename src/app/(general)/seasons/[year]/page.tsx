@@ -1,9 +1,10 @@
-import React, { Suspense } from "react";
+import React, { cache, Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import type { Show } from "@/app/types";
 import classnames from "classnames";
 import ShowPanel from "./ShowPanel";
 import CenterSpinner from "@/app/components/CenterSpinner";
+import { formatList } from "@/app/utils";
 
 interface PageProps {
   params: Promise<{
@@ -16,7 +17,20 @@ interface ShowsProps {
   endOfYear: Date;
 }
 
-const Shows = async ({ startOfYear, endOfYear }: ShowsProps) => {
+export async function generateMetadata({ params }: PageProps) {
+  const { year } = await params;
+
+  // Construct the start and end dates for the year
+  const startOfYear = new Date(`${year}-01-01T00:00:00.000Z`);
+  const endOfYear = new Date(`${year}-12-31T23:59:59.999Z`);
+  const shows = await getShows(startOfYear, endOfYear);
+
+  return {
+    title: `${year} Season: ${formatList(shows.map((show) => show.title))}`,
+  };
+}
+
+const getShows = cache(async (startOfYear: Date, endOfYear: Date) => {
   const { items } = await wixClient.items
     .query("Shows")
     .ge("openingDate", startOfYear.toISOString()) // Greater than or equal to start of the year
@@ -25,7 +39,11 @@ const Shows = async ({ startOfYear, endOfYear }: ShowsProps) => {
     .include("director")
     .find();
 
-  const shows = items as Show[];
+  return items as Show[];
+});
+
+const Shows = async ({ startOfYear, endOfYear }: ShowsProps) => {
+  const shows = await getShows(startOfYear, endOfYear);
 
   return (
     <>
