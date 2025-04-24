@@ -205,7 +205,7 @@ const Page = async () => {
           </Person>
           <Person
             name="Sarah Baczewski"
-            title="Administrative&nbsp;Director / Actress / Director"
+            title="Artistic&nbsp;Director / Actress / Director"
             photosFolderId="4f9a71dd9d2e49f4a9792b5244b51cdd"
           >
             <p className="mb-4">
@@ -238,6 +238,50 @@ const Page = async () => {
               As Administrative Director, Sarah handles scheduling, logistical
               coordination, and other support for NOVA Nightsky&rsquo;s
               productions.
+            </p>
+          </Person>
+          <Person
+            name="Elyse R. Smith"
+            title="Administrative&nbsp;Director / Actress / Director"
+            photosFolderId="3caf53af3db94a6e862b7f7b1d76f7a2"
+          >
+            <p className="mb-4">
+              Elyse is an Army Brat who discovered theater while growing up in
+              Germany. According to family legend, Art Club was canceled one
+              afternoon, and her sister dragged her to Drama Club instead.
+              Elyse—a professional introvert—was content to work backstage, but
+              her dad insisted she try the spotlight.
+            </p>
+
+            <p className="mb-4">
+              She spent her high school years doing shows with peers and at the{" "}
+              <Link className="link" href="https://roadside.org/">
+                Roadside Theater in Heidelberg
+              </Link>
+              . Elyse earned her BA in Theater and Arts Administration from{" "}
+              <Link className="link" href="https://drew.edu/">
+                Drew University
+              </Link>
+              , where she acted, directed, and served as chair of the dramatic
+              society. She later earned an MA in Arts Management from{" "}
+              <Link className="link" href="https://www.gmu.edu/">
+                George Mason University.
+              </Link>
+            </p>
+
+            <p className="mb-4">
+              After a decade-long hiatus from performing (her daughter was 10
+              when she got back on stage—go ahead, do the math), Elyse returned
+              to acting thanks to a spontaneous audition for NOVA Nightsky in
+              2023. She hasn’t stopped pestering them since.
+            </p>
+
+            <p className="mb-4">
+              Elyse enjoys acting, directing, designing, and cheering on her
+              incredibly talented young thespian. By day, she works for the
+              Smithsonian, where she champions unrestricted revenue and
+              occasionally shakes down couches for loose change. She loves a
+              good spreadsheet.
             </p>
           </Person>
         </div>
