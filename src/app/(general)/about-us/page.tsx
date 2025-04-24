@@ -249,7 +249,10 @@ const Page = async () => {
 
             <p className="mb-4">
               She spent her high school years doing shows with peers and at the{" "}
-              <Link className="link" href="https://roadside.org/">
+              <Link
+                className="link"
+                href="https://www.facebook.com/groups/2372221621/"
+              >
                 Roadside Theater in Heidelberg
               </Link>
               . Elyse earned her BA in Theater and Arts Administration from{" "}
