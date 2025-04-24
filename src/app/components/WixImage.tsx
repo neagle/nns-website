@@ -47,9 +47,12 @@ const WixImage = ({
 
   const scaledImage = getScaledToFitImageUrl(
     src,
-    scaledWidth,
-    scaledHeight,
-    {}
+    // To address quality issues with Wix images, we double the resolution
+    scaledWidth * 2,
+    scaledHeight * 2,
+    {
+      quality: 100,
+    }
   );
 
   const imageElement = (

@@ -26,6 +26,21 @@ export interface Person extends WixDataItem {
   headshot?: string;
 }
 
+export interface AlternateHeadshot {
+  _id: string;
+  alt: string;
+  description: string;
+  settings: {
+    width: number;
+    height: number;
+    focalPoint?: [number, number];
+  };
+  slug: string;
+  src: string;
+  title: string;
+  type: "image";
+}
+
 export interface Credit {
   _id: string;
   role: string;

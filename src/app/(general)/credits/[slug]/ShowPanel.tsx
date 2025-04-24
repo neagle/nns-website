@@ -26,47 +26,45 @@ const ShowPanel = ({ credits }: ShowPanelProps) => {
   return (
     <div
       className={classnames([
-        "grid",
-        "md:grid-cols-[auto_1fr]",
-        "gap-4",
-        "mb-4",
-        "w-full",
+        "card",
+        "md:card-side",
+        "bg-base-200",
+        "shadow-md",
+        // "hover:bg-base-300",
+        // "transition-all",
       ])}
     >
-      <div>
-        {show.logo && (
+      {show.logo && (
+        <figure className="shrink-0">
           <ShowLogo
             show={show}
             targetWidth={200}
-            className="text-center rounded overflow-hidden"
+            className="text-center overflow-hidden p-2 w-full"
           />
-        )}
-      </div>
-      <div>
-        <h2 className="text-lg leading-tight">
-          <Link href={`/shows/${show.slug}`}>{show.title}</Link>
-        </h2>
-        <p className="mb-4">{dayjs(show.openingDate).format("MMMM YYYY")}</p>
-        <div className="text-sm">
+        </figure>
+      )}
+      <div className="card-body flex-row items-start">
+        <div className="grow-1">
           {wasDirector ? (
             <p className="text-lg mb-2 text-primary/80">Director</p>
           ) : null}
 
           {cast.length ? (
-            <>
-              <h3>Cast</h3>
-              <ul className="mb-4">
+            <div className="flex flex-row gap-2">
+              <h3 className="w-1/4 text-right">Cast</h3>
+              <ul className="">
                 {cast.map((credit) => (
                   <li key={credit._id} className="mr-2 uppercase">
                     {credit.role}
                   </li>
                 ))}
               </ul>
-            </>
+            </div>
           ) : null}
+
           {crew.length ? (
-            <>
-              <h3>Crew</h3>
+            <div className="flex flex-row gap-2">
+              <h3 className="w-1/4 text-right">Crew</h3>
               <ul className="">
                 {crew.map((credit) => (
                   <li key={credit._id} className="mr-2">
@@ -74,8 +72,16 @@ const ShowPanel = ({ credits }: ShowPanelProps) => {
                   </li>
                 ))}
               </ul>
-            </>
+            </div>
           ) : null}
+        </div>
+        <div className="text-info text-right">
+          <div className="uppercase text-sm leading-tight">
+            {dayjs(show.openingDate).format("MMM")}
+          </div>
+          <div className="leading-tight">
+            {dayjs(show.openingDate).format("YYYY")}
+          </div>
         </div>
       </div>
     </div>

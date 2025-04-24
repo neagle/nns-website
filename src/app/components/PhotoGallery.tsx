@@ -27,7 +27,7 @@ const PhotoGallery = ({ photos }: PhotoGalleryProps) => {
   const swiperRef = useRef<SwiperType | null>(null);
 
   return (
-    <div>
+    <div className="overflow-hidden">
       <div className="relative">
         <Swiper
           className={classnames([

@@ -159,7 +159,7 @@ const Credits = async ({ params }: PageProps) => {
           )}
         </section>
 
-        <section className={classnames(["grid", "xl:grid-cols-2", "gap-8"])}>
+        <section className={classnames(["grid", "xl:grid-cols-2", "gap-4"])}>
           <Suspense
             fallback={
               <div
@@ -180,7 +180,7 @@ const Credits = async ({ params }: PageProps) => {
       </div>
 
       {person.aboutTheArtists && (
-        <p className="mt-4">
+        <p className="mt-8">
           See more of {fullName(person)}&rsquo;s theater credits at{" "}
           <Link href={person.aboutTheArtists} className="link">
             <strong>About the Artists</strong>

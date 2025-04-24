@@ -51,36 +51,51 @@ const ShowContent = async ({ slug }: { slug: string }) => {
 
   return (
     <div className="">
-      <h1 className="p-4 md:p-6 xl:p-8 text-2xl">{show.title}</h1>
+      {/* <h1 className="p-4 md:p-6 xl:p-8 text-2xl">{show.title}</h1> */}
       <div
-        className={classnames({ "mb-8": !show.photos }, [
-          "flex",
-          "flex-col",
-          "md:flex-row",
+        className={classnames([
+          "grid",
+          "md:gap-x-8",
+          "md:gap-y-6",
+          "grid-cols-1",
+          "md:grid-cols-[2fr_3fr]",
+          "xl:grid-cols-3",
+          // "flex",
+          // "flex-col",
+          // "md:flex-row",
         ])}
       >
         {show.logo && (
           <ShowLogo
             show={show}
-            className="md:w-1/3"
+            className={classnames([
+              //"md:w-1/3",
+              "p-2",
+              "row-span-2",
+            ])}
             link={show.program ? media.getDocumentUrl(show.program).url : false}
           />
         )}
         <section
           className={classnames([
-            "md:pt-0!",
+            "xl:col-start-2",
+            "xl:row-start-1",
+            // "md:pt-0!",
             "p-4",
-            "md:p-6",
-            "xl:p-8",
+            "md:pl-0",
+            "md:pt-6",
+            "md:pr-8",
+            // "md:pb-0",
+            "xl:pt-8",
             "flex",
             "flex-col",
             "gap-8",
           ])}
         >
-          <h2 className="text-2xl">
+          {/* <h2 className="text-2xl">
             <b className="text-xl text-primary/50 font-normal">by</b>{" "}
             {show.author}
-          </h2>
+          </h2> */}
 
           <section>
             <h2>Director</h2>
@@ -127,7 +142,7 @@ const ShowContent = async ({ slug }: { slug: string }) => {
           {show.crew?.length ? (
             <section>
               <h2>Crew</h2>
-              <table className="mt-1 mb-4">
+              <table className="mt-1">
                 <tbody>
                   {show.crew.map((crew) => {
                     return (
@@ -188,13 +203,20 @@ const ShowContent = async ({ slug }: { slug: string }) => {
             </section>
           ) : null}
         </section>
+
         <section
           className={classnames([
-            "md:pt-0!",
-            "md:w-1/3",
+            "md:col-start-2",
+            "md:row-start-2",
+            "xl:col-start-3",
+            "xl:row-start-1",
+            // "md:pt-0!",
+            // "md:w-1/3",
             "p-4",
-            "md:p-6",
-            "xl:p-8",
+            "md:pl-0",
+            "md:pb-8",
+            "md:pr-8",
+            "xl:pt-8",
             "flex",
             "flex-col",
             "gap-8",
@@ -206,7 +228,7 @@ const ShowContent = async ({ slug }: { slug: string }) => {
 
               <ul>
                 {manualSort(show.cast).map((credit: Credit) => (
-                  <li key={credit._id}>
+                  <li key={credit._id} className="mb-2">
                     <Link
                       href={`/credits/${nameSlug(credit.person)}`}
                       className="link text-primary/70 hover:text-primary transition-all"

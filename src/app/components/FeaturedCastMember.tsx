@@ -18,16 +18,18 @@ const FeaturedCastMember = ({
   headshot,
   className = "",
 }: Props) => {
-  return (
-    <div className={classnames(className, [""])}>
-      {headshot ? (
+  const Headshot = () => {
+    if (headshot) {
+      return (
         <WixImage
           alt={fullName(castMember)}
           src={headshot}
           targetHeight={200}
           className="mb-2 outline-4 outline-primary shadow-lg rounded"
         />
-      ) : (
+      );
+    } else {
+      return (
         <div
           className={classnames([
             "w-[160px]",
@@ -43,10 +45,13 @@ const FeaturedCastMember = ({
             "justify-center",
             "opacity-30",
           ])}
-        >
-          {/* <User color="var(--color-primary)" size={150} /> */}
-        </div>
-      )}
+        ></div>
+      );
+    }
+  };
+  return (
+    <div className={classnames(className, [""])}>
+      <Headshot />
       <div className="leading-tight drop-shadow-lg">
         <Link
           className="text-primary font-bold link"

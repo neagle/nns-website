@@ -3,7 +3,7 @@ import wixClient from "@/lib/wixClient";
 import { media } from "@wix/sdk";
 import classnames from "classnames";
 
-import type { Credit, Show } from "@/app/types";
+import type { AlternateHeadshot, Credit, Show } from "@/app/types";
 
 import { fullName, manualSort, nameSlug } from "@/app/utils";
 import FeaturedCastMember from "./FeaturedCastMember";
@@ -106,13 +106,36 @@ const FeaturedShow = async () => {
                       )}
                     >
                       {manualSort(show.cast).map(async (cast: Credit) => {
+                        let headshot: string | undefined;
+                        // Check if the cast member has an alternate headshot
+                        // designated for this show
+                        if (cast.person?.headshots?.length) {
+                          const alternateHeadshot = cast.person.headshots.find(
+                            (headshot: AlternateHeadshot) =>
+                              // The title of the headshot must exactly match
+                              // the title of the show
+                              headshot.title === show.title
+                          );
+                          if (alternateHeadshot) {
+                            headshot = alternateHeadshot.src;
+                          }
+                        } else {
+                          headshot = cast.person?.headshot;
+                        }
+
                         return (
                           <FeaturedCastMember
                             key={cast._id}
-                            className="flex flex-col items-center justify-center text-center"
+                            className={classnames([
+                              "flex",
+                              "flex-col",
+                              "items-center",
+                              "justify-center",
+                              "text-center",
+                            ])}
                             role={cast.role}
                             castMember={cast.person}
-                            headshot={cast.person?.headshot}
+                            headshot={headshot}
                           />
                         );
                       })}
