@@ -48,7 +48,7 @@ const noah = localFont({
 export const metadata: Metadata = {
   title: {
     template: "%s | NOVA Nightsky Theater",
-    default: "NOVA Nightsky Theater",
+    default: "Community Theater | NOVA Nightsky Theater | Falls Church",
   },
   description:
     "NOVA Nightsky Theater is community theater group in Falls Church VA performing outdoors and indoors in unconventional places.",

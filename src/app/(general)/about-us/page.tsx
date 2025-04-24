@@ -314,11 +314,32 @@ const Page = async () => {
               <Link className="link" href="https://www.sjc.edu/">
                 St. John&rsquo;s College
               </Link>{" "}
-              in Annapolis, Maryland, the weird Great Books school, where he
-              studied liberal arts and philosophy. <em>Also</em> a Washington
-              State native, he&rsquo;d still call soda &ldquo;pop&rdquo; if he
-              could get away with it. He returned to acting in 2024 after 21
-              years away and has no intention of stopping.
+              in Annapolis, Maryland&mdash;yeah, the weird Great Books
+              school&mdash;where he studied liberal arts and philosophy.
+              He&rsquo;s an avid{" "}
+              <Link
+                className="link"
+                href="https://gokibitz.com/user/cloudbrows"
+              >
+                go player
+              </Link>
+              ,{" "}
+              <Link
+                className="link"
+                href="https://nateeagle.com/tag/cocktails/"
+              >
+                cocktailer
+              </Link>
+              , and{" "}
+              <Link
+                className="link"
+                href="https://nateeagle.com/posts/burns-supper/"
+              >
+                Robert Burns enthusiast
+              </Link>
+              . He acted in High School and college, then spent 21 years doing a
+              bunch of other stuff. He returned to acting in 2024 and
+              doesn&rsquo;t seem to be stopping any time soon.
             </p>
           </Person>
         </div>
