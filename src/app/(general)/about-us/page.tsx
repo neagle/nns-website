@@ -233,12 +233,6 @@ const Page = async () => {
               in fund development for a nonprofit focused on D.C. legal system
               reform.
             </p>
-
-            <p>
-              As Administrative Director, Sarah handles scheduling, logistical
-              coordination, and other support for NOVA Nightsky&rsquo;s
-              productions.
-            </p>
           </Person>
           <Person
             name="Elyse R. Smith"
