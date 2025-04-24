@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import type { Credit, Show } from "@/app/types";
-import { fullName } from "@/app/utils";
+import { getFirstMiddleLastNamesFromSlug, fullName } from "@/app/utils";
 import { notFound } from "next/navigation";
 import type { Person } from "@/app/types";
 import Link from "next/link";
@@ -15,19 +15,6 @@ interface PageProps {
     slug: string;
   }>;
 }
-
-const getFirstMiddleLastNamesFromSlug = (slug: string) => {
-  const parts = slug.replaceAll("_", " ").split("-");
-  const firstName = parts[0];
-  const lastName = parts[parts.length - 1];
-  const middleName = parts.slice(1, -1).join(" ");
-
-  return {
-    firstName,
-    lastName,
-    middleName,
-  };
-};
 
 export async function generateMetadata({
   params,

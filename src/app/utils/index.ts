@@ -103,3 +103,29 @@ export const formatList = (arr: string[]) => {
     return `${allButLast} and ${lastItem}`;
   }
 };
+
+export const getFirstMiddleLastNamesFromSlug = (slug: string) => {
+  const parts = slug.replaceAll("_", " ").split("-");
+  const firstName = parts[0];
+  const lastName = parts[parts.length - 1];
+  const middleName = parts.slice(1, -1).join(" ");
+
+  return {
+    firstName,
+    lastName,
+    middleName,
+  };
+};
+
+export const slugifyFirstMiddleLastNames = (
+  firstName: string,
+  middleName: string,
+  lastName: string
+) => {
+  const slug = [firstName, middleName, lastName]
+    .filter((name) => !!name)
+    .map((name) => encodeURIComponent(String(name).replaceAll(" ", "_")))
+    .join("-");
+
+  return slug;
+};

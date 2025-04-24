@@ -262,8 +262,9 @@ const Page = async () => {
               , where she acted, directed, and served as chair of the dramatic
               society. She later earned an MA in Arts Management from{" "}
               <Link className="link" href="https://www.gmu.edu/">
-                George Mason University.
+                George Mason University
               </Link>
+              .
             </p>
 
             <p className="mb-4">
@@ -303,6 +304,7 @@ const Page = async () => {
         <div className={classnames(["p-4", "md:p-6", "xl:p-8"])}>
           <Person
             name="Hannah Ruth Blackwell"
+            slug="Hannah_Ruth-Blackwell"
             title="Actor / Director / Playwright"
             photosFolderId="cad84141f3f745cfbb78efa1ed945eb7"
           >

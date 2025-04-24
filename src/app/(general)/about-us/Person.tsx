@@ -2,15 +2,20 @@ import React from "react";
 import classnames from "classnames";
 import slugify from "@sindresorhus/slugify";
 import FolderPhotoGallery from "@/app/components/FolderPhotoGallery";
+import Link from "next/link";
 
 type Props = {
   name: string;
+  slug?: string;
   title: string;
   photosFolderId?: string;
   children?: React.ReactNode;
 };
 
-const Person = ({ name, title, photosFolderId, children }: Props) => {
+const Person = ({ name, slug, title, photosFolderId, children }: Props) => {
+  const personSlug =
+    slug || slugify(name, { separator: "-", lowercase: false });
+
   return (
     <section
       id={slugify(name)}
@@ -31,7 +36,11 @@ const Person = ({ name, title, photosFolderId, children }: Props) => {
       ])}
     >
       <div className="md:text-right">
-        <h2 className="text-xl leading-tight mb-1">{name}</h2>
+        <Link href={`/credits/${personSlug}`}>
+          <h2 className="text-xl leading-tight mb-1 hover:text-info! transition-colors">
+            {name}
+          </h2>
+        </Link>
         <h3 className="text-accent! mb-4 font-normal! normal-case! font-sans! leading-tight">
           {title}
         </h3>
