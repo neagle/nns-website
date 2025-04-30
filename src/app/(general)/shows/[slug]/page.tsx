@@ -66,15 +66,7 @@ const ShowContent = async ({ slug }: { slug: string }) => {
         ])}
       >
         {show.logo && (
-          <ShowLogo
-            show={show}
-            className={classnames([
-              //"md:w-1/3",
-              "p-2",
-              "row-span-2",
-            ])}
-            link={show.program ? media.getDocumentUrl(show.program).url : false}
-          />
+          <ShowLogo show={show} className={classnames(["p-2", "row-span-2"])} />
         )}
         <section
           className={classnames([
