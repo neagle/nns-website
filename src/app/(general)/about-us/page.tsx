@@ -92,6 +92,7 @@ const Page = async () => {
           </div>
 
           <Image
+            priority
             className="w-full rounded-lg shadow-md mb-4 shadow-primary"
             src="/images/photographs/general/all-the-board.jpg"
             width="2930"

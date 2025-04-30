@@ -30,6 +30,7 @@ export const wixApiClient = createClient({
   auth: ApiKeyStrategy({
     apiKey: process.env.WIX_API_KEY || "",
     siteId: process.env.WIX_SITE_ID || "",
+    // accountId: process.env.WIX_ACCOUNT_ID || "",
   }),
   modules: {
     files,

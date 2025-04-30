@@ -10,6 +10,9 @@ import FeaturedCastMember from "./FeaturedCastMember";
 import { getShowsWithData } from "@/app/actions/shows";
 import ShowTime from "./ShowTime";
 import WixImage from "@/app/components/WixImage";
+import { getImageProps } from "next/image";
+import { getBackgroundImage } from "@/app/utils";
+import probe from "probe-image-size";
 import Link from "next/link";
 
 const FeaturedShow = async () => {
@@ -34,10 +37,25 @@ const FeaturedShow = async () => {
           };
 
           if (show.backgroundTexture) {
+            // TODO: package up this way of optimizing background images
             const backgroundTexture = media.getImageUrl(show.backgroundTexture);
+            const imageData = await probe(backgroundTexture.url);
+            const backgroundWidth = imageData.width;
+            const backgroundHeight = imageData.height;
+
+            const {
+              props: { srcSet },
+            } = getImageProps({
+              alt: "",
+              width: backgroundWidth,
+              height: backgroundHeight,
+              src: backgroundTexture.url,
+            });
+            const backgroundImage = getBackgroundImage(srcSet);
+
             backgroundStyle = {
               ...backgroundStyle,
-              backgroundImage: `url(${backgroundTexture.url})`,
+              backgroundImage,
               backgroundSize: "cover",
               backgroundPosition: "center",
             };
