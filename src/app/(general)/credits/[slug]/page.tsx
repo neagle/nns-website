@@ -8,7 +8,7 @@ import type { Person } from "@/app/types";
 import Link from "next/link";
 import WixImage from "@/app/components/WixImage";
 import classnames from "classnames";
-import ShowPanel from "./ShowPanel";
+import ShowList from "./ShowList";
 
 interface PageProps {
   params: Promise<{
@@ -97,9 +97,7 @@ const CreditsContent = async ({ id, person }: CreditsContentProps) => {
     return 0;
   });
 
-  return sortedCredits.map(([showId, credits]) => (
-    <ShowPanel key={showId} credits={credits} />
-  ));
+  return <ShowList credits={sortedCredits} />;
 };
 
 const Credits = async ({ params }: PageProps) => {
@@ -159,7 +157,7 @@ const Credits = async ({ params }: PageProps) => {
           )}
         </section>
 
-        <section className={classnames(["grid", "xl:grid-cols-2", "gap-4"])}>
+        <section className={classnames([])}>
           <Suspense
             fallback={
               <div
@@ -185,6 +183,7 @@ const Credits = async ({ params }: PageProps) => {
           <Link href={person.aboutTheArtists} className="link">
             <strong>About the Artists</strong>
           </Link>
+          .
         </p>
       )}
     </div>

@@ -28,8 +28,16 @@ const Page = async () => {
   const numberOfProducedShows = shows.length;
 
   return (
-    <div>
-      <section className="mb-4 p-4 md:p-6 xl:p-8">
+    <div className="overflow-hidden">
+      <section
+        className={classnames([
+          "mb-4",
+          "p-4",
+          "md:p-6",
+          "xl:p-8",
+          "overflow-hidden",
+        ])}
+      >
         <h1 className="text-2xl mb-4">About Us</h1>
         <div
           className={classnames(["md:grid", "md:grid-cols-[3fr_2fr]", "gap-8"])}

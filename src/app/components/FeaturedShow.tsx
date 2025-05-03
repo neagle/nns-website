@@ -2,11 +2,8 @@ import React from "react";
 import wixClient from "@/lib/wixClient";
 import { media } from "@wix/sdk";
 import classnames from "classnames";
-
-import type { AlternateHeadshot, Credit, Show } from "@/app/types";
-
-import { fullName, manualSort, nameSlug } from "@/app/utils";
-import FeaturedCastMember from "./FeaturedCastMember";
+import type { Show } from "@/app/types";
+import { fullName, nameSlug } from "@/app/utils";
 import { getShowsWithData } from "@/app/actions/shows";
 import ShowTime from "./ShowTime";
 import WixImage from "@/app/components/WixImage";
@@ -14,6 +11,7 @@ import { getImageProps } from "next/image";
 import { getBackgroundImage } from "@/app/utils";
 import probe from "probe-image-size";
 import Link from "next/link";
+import FeaturedCast from "@/app/components/FeaturedCast";
 
 const FeaturedShow = async () => {
   const { items } = await wixClient.items
@@ -71,12 +69,13 @@ const FeaturedShow = async () => {
                 "md:flex-row",
               ])}
             >
-              <section
-                className={classnames(["p-4", "md:p-6", "xl:p-8", "md:w-2/3"])}
-                style={backgroundStyle}
-              >
+              <section className={classnames(["md:w-2/3"])}>
                 <section className={classnames(["text-center"])}>
-                  <div className="rounded-lg">
+                  <Link
+                    className={classnames(["p-4", "md:p-6", "xl:p-8", "block"])}
+                    style={backgroundStyle}
+                    href="/box-office"
+                  >
                     <WixImage
                       src={
                         show.logoHorizontal ? show.logoHorizontal : show.logo
@@ -91,8 +90,15 @@ const FeaturedShow = async () => {
                       targetWidth={400}
                       className="block md:hidden mx-auto mb-5"
                     />
-                  </div>
-                  <section className={classnames(["text-left"])}>
+                  </Link>
+                  <section
+                    className={classnames([
+                      "text-left",
+                      "p-4",
+                      "md:p-6",
+                      "xl:p-8",
+                    ])}
+                  >
                     <div className="flex mb-2 items-center justify-center">
                       <p
                         className={classnames([
@@ -112,52 +118,10 @@ const FeaturedShow = async () => {
                         </Link>
                       </p>
                     </div>
-                    <h3 className="text-xl text-primary mb-6 drop-shadow-lg text-center">
-                      Featuring
+                    <h3 className="text-2xl text-primary mb-8 drop-shadow-lg text-center">
+                      The Cast
                     </h3>
-                    <div
-                      className={classnames(
-                        {
-                          "xl:grid-cols-3": show.cast.length > 2,
-                        },
-                        ["grid", "gap-8", "md:grid-cols-2", "items-start"]
-                      )}
-                    >
-                      {manualSort(show.cast).map(async (cast: Credit) => {
-                        let headshot: string | undefined;
-                        // Check if the cast member has an alternate headshot
-                        // designated for this show
-                        if (cast.person?.headshots?.length) {
-                          const alternateHeadshot = cast.person.headshots.find(
-                            (headshot: AlternateHeadshot) =>
-                              // The title of the headshot must exactly match
-                              // the title of the show
-                              headshot.title === show.title
-                          );
-                          if (alternateHeadshot) {
-                            headshot = alternateHeadshot.src;
-                          }
-                        } else {
-                          headshot = cast.person?.headshot;
-                        }
-
-                        return (
-                          <FeaturedCastMember
-                            key={cast._id}
-                            className={classnames([
-                              "flex",
-                              "flex-col",
-                              "items-center",
-                              "justify-center",
-                              "text-center",
-                            ])}
-                            role={cast.role}
-                            castMember={cast.person}
-                            headshot={headshot}
-                          />
-                        );
-                      })}
-                    </div>
+                    <FeaturedCast show={show} />
                   </section>
                 </section>
               </section>

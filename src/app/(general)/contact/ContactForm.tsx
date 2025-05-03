@@ -69,7 +69,16 @@ export default function ContactForm() {
               />
 
               <div className="">
-                <button type="submit" className="btn btn-primary w-full">
+                <button
+                  type="submit"
+                  className={classnames([
+                    "btn",
+                    "btn-primary",
+                    "w-full",
+                    "hover:scale-105",
+                    "transition-all",
+                  ])}
+                >
                   Send
                 </button>
               </div>

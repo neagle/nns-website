@@ -1,7 +1,6 @@
 import React from "react";
 import type { Credit } from "@/app/types";
 import classnames from "classnames";
-import Link from "next/link";
 import ShowLogo from "@/app/components/ShowLogo";
 import dayjs from "dayjs";
 
@@ -30,8 +29,6 @@ const ShowPanel = ({ credits }: ShowPanelProps) => {
         "md:card-side",
         "bg-base-200",
         "shadow-md",
-        // "hover:bg-base-300",
-        // "transition-all",
       ])}
     >
       {show.logo && (

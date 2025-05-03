@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import type { Person } from "@/app/types";
 import { fullName, nameSlug } from "@/app/utils";
@@ -10,6 +12,7 @@ type Props = {
   castMember: Person;
   headshot?: string;
   className?: string;
+  width?: number;
 };
 
 const FeaturedCastMember = ({
@@ -17,6 +20,7 @@ const FeaturedCastMember = ({
   castMember,
   headshot,
   className = "",
+  width = 300,
 }: Props) => {
   const Headshot = () => {
     if (headshot) {
@@ -24,8 +28,8 @@ const FeaturedCastMember = ({
         <WixImage
           alt={fullName(castMember)}
           src={headshot}
-          targetHeight={200}
-          className="mb-2 outline-4 outline-primary shadow-lg rounded"
+          targetWidth={width}
+          className={classnames([])}
         />
       );
     } else {
@@ -34,15 +38,7 @@ const FeaturedCastMember = ({
           className={classnames([
             "w-[160px]",
             "h-[200px]",
-            "outline-4",
-            "outline-primary",
-            "rounded",
-            "shadow-lg",
             "bg-base-100",
-            "mb-2",
-            "flex",
-            "items-end",
-            "justify-center",
             "opacity-30",
           ])}
         ></div>
@@ -50,19 +46,33 @@ const FeaturedCastMember = ({
     }
   };
   return (
-    <div className={classnames(className, [""])}>
-      <Headshot />
-      <div className="leading-tight drop-shadow-lg">
-        <Link
-          className="text-primary font-bold link"
-          href={`/credits/${nameSlug(castMember)}`}
-        >
-          {fullName(castMember)}
-        </Link>{" "}
-        <span className="text-primary/80">as</span>{" "}
-        <span className="text-primary font-bold"> {role}</span>
+    <Link
+      // className="text-primary font-bold "
+      style={{ width: `${width}px` }}
+      className={classnames(className, [
+        "block",
+        "flex",
+        "flex-col",
+        "items-start",
+        "hover:scale-110",
+        "hover:shadow-lg",
+        "focus:scale-110",
+        "focus:shadow-lg",
+        "transition-all",
+        "card",
+        "bg-base-200",
+        "shadow-sm",
+      ])}
+      href={`/credits/${nameSlug(castMember)}`}
+    >
+      <figure>
+        <Headshot />
+      </figure>
+      <div className="card-body leading-tight">
+        <div className="card-title font-bold text-neutral-content">{role}</div>
+        <p className="font-bold">{fullName(castMember)}</p>
       </div>
-    </div>
+    </Link>
   );
 };
 
