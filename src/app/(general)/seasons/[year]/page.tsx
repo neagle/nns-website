@@ -2,7 +2,7 @@ import React, { cache, Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import type { Show } from "@/app/types";
 import classnames from "classnames";
-import ShowPanel from "./ShowPanel";
+import ShowLogo from "@/app/components/ShowLogo";
 import CenterSpinner from "@/app/components/CenterSpinner";
 import { formatList } from "@/app/utils";
 
@@ -48,7 +48,7 @@ const Shows = async ({ startOfYear, endOfYear }: ShowsProps) => {
   return (
     <>
       {shows.map(async (show) => {
-        return <ShowPanel key={show._id} show={show} />;
+        return <ShowLogo key={show._id} show={show} />;
       })}
     </>
   );

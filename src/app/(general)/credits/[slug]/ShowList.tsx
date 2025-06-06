@@ -27,7 +27,7 @@ const ShowList = ({ credits }: Props) => (
     variants={containerVariants}
     initial="hidden"
     animate="visible"
-    className={classnames(["grid", "md:grid-cols-2", "gap-8"])}
+    className={classnames(["grid", "xl:grid-cols-2", "gap-8"])}
   >
     {credits.map(([showId, credits]) => (
       <motion.div key={showId} variants={childVariants}>
