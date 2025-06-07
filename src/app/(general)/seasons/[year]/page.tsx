@@ -48,7 +48,27 @@ const Shows = async ({ startOfYear, endOfYear }: ShowsProps) => {
   return (
     <>
       {shows.map(async (show) => {
-        return <ShowLogo key={show._id} show={show} />;
+        return (
+          <ShowLogo
+            key={show._id}
+            show={show}
+            className={classnames([
+              "flex",
+              "items-center",
+              "p-4",
+              "md:w-1/2",
+              "lg:w-1/3",
+              "xl:w-1/4",
+              "group",
+              "group-hover:scale-90",
+              "group-hover:opacity-50",
+              "hover:scale-100",
+              "hover:opacity-100",
+              "transition-all",
+              "duration-300",
+            ])}
+          />
+        );
       })}
     </>
   );
