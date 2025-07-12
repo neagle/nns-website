@@ -79,16 +79,14 @@ const ShowLogo = ({
 
   if (link) {
     return (
-      <div style={styleBlock} className={classnames(className)} {...rest}>
+      <div
+        style={styleBlock}
+        className={classnames(className, "p-4")}
+        {...rest}
+      >
         <Link
           href={typeof link === "string" ? link : `/shows/${show.slug}`}
-          className={classnames([
-            "flex",
-            "w-full",
-            "h-full",
-            "text-center",
-            "items-center",
-          ])}
+          className={classnames(["flex", "text-center", "items-start"])}
         >
           <WixImage
             src={show.logo}
@@ -102,7 +100,11 @@ const ShowLogo = ({
     );
   } else {
     return (
-      <div style={styleBlock} className={classnames(className)} {...rest}>
+      <div
+        style={styleBlock}
+        className={classnames(className, "p-4")}
+        {...rest}
+      >
         <WixImage
           src={show.logo}
           alt={show.title}

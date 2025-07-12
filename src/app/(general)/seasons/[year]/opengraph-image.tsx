@@ -1,4 +1,3 @@
-// app/seasons/[year]/opengraph-image.tsx
 import { ImageResponse } from "next/og";
 import wixClient from "@/lib/wixClient";
 import { getScaledToFitImageUrl } from "@/app/utils/wix/media";

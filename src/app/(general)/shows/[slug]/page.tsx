@@ -60,13 +60,14 @@ const ShowContent = async ({ slug }: { slug: string }) => {
           "grid-cols-1",
           "md:grid-cols-[2fr_3fr]",
           "xl:grid-cols-3",
-          // "flex",
-          // "flex-col",
-          // "md:flex-row",
         ])}
       >
         {show.logo && (
-          <ShowLogo show={show} className={classnames(["p-2", "row-span-2"])} />
+          <ShowLogo
+            show={show}
+            link={false}
+            className={classnames(["p-2", "row-span-2"])}
+          />
         )}
         <section
           className={classnames([

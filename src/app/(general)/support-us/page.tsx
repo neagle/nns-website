@@ -25,11 +25,11 @@ const Page = () => {
           </p>
 
           <p>
-            We believe in the power of expression and our volunteers work day
-            and night to make sure our performances bring our audience members
-            joy. We believe that the most important thing about community
-            theater is the community of people who create it. A donation to NOVA
-            Nightsky allows us to:
+            We believe in the power of expression: our volunteers work day and
+            night to make sure our performances bring our audience members joy.
+            We believe that the most important thing about community theater is
+            the community of people who create it. A donation to NOVA Nightsky
+            allows us to:
           </p>
 
           <ul>
