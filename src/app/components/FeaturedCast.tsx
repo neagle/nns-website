@@ -15,9 +15,16 @@ const FeaturedCast: React.FC<Props> = ({ show }) => {
     <div
       className={classnames(
         {
-          "xl:grid-cols-3": show.cast.length > 2,
+          "2xl:grid-cols-3": show.cast.length > 2,
+          "xl:grid-cols-2": show.cast.length > 2,
         },
-        ["grid", "gap-8", "md:grid-cols-2", "justify-center", "items-start"]
+        [
+          "grid",
+          "gap-8",
+          "md:grid-cols-1",
+          "justify-items-center",
+          "items-start",
+        ]
       )}
     >
       {manualSort(show.cast).map((cast: Credit) => {

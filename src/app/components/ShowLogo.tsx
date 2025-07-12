@@ -62,6 +62,7 @@ const ShowLogo = ({
   targetWidth,
   targetHeight,
   link = true,
+  ...rest
 }: Props) => {
   const styleBlock = {
     backgroundImage: show.backgroundTexture
@@ -73,13 +74,22 @@ const ShowLogo = ({
   };
 
   if (!show.logo) {
-    return <TextPanel show={show} />;
+    return <TextPanel show={show} {...rest} />;
   }
 
   if (link) {
     return (
-      <div style={styleBlock} className={classnames(className)}>
-        <Link href={typeof link === "string" ? link : `/shows/${show.slug}`}>
+      <div style={styleBlock} className={classnames(className)} {...rest}>
+        <Link
+          href={typeof link === "string" ? link : `/shows/${show.slug}`}
+          className={classnames([
+            "flex",
+            "w-full",
+            "h-full",
+            "text-center",
+            "items-center",
+          ])}
+        >
           <WixImage
             src={show.logo}
             alt={show.title}
@@ -92,7 +102,7 @@ const ShowLogo = ({
     );
   } else {
     return (
-      <div style={styleBlock} className={classnames(className)}>
+      <div style={styleBlock} className={classnames(className)} {...rest}>
         <WixImage
           src={show.logo}
           alt={show.title}

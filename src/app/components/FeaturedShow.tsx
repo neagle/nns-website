@@ -118,10 +118,14 @@ const FeaturedShow = async () => {
                         </Link>
                       </p>
                     </div>
-                    <h3 className="text-2xl text-primary mb-8 drop-shadow-lg text-center">
-                      The Cast
-                    </h3>
-                    <FeaturedCast show={show} />
+                    {show.cast?.length ? (
+                      <>
+                        <h3 className="text-2xl text-primary mb-8 drop-shadow-lg text-center">
+                          The Cast
+                        </h3>
+                        <FeaturedCast show={show} />
+                      </>
+                    ) : null}
                   </section>
                 </section>
               </section>
@@ -159,7 +163,7 @@ const FeaturedShow = async () => {
                     })
                   ) : (
                     <p className="text-center text-lg">
-                      No showtimes available
+                      Tickets are not yet available for this show.
                     </p>
                   )}
                 </div>

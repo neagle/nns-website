@@ -55,17 +55,18 @@ const Shows = async ({ startOfYear, endOfYear }: ShowsProps) => {
             className={classnames([
               "flex",
               "items-center",
-              "p-4",
+              "[&>*]:p-4",
               "md:w-1/2",
               "lg:w-1/3",
               "xl:w-1/4",
-              "group",
-              "group-hover:scale-90",
-              "group-hover:opacity-50",
-              "hover:scale-100",
-              "hover:opacity-100",
+              "hover:scale-100!",
+              "hover:opacity-100!",
               "transition-all",
               "duration-300",
+              "[&:focus-within]:scale-100!",
+              "[&:focus-within]:opacity-100!",
+              "[&:focus-within]:outline-8",
+              "[&:focus-within]:outline-accent",
             ])}
           />
         );
@@ -92,8 +93,10 @@ const Season = async ({ params }: PageProps) => {
           "flex-row",
           "flex-wrap",
           "group",
-          "hover:[&>section]:scale-90",
-          "hover:[&>section]:opacity-50",
+          "[&:has(*:hover)]:hover:[&>*]:scale-90",
+          "[&:has(*:hover)]:hover:[&>*]:opacity-50",
+          "[&:focus-within]:[&>*]:scale-90",
+          "[&:focus-within]:[&>*]:opacity-50",
         ])}
       >
         <Suspense fallback={<CenterSpinner />}>

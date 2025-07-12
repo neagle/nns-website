@@ -49,6 +49,14 @@ const getBoxOfficeData = cache(async () => {
 const BoxOfficeContent = async () => {
   const shows = await getBoxOfficeData();
 
+  if (Object.keys(shows).length === 0) {
+    return (
+      <div className="">
+        <p>No tickets are currently on sale.</p>
+      </div>
+    );
+  }
+
   return (
     <>
       {Object.keys(shows).map(async (show) => {

@@ -33,16 +33,21 @@ const FeaturedCastMember = ({
         />
       );
     } else {
-      return (
-        <div
-          className={classnames([
-            "w-[160px]",
-            "h-[200px]",
-            "bg-base-100",
-            "opacity-30",
-          ])}
-        ></div>
-      );
+      return null;
+      // Still working out the best way to handle missing headshots
+      // Keeping this for the moment as reference for a blank block
+      // return (
+      //   <div
+      //     className={classnames([
+      //       "w-[160px]",
+      //       "h-[200px]",
+      //       "bg-base-100",
+      //       "opacity-30",
+      //     ])}
+      //   >
+      //     No headshot
+      //   </div>
+      // );
     }
   };
   return (
