@@ -1,4 +1,4 @@
-import React, { cache, Suspense } from "react";
+import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import type { Show } from "@/app/types";
 import classnames from "classnames";
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-const getShows = cache(async (startOfYear: Date, endOfYear: Date) => {
+const getShows = async (startOfYear: Date, endOfYear: Date) => {
   const { items } = await wixClient.items
     .query("Shows")
     .ge("openingDate", startOfYear.toISOString()) // Greater than or equal to start of the year
@@ -40,7 +40,7 @@ const getShows = cache(async (startOfYear: Date, endOfYear: Date) => {
     .find();
 
   return items as Show[];
-});
+};
 
 const Shows = async ({ startOfYear, endOfYear }: ShowsProps) => {
   const shows = await getShows(startOfYear, endOfYear);

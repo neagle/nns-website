@@ -1,3 +1,5 @@
+export const revalidate = 60;
+
 import { Suspense } from "react";
 import FeaturedShow from "@/app/components/FeaturedShow";
 
