@@ -84,8 +84,8 @@ const Season = async ({ params }: PageProps) => {
 
   return (
     <div className="">
-      <h1 className="p-4 text-2xl text-primary/70! font-normal!">
-        Season <b className="text-primary! text-3xl">{year}</b>
+      <h1 className="p-4 text-2xl text-primary! font-normal!">
+        <b className="text-primary! text-3xl">{year}</b> Season
       </h1>
       <div
         className={classnames([

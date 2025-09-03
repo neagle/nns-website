@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import React, { Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import type { Credit, Show } from "@/app/types";
-import { getFirstMiddleLastNamesFromSlug, fullName } from "@/app/utils";
+import { fullName } from "@/app/utils";
 import { notFound } from "next/navigation";
 import type { Person } from "@/app/types";
 import Link from "next/link";
@@ -12,6 +12,7 @@ import ShowList from "./ShowList";
 
 interface PageProps {
   params: Promise<{
+    id: string;
     slug: string;
   }>;
 }
@@ -19,12 +20,16 @@ interface PageProps {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const { firstName, lastName } = getFirstMiddleLastNamesFromSlug(slug);
+  const { id } = await params;
+  const personQuery = wixClient.items.query("People").eq("_id", id);
+
+  const { items: people } = await personQuery.find();
+
+  const person = people[0] as Person;
 
   return {
-    title: `${firstName} ${lastName} - Credits`,
-    description: `NOVA Nightsky credits for ${firstName} ${lastName}.`,
+    title: `${fullName(person)} - Credits`,
+    description: `NOVA Nightsky credits for ${fullName(person)}.`,
   };
 }
 
@@ -101,20 +106,9 @@ const CreditsContent = async ({ id, person }: CreditsContentProps) => {
 };
 
 const Credits = async ({ params }: PageProps) => {
-  const { slug } = await params;
-  // const person = (await wixClient.items.get("People", id)) as Person;
-  const { firstName, lastName, middleName } = getFirstMiddleLastNamesFromSlug(
-    decodeURIComponent(slug)
-  );
+  const { id } = await params;
 
-  let personQuery = wixClient.items
-    .query("People")
-    .eq("firstName", firstName)
-    .eq("lastName", lastName);
-
-  if (middleName) {
-    personQuery = personQuery.eq("middleName", middleName);
-  }
+  const personQuery = wixClient.items.query("People").eq("_id", id);
 
   const { items: people } = await personQuery.find();
 
@@ -123,8 +117,6 @@ const Credits = async ({ params }: PageProps) => {
   if (!person) {
     notFound();
   }
-
-  const id = person._id;
 
   return (
     <div className="p-4 md:p-6 xl:p-8">

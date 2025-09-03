@@ -95,7 +95,9 @@ const ShowContent = async ({ slug }: { slug: string }) => {
 
             <p>
               <Link
-                href={`/credits/${nameSlug(show.director)}`}
+                href={`/credits/${nameSlug(show.director)}/${
+                  show.director._id
+                }`}
                 className="link"
               >
                 {fullName(show.director)}
@@ -151,7 +153,9 @@ const ShowContent = async ({ slug }: { slug: string }) => {
                           ])}
                         >
                           <Link
-                            href={`/credits/${nameSlug(crew[0].person)}`}
+                            href={`/credits/${nameSlug(crew[0].person)}/${
+                              crew[0].person._id
+                            }`}
                             className={classnames([
                               "link",
                               // "text-sm",
@@ -223,7 +227,9 @@ const ShowContent = async ({ slug }: { slug: string }) => {
                 {manualSort(show.cast).map((credit: Credit) => (
                   <li key={credit._id} className="mb-2">
                     <Link
-                      href={`/credits/${nameSlug(credit.person)}`}
+                      href={`/credits/${nameSlug(credit.person)}/${
+                        credit.person._id
+                      }`}
                       className="link text-primary/70 hover:text-primary transition-all"
                     >
                       {fullName(credit.person)}

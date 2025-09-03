@@ -5,6 +5,7 @@ import FolderPhotoGallery from "@/app/components/FolderPhotoGallery";
 import Link from "next/link";
 
 type Props = {
+  id: string;
   name: string;
   slug?: string;
   title: string;
@@ -12,7 +13,7 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const Person = ({ name, slug, title, photosFolderId, children }: Props) => {
+const Person = ({ id, name, slug, title, photosFolderId, children }: Props) => {
   const personSlug =
     slug || slugify(name, { separator: "-", lowercase: false });
 
@@ -36,7 +37,7 @@ const Person = ({ name, slug, title, photosFolderId, children }: Props) => {
       ])}
     >
       <div className="md:text-right">
-        <Link href={`/credits/${personSlug}`}>
+        <Link href={`/credits/${personSlug}/${id}`}>
           <h2 className="text-xl leading-tight mb-1 hover:text-info! transition-colors">
             {name}
           </h2>

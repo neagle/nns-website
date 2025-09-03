@@ -68,7 +68,7 @@ const FeaturedCastMember = ({
         "bg-base-200",
         "shadow-sm",
       ])}
-      href={`/credits/${nameSlug(castMember)}`}
+      href={`/credits/${nameSlug(castMember)}/${castMember._id}`}
     >
       <figure>
         <Headshot />

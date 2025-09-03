@@ -116,6 +116,7 @@ const Page = async () => {
         <div className={classnames(["p-4", "md:p-6", "xl:p-8"])}>
           <Person
             name="Jaclyn Robertson"
+            id="30f3d369-55e6-46ff-a77f-f7201fe29b58"
             title="Producing Director / Co&#x2011;Founder / Actress"
             photosFolderId="f9121230e78c499bbc214a7faa968714"
           >
@@ -161,6 +162,7 @@ const Page = async () => {
           </Person>
           <Person
             name="Adam Ressa"
+            id="56eeb542-0b53-423d-83dc-f9f183adb531"
             title="Design and Technical&nbsp;Director / Actor"
             photosFolderId="fee4187d32d04283aa0fe811e416387a"
           >
@@ -214,6 +216,7 @@ const Page = async () => {
           </Person>
           <Person
             name="Sarah Baczewski"
+            id="12b45679-e12a-4bcd-a6cb-098d86e7bbe3"
             title="Artistic&nbsp;Director / Actress / Director"
             photosFolderId="4f9a71dd9d2e49f4a9792b5244b51cdd"
           >
@@ -245,6 +248,7 @@ const Page = async () => {
           </Person>
           <Person
             name="Elyse R. Smith"
+            id="62151fb6-b85d-4de7-9508-a346d65c0262"
             title="Administrative&nbsp;Director / Actress / Director"
             photosFolderId="3caf53af3db94a6e862b7f7b1d76f7a2"
           >
@@ -313,6 +317,7 @@ const Page = async () => {
         <div className={classnames(["p-4", "md:p-6", "xl:p-8"])}>
           <Person
             name="Hannah Ruth Blackwell"
+            id="3d7c8a3f-94e8-4219-95ec-268ac55d3687"
             slug="Hannah_Ruth-Blackwell"
             title="Actor / Director / Playwright"
             photosFolderId="cad84141f3f745cfbb78efa1ed945eb7"
@@ -335,6 +340,7 @@ const Page = async () => {
           </Person>
           <Person
             name="Fosse Thornton"
+            id="a78c3737-bc15-4130-926a-86c9b04cc4ef"
             title="Dancer / Actress"
             photosFolderId="26e8bbe1612b4b03b5d29169d8d2564c"
           >
@@ -357,6 +363,7 @@ const Page = async () => {
         <div className={classnames(["p-4", "md:p-6", "xl:p-8"])}>
           <Person
             name="Nate Eagle"
+            id="4fc560a2-b4fa-46e2-89d2-db253361a0e9"
             title="Webmaster / Actor"
             photosFolderId="62068bde83d34dc280bdc8b00c17b8f4"
           >

@@ -112,7 +112,9 @@ const FeaturedShow = async () => {
                         Directed by <br className="md:hidden" />
                         <Link
                           className="text-primary link"
-                          href={`/credits/${nameSlug(show.director)}`}
+                          href={`/credits/${nameSlug(show.director)}/${
+                            show.director._id
+                          }`}
                         >
                           {fullName(show.director)}
                         </Link>

@@ -16,42 +16,62 @@ type Props = {
 };
 
 // If no show logo -- hopefully only a placeholder till we get data entered for all shows
-const TextPanel = ({ show }: { show: Show }) => {
+const TextPanel = ({
+  className = "",
+  link = undefined,
+  show,
+  width = 200,
+}: {
+  className?: string;
+  link?: string | boolean;
+  show: Show;
+  width?: number;
+}) => {
   const backgroundColor = convert(show.backgroundColor || random(), "hex");
   const color = convert(textColor(backgroundColor), "hex");
-  console.log("color", color);
+
+  const TextPanelContent = (
+    <div style={{ width: `${width}px` }}>
+      <h2
+        className={classnames(
+          {
+            "text-2xl": width >= 200,
+            "text-xl": width >= 150,
+          },
+          ["opacity-70", "mb-2", "leading-tight"]
+        )}
+        suppressHydrationWarning={true}
+        style={{ color }}
+      >
+        {show.title}
+      </h2>
+      <p className="opacity-50 text-xs">by {show.author}</p>
+      {typeof show.director !== "string" && (
+        <p className="opacity-50 text-xs">
+          directed by {fullName(show.director)}
+        </p>
+      )}
+    </div>
+  );
 
   return (
     <div
-      className={classnames([
-        "w-full",
-        "h-full",
-        "flex",
-        "flex-col",
-        "justify-center",
-        "items-center",
-        "p-4",
-      ])}
+      className={classnames(
+        ["w-full", "h-full", "flex", "flex-col", "p-[1.5rem]"],
+        className
+      )}
       // There is a bit of a mystery here: the color seems to change format
       // between server/client even though we're explicitly setting it to hex
       suppressHydrationWarning={true}
       style={{ backgroundColor, color }}
     >
-      <div className="w-[200px]">
-        <h2
-          className="text-2xl opacity-70 mb-2 leading-tight"
-          suppressHydrationWarning={true}
-          style={{ color }}
-        >
-          {show.title}
-        </h2>
-        <p className="opacity-50 text-xs">by {show.author}</p>
-        {typeof show.director !== "string" && (
-          <p className="opacity-50 text-xs">
-            directed by {fullName(show.director)}
-          </p>
-        )}
-      </div>
+      {link ? (
+        <Link href={typeof link === "string" ? link : `/shows/${show.slug}`}>
+          {TextPanelContent}
+        </Link>
+      ) : (
+        TextPanelContent
+      )}
     </div>
   );
 };
@@ -74,14 +94,22 @@ const ShowLogo = ({
   };
 
   if (!show.logo) {
-    return <TextPanel show={show} {...rest} />;
+    return (
+      <TextPanel
+        link={link}
+        className={className}
+        width={targetWidth}
+        show={show}
+        {...rest}
+      />
+    );
   }
 
   if (link) {
     return (
       <div
         style={styleBlock}
-        className={classnames(className, "p-4")}
+        className={classnames(className, "p-[1.5rem]")}
         {...rest}
       >
         <Link
@@ -102,7 +130,7 @@ const ShowLogo = ({
     return (
       <div
         style={styleBlock}
-        className={classnames(className, "p-4")}
+        className={classnames(className, "p-[1.5rem]")}
         {...rest}
       >
         <WixImage
