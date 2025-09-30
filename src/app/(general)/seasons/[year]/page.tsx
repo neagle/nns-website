@@ -54,6 +54,7 @@ const Shows = async ({ startOfYear, endOfYear }: ShowsProps) => {
             show={show}
             className={classnames([
               "flex",
+              "items-center",
               "hover:scale-100!",
               "hover:opacity-100!",
               "transition-all",
@@ -91,6 +92,7 @@ const Season = async ({ params }: PageProps) => {
           "md:grid-cols-3",
           "lg:grid-cols-4",
           "items-stretch",
+
           "group",
 
           "[&:has(*:hover)]:hover:[&>*]:scale-90",
