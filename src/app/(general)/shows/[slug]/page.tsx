@@ -51,34 +51,27 @@ const ShowContent = async ({ slug }: { slug: string }) => {
 
   return (
     <div className="">
-      {/* <h1 className="p-4 md:p-6 xl:p-8 text-2xl">{show.title}</h1> */}
       <div
         className={classnames([
           "grid",
-          "md:gap-x-8",
-          "md:gap-y-6",
           "grid-cols-1",
           "md:grid-cols-[2fr_3fr]",
           "xl:grid-cols-3",
         ])}
       >
-        {show.logo && (
-          <ShowLogo
-            show={show}
-            link={false}
-            className={classnames(["p-2", "row-span-2"])}
-          />
-        )}
+        <ShowLogo
+          show={show}
+          link={false}
+          className={classnames(["row-span-2"])}
+          noDirector={true}
+        />
         <section
           className={classnames([
             "xl:col-start-2",
             "xl:row-start-1",
-            // "md:pt-0!",
-            "p-4",
-            "md:pl-0",
+            "p-8",
             "md:pt-6",
             "md:pr-8",
-            // "md:pb-0",
             "xl:pt-8",
             "flex",
             "flex-col",
@@ -207,10 +200,7 @@ const ShowContent = async ({ slug }: { slug: string }) => {
             "md:row-start-2",
             "xl:col-start-3",
             "xl:row-start-1",
-            // "md:pt-0!",
-            // "md:w-1/3",
-            "p-4",
-            "md:pl-0",
+            "p-8",
             "md:pb-8",
             "md:pr-8",
             "xl:pt-8",

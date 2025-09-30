@@ -132,8 +132,8 @@ const Credits = async ({ params }: PageProps) => {
           "w-full",
         ])}
       >
-        <section>
-          {person.headshot && (
+        {person.headshot && (
+          <section>
             <WixImage
               src={person.headshot}
               alt={fullName(person)}
@@ -146,8 +146,8 @@ const Credits = async ({ params }: PageProps) => {
                 "md:mx-0",
               ])}
             />
-          )}
-        </section>
+          </section>
+        )}
 
         <section className={classnames([])}>
           <Suspense

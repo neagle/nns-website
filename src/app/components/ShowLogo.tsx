@@ -13,6 +13,7 @@ type Props = {
   targetWidth?: number;
   targetHeight?: number;
   link?: boolean | string;
+  noDirector?: boolean;
 };
 
 // If no show logo -- hopefully only a placeholder till we get data entered for all shows
@@ -21,11 +22,13 @@ const TextPanel = ({
   link = undefined,
   show,
   width = 200,
+  noDirector = false,
 }: {
   className?: string;
   link?: string | boolean;
   show: Show;
   width?: number;
+  noDirector?: boolean;
 }) => {
   const backgroundColor = convert(show.backgroundColor || random(), "hex");
   const color = convert(textColor(backgroundColor), "hex");
@@ -46,7 +49,7 @@ const TextPanel = ({
         {show.title}
       </h2>
       <p className="opacity-50 text-xs">by {show.author}</p>
-      {typeof show.director !== "string" && (
+      {!noDirector && typeof show.director !== "string" && (
         <p className="opacity-50 text-xs">
           directed by {fullName(show.director)}
         </p>
@@ -82,6 +85,7 @@ const ShowLogo = ({
   targetWidth,
   targetHeight,
   link = true,
+  noDirector,
   ...rest
 }: Props) => {
   const styleBlock = {
@@ -100,6 +104,7 @@ const ShowLogo = ({
         className={className}
         width={targetWidth}
         show={show}
+        noDirector={noDirector}
         {...rest}
       />
     );
@@ -109,7 +114,9 @@ const ShowLogo = ({
     return (
       <div
         style={styleBlock}
-        className={classnames(className, "p-[1.5rem]")}
+        className={classnames(className, {
+          "p-[1.5rem]": !show.nologopadding,
+        })}
         {...rest}
       >
         <Link
@@ -130,7 +137,7 @@ const ShowLogo = ({
     return (
       <div
         style={styleBlock}
-        className={classnames(className, "p-[1.5rem]")}
+        className={classnames(className, { "p-[1.5rem]": !show.nologopadding })}
         {...rest}
       >
         <WixImage
