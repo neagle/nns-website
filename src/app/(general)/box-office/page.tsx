@@ -1,3 +1,5 @@
+export const revalidate = 60;
+
 import type { Metadata } from "next";
 import React, { cache, Suspense } from "react";
 import wixClient from "@/lib/wixClient";
