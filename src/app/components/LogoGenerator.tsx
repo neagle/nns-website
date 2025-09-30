@@ -9,7 +9,7 @@
  * - [ ] Create controls to justify/align logo
  */
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Logo from "@/app/components/Logo";
 import Nightsky from "@/app/components/Nightsky";
 import { toPng, toJpeg, toSvg } from "html-to-image";
@@ -48,8 +48,20 @@ const LogoGenerator = () => {
 
   const [fileType, setFileType] = useLocalStorage("logo-file-type", "png");
   const [fontSize, setFontSize] = useLocalStorage("logo-font-size", 48);
+  const [showFireflies, setShowFireflies] = useLocalStorage(
+    "logo-fireflies",
+    false
+  );
+
+  useEffect(() => {
+    // If fileType is not in fileTypes, set it to the first item
+    if (!fileTypes.includes(fileType)) {
+      setFileType(fileTypes[0]);
+    }
+  }, [fileType, setFileType]);
 
   const handleSave = async () => {
+    console.log("save", fileType);
     if (logoRef.current) {
       let dataUrl;
       if (fileType === "png") {
@@ -72,8 +84,8 @@ const LogoGenerator = () => {
   return (
     <div>
       <h1>Logo Generator</h1>
-      <div className="flex gap-8">
-        <label className="input">
+      <div className="w-full flex gap-8">
+        <label className="input input-xs">
           Width
           <input
             type="text"
@@ -83,7 +95,7 @@ const LogoGenerator = () => {
             onChange={(e) => setWidth(Number(e.target.value))}
           />
         </label>
-        <label className="input">
+        <label className="input input-xs">
           Height
           <input
             type="text"
@@ -93,8 +105,10 @@ const LogoGenerator = () => {
             onChange={(e) => setHeight(Number(e.target.value))}
           />
         </label>
+      </div>
+      <div className="py-4">
         <label>
-          <label className="input">
+          <label className="input input-xs">
             Font Size
             <input
               type="text"
@@ -109,9 +123,18 @@ const LogoGenerator = () => {
             min={0}
             max={200}
             value={fontSize}
-            className="range range-xs w-[200px]"
+            className="range range-xs w-[200px] ml-4"
             onChange={(e) => setFontSize(Number(e.target.value))}
           />
+        </label>
+        <label className="label pt-4">
+          <input
+            type="checkbox"
+            checked={showFireflies}
+            onChange={(e) => setShowFireflies(e.target.checked)}
+            className="toggle toggle-xs"
+          />
+          Show Fireflies
         </label>
       </div>
       <div
@@ -120,6 +143,7 @@ const LogoGenerator = () => {
       >
         <div id="logo-generator" style={{ width, height }} ref={logoRef}>
           <Nightsky
+            fireflies={showFireflies}
             className={classnames([
               // "[&_div]:outline-10",
               // "[&_div]:outline-red-500",
