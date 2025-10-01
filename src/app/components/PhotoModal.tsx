@@ -16,12 +16,18 @@ import { X } from "lucide-react";
 
 interface PhotoModalProps {
   photo: Photo;
+  isOpen?: boolean;
+  onClose?: () => void;
   /** The child component(s), e.g. <Image /> */
   children: ReactNode;
 }
 
-const PhotoModal = ({ photo, children }: PhotoModalProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+const PhotoModal = ({
+  photo,
+  children,
+  isOpen = false,
+  onClose,
+}: PhotoModalProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [scaledUrl, setScaledUrl] = useState("");
   const [finalWidth, setFinalWidth] = useState(0);
@@ -43,19 +49,6 @@ const PhotoModal = ({ photo, children }: PhotoModalProps) => {
       window.removeEventListener("resize", handleResize);
     };
   }, [handleResize]);
-
-  // Close modal on Escape
-  useEffect(() => {
-    function handleEscape(e: globalThis.KeyboardEvent) {
-      if (e.key === "Escape") {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener("keydown", handleEscape as EventListener);
-    return () => {
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, []);
 
   // Calculate scaled dimensions when modal opens or window size changes
   useEffect(() => {
@@ -103,7 +96,7 @@ const PhotoModal = ({ photo, children }: PhotoModalProps) => {
   // Close modal when clicking the backdrop
   const handleBackdropClick = (e: MouseEvent<HTMLDialogElement>) => {
     if (e.target === e.currentTarget) {
-      setIsOpen(false);
+      if (onClose) onClose();
     }
   };
 
@@ -144,7 +137,9 @@ const PhotoModal = ({ photo, children }: PhotoModalProps) => {
               "transition-all",
               "font-bold",
             ])}
-            onClick={() => setIsOpen(false)}
+            onClick={() => {
+              if (onClose) onClose();
+            }}
           >
             <X />
           </button>
@@ -174,7 +169,7 @@ const PhotoModal = ({ photo, children }: PhotoModalProps) => {
                   objectFit: "contain",
                 }}
                 className="rounded-lg"
-                onLoadingComplete={() => setIsLoading(false)}
+                onLoad={() => setIsLoading(false)}
                 priority={true}
               />
             </div>
@@ -186,19 +181,16 @@ const PhotoModal = ({ photo, children }: PhotoModalProps) => {
 
   return (
     <>
-      {/* Trigger: Click to open modal */}
       <div
         role="button"
         tabIndex={0}
-        onClick={() => setIsOpen(true)}
-        onKeyDown={(e) => e.key === "Enter" && setIsOpen(true)}
         style={{ cursor: "pointer", display: "inline-block" }}
       >
         {children}
       </div>
 
       {/* Render modal using React Portal */}
-      {isOpen && createPortal(modalContent, document.body)}
+      {createPortal(modalContent, document.body)}
 
       {/* Preload the image */}
       {scaledUrl && (
@@ -208,7 +200,7 @@ const PhotoModal = ({ photo, children }: PhotoModalProps) => {
           width={finalWidth}
           height={finalHeight}
           style={{ display: "none" }}
-          onLoadingComplete={() => setIsLoading(false)}
+          onLoad={() => setIsLoading(false)}
           priority={true}
         />
       )}

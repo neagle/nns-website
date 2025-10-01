@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import type { Photo } from "@/app/types";
 import { getWixImageDimensions } from "@/app/utils";
 import { getScaledToFitImageUrl } from "@/app/utils/wix/media";
@@ -25,6 +25,32 @@ interface PhotoGalleryProps {
 
 const PhotoGallery = ({ photos }: PhotoGalleryProps) => {
   const swiperRef = useRef<SwiperType | null>(null);
+  const [openModalIndex, setOpenModalIndex] = useState<number | null>(null);
+
+  // Close modal on Escape
+  useEffect(() => {
+    function handleKeypress(e: globalThis.KeyboardEvent) {
+      if (e.key === "Escape") {
+        setOpenModalIndex(null);
+      }
+      if (e.key === "ArrowLeft") {
+        setOpenModalIndex((prev) => {
+          if (prev === null) return null;
+          return prev > 0 ? prev - 1 : prev;
+        });
+      }
+      if (e.key === "ArrowRight") {
+        setOpenModalIndex((prev) => {
+          if (prev === null) return null;
+          return prev < photos.length - 1 ? prev + 1 : prev;
+        });
+      }
+    }
+    document.addEventListener("keyup", handleKeypress as EventListener);
+    return () => {
+      document.removeEventListener("keyup", handleKeypress);
+    };
+  }, [photos.length]);
 
   return (
     <div className="overflow-hidden">
@@ -64,10 +90,10 @@ const PhotoGallery = ({ photos }: PhotoGalleryProps) => {
                 "transition-opacity",
               ])}"></span>`,
           }}
-          onSlideChange={() => console.log("slide change")}
-          onSwiper={(swiper) => console.log(swiper)}
+          // onSlideChange={() => {}}
+          // onSwiper={(swiper) => console.log(swiper)}
         >
-          {photos.map((photo) => {
+          {photos.map((photo, i) => {
             const { width, height } = getWixImageDimensions(photo.src);
             const ratio = width / height;
 
@@ -82,16 +108,32 @@ const PhotoGallery = ({ photos }: PhotoGalleryProps) => {
             );
 
             return (
-              <SwiperSlide key={photo.slug} style={{ width: scaledWidth }}>
-                <PhotoModal photo={photo}>
-                  <Image
-                    src={scaledImage}
-                    alt={photo.alt}
-                    width={scaledWidth}
-                    height={scaledHeight}
-                  />
-                </PhotoModal>
-              </SwiperSlide>
+              <>
+                <SwiperSlide
+                  key={photo.slug}
+                  style={{ width: scaledWidth }}
+                  onClick={() => {
+                    if (openModalIndex !== i) {
+                      setOpenModalIndex(i);
+                    }
+                  }}
+                >
+                  <PhotoModal
+                    photo={photo}
+                    isOpen={openModalIndex === i}
+                    onClose={() => {
+                      setOpenModalIndex(null);
+                    }}
+                  >
+                    <Image
+                      src={scaledImage}
+                      alt={photo.alt}
+                      width={scaledWidth}
+                      height={scaledHeight}
+                    />
+                  </PhotoModal>
+                </SwiperSlide>
+              </>
             );
           })}
         </Swiper>
