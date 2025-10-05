@@ -11,6 +11,7 @@ export interface Show extends WixDataItem {
     middleName?: string;
     lastName: string;
   };
+  auditions?: string;
   logo: string;
   logoHorizontal?: string;
   backgroundTexture?: string;

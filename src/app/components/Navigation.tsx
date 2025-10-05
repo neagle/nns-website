@@ -22,8 +22,9 @@ const Navigation = ({ seasons }: Props) => {
   const navItems: navItem[] = [
     {
       label: "Shows",
-      children: seasons.map((season) => {
-        const currentSeason = season === new Date().getFullYear().toString();
+      children: seasons.map((season, i) => {
+        // const currentSeason = season === new Date().getFullYear().toString();
+        const currentSeason = i === 0;
         return {
           label: `${season}${currentSeason ? " Season" : ""}`,
           href: `/seasons/${season}`,

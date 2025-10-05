@@ -1,3 +1,5 @@
+export const revalidate = 60; // revalidate this page every 60 seconds
+
 import React from "react";
 import wixClient from "@/lib/wixClient";
 import { media } from "@wix/sdk";
@@ -12,6 +14,7 @@ import { getBackgroundImage } from "@/app/utils";
 import probe from "probe-image-size";
 import Link from "next/link";
 import FeaturedCast from "@/app/components/FeaturedCast";
+import FormattedDateTime from "@/app/components/FormattedDateTime";
 
 const FeaturedShow = async () => {
   const { items } = await wixClient.items
@@ -127,7 +130,28 @@ const FeaturedShow = async () => {
                         </h3>
                         <FeaturedCast show={show} />
                       </>
-                    ) : null}
+                    ) : (
+                      <>
+                        {show.openingDate ? (
+                          <h3 className="text-center">
+                            <span className="font-normal opacity-80 text-md mr-1">
+                              Opens on
+                            </span>{" "}
+                            <FormattedDateTime
+                              className="text-xl"
+                              date={new Date(show.openingDate)}
+                              format="MMMM D , YYYY"
+                            />
+                          </h3>
+                        ) : null}
+                        {show.auditions ? (
+                          <div
+                            className="my-2"
+                            dangerouslySetInnerHTML={{ __html: show.auditions }}
+                          />
+                        ) : null}
+                      </>
+                    )}
                   </section>
                 </section>
               </section>
