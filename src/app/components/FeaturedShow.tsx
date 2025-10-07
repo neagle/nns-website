@@ -2,16 +2,13 @@ export const revalidate = 60; // revalidate this page every 60 seconds
 
 import React from "react";
 import wixClient from "@/lib/wixClient";
-import { media } from "@wix/sdk";
 import classnames from "classnames";
 import type { Show } from "@/app/types";
 import PersonList from "@/app/components/PersonList";
 import { getShowsWithData } from "@/app/actions/shows";
 import ShowTime from "./ShowTime";
 import WixImage from "@/app/components/WixImage";
-import { getImageProps } from "next/image";
-import { getBackgroundImage } from "@/app/utils";
-import probe from "probe-image-size";
+import { getShowBackgroundStyle } from "@/app/utils";
 import Link from "next/link";
 import FeaturedCast from "@/app/components/FeaturedCast";
 import FormattedDateTime from "@/app/components/FormattedDateTime";
@@ -33,34 +30,7 @@ const FeaturedShow = async () => {
     <div className="h-full">
       <ul className="h-full flex flex-col">
         {showsWithData.map(async (show) => {
-          let backgroundStyle: React.CSSProperties = {
-            backgroundColor: show.backgroundColor || "transparent",
-          };
-
-          if (show.backgroundTexture) {
-            // TODO: package up this way of optimizing background images
-            const backgroundTexture = media.getImageUrl(show.backgroundTexture);
-            const imageData = await probe(backgroundTexture.url);
-            const backgroundWidth = imageData.width;
-            const backgroundHeight = imageData.height;
-
-            const {
-              props: { srcSet },
-            } = getImageProps({
-              alt: "",
-              width: backgroundWidth,
-              height: backgroundHeight,
-              src: backgroundTexture.url,
-            });
-            const backgroundImage = getBackgroundImage(srcSet);
-
-            backgroundStyle = {
-              ...backgroundStyle,
-              backgroundImage,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            };
-          }
+          const backgroundStyle = getShowBackgroundStyle(show);
 
           return (
             <li

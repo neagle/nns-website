@@ -1,12 +1,11 @@
 import React from "react";
 import type { Show } from "@/app/types";
 import WixImage from "@/app/components/WixImage";
-import { media } from "@wix/sdk";
 import Link from "next/link";
 import classnames from "classnames";
 import { convert, random, textColor } from "colorizr";
-import { fullName } from "@/app/utils";
 import { getPersonList } from "./PersonList";
+import { getShowBackgroundStyle } from "@/app/utils";
 
 type Props = {
   className?: string;
@@ -89,14 +88,14 @@ const ShowLogo = ({
   noDirector,
   ...rest
 }: Props) => {
-  const styleBlock = {
-    backgroundImage: show.backgroundTexture
-      ? `url(${media.getImageUrl(show.backgroundTexture).url})`
-      : "none",
-    backgroundColor: show.backgroundColor || "transparent",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  };
+  // const styleBlock = {
+  //   backgroundImage: show.backgroundTexture
+  //     ? `url(${media.getImageUrl(show.backgroundTexture).url})`
+  //     : "none",
+  //   backgroundColor: show.backgroundColor || "transparent",
+  //   backgroundSize: "cover",
+  //   backgroundPosition: "center",
+  // };
 
   if (!show.logo) {
     return (
@@ -110,6 +109,8 @@ const ShowLogo = ({
       />
     );
   }
+
+  const styleBlock = getShowBackgroundStyle(show);
 
   if (link) {
     return (

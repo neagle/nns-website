@@ -1,4 +1,6 @@
 import type { Person } from "@/app/types";
+import { getImageProps } from "next/image";
+import { Show } from "@/app/types";
 
 export const fullName = ({
   firstName = "",
@@ -128,4 +130,53 @@ export const slugifyFirstMiddleLastNames = (
     .join("-");
 
   return slug;
+};
+
+export const getShowBackgroundStyle = (show: Show) => {
+  // get hash and query params from show.backgroundTexture
+  if (!show.backgroundTexture) {
+    return {
+      backgroundColor: show.backgroundColor || "transparent",
+    };
+  }
+
+  if (show.backgroundTexture) {
+    const url = new URL(show.backgroundTexture);
+    // Get just the filename part of the path
+    // "wix:image://v1/c22223_10614f11a4a94b6da943329142b0fd48~mv2.png/CF-BG-WEB.png#originWidth=2400&originHeight=2400"
+    const match = /v1\/(?<filename>[a-z0-9_~\.]+)\//.exec(url.pathname);
+    const { filename = "" } = match?.groups || {};
+    const hashParams = Object.fromEntries(
+      url.hash
+        .replace("#", "")
+        .split("&")
+        .map((param) => param.split("="))
+    );
+
+    let backgroundStyle: React.CSSProperties = {};
+    const backgroundWidth = hashParams.originWidth
+      ? parseInt(hashParams.originWidth, 10)
+      : undefined;
+    const backgroundHeight = hashParams.originHeight
+      ? parseInt(hashParams.originHeight, 10)
+      : undefined;
+
+    const {
+      props: { srcSet },
+    } = getImageProps({
+      alt: "",
+      width: backgroundWidth,
+      height: backgroundHeight,
+      src: `https://static.wixstatic.com/media/${filename}`,
+    });
+    const backgroundImage = getBackgroundImage(srcSet);
+
+    backgroundStyle = {
+      ...backgroundStyle,
+      backgroundImage,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    };
+    return backgroundStyle;
+  }
 };
