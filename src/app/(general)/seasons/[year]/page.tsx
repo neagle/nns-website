@@ -36,7 +36,7 @@ const getShows = async (startOfYear: Date, endOfYear: Date) => {
     .ge("openingDate", startOfYear.toISOString()) // Greater than or equal to start of the year
     .le("openingDate", endOfYear.toISOString()) // Less than or equal to end of the year
     .ascending("openingDate")
-    .include("director")
+    .include("directors")
     .find();
 
   return items as Show[];

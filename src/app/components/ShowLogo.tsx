@@ -6,6 +6,7 @@ import Link from "next/link";
 import classnames from "classnames";
 import { convert, random, textColor } from "colorizr";
 import { fullName } from "@/app/utils";
+import { getPersonList } from "./PersonList";
 
 type Props = {
   className?: string;
@@ -49,9 +50,9 @@ const TextPanel = ({
         {show.title}
       </h2>
       <p className="opacity-50 text-xs">by {show.author}</p>
-      {!noDirector && typeof show.director !== "string" && (
+      {!noDirector && show.directors?.length && (
         <p className="opacity-50 text-xs">
-          directed by {fullName(show.director)}
+          directed by {getPersonList({ people: show.directors })}
         </p>
       )}
     </div>
@@ -112,13 +113,7 @@ const ShowLogo = ({
 
   if (link) {
     return (
-      <div
-        style={styleBlock}
-        className={classnames(className, {
-          "p-[1.5rem]": !show.nologopadding,
-        })}
-        {...rest}
-      >
+      <div style={styleBlock} className={classnames(className, {})} {...rest}>
         <Link
           href={typeof link === "string" ? link : `/shows/${show.slug}`}
           className={classnames(["flex", "text-center", "items-start"])}
@@ -135,11 +130,7 @@ const ShowLogo = ({
     );
   } else {
     return (
-      <div
-        style={styleBlock}
-        className={classnames(className, { "p-[1.5rem]": !show.nologopadding })}
-        {...rest}
-      >
+      <div style={styleBlock} className={classnames(className, {})} {...rest}>
         <WixImage
           src={show.logo}
           alt={show.title}

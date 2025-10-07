@@ -5,7 +5,7 @@ import wixClient from "@/lib/wixClient";
 import { media } from "@wix/sdk";
 import classnames from "classnames";
 import type { Show } from "@/app/types";
-import { fullName, nameSlug } from "@/app/utils";
+import PersonList from "@/app/components/PersonList";
 import { getShowsWithData } from "@/app/actions/shows";
 import ShowTime from "./ShowTime";
 import WixImage from "@/app/components/WixImage";
@@ -20,7 +20,7 @@ const FeaturedShow = async () => {
   const { items } = await wixClient.items
     .query("Shows")
     .eq("feature", true)
-    .include("director")
+    .include("directors")
     .find();
 
   const shows = items as Show[];
@@ -77,7 +77,11 @@ const FeaturedShow = async () => {
                   <Link
                     className={classnames(["p-4", "md:p-6", "xl:p-8", "block"])}
                     style={backgroundStyle}
-                    href="/box-office"
+                    href={
+                      // If there are showtimes, link to the box office,
+                      // otherwise link to the show page
+                      show.shows?.length ? "/box-office" : `/shows/${show.slug}`
+                    }
                   >
                     <WixImage
                       src={
@@ -113,14 +117,10 @@ const FeaturedShow = async () => {
                         ])}
                       >
                         Directed by <br className="md:hidden" />
-                        <Link
-                          className="text-primary link"
-                          href={`/credits/${nameSlug(show.director)}/${
-                            show.director._id
-                          }`}
-                        >
-                          {fullName(show.director)}
-                        </Link>
+                        <PersonList
+                          people={show.directors}
+                          linkToCredits={true}
+                        />
                       </p>
                     </div>
                     {show.cast?.length ? (

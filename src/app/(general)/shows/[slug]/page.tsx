@@ -11,6 +11,7 @@ import { BookImage } from "lucide-react";
 import PhotoGallery from "@/app/components/PhotoGallery";
 import ShowLogo from "@/app/components/ShowLogo";
 import CenterSpinner from "@/app/components/CenterSpinner";
+import PersonList, { getPersonList } from "@/app/components/PersonList";
 
 interface PageProps {
   params: Promise<{
@@ -21,7 +22,7 @@ interface PageProps {
 const getShowData = async (slug: string) => {
   const { items } = await wixClient.items
     .query("Shows")
-    .include("director")
+    .include("directors")
     .eq("slug", slug)
     .find();
 
@@ -37,9 +38,9 @@ export async function generateMetadata({
   const show = await getShowData(slug);
 
   return {
-    title: `${show.title}, by ${show.author}, directed by ${fullName(
-      show.director
-    )}`,
+    title: `${show.title}, by ${show.author}, directed by ${getPersonList({
+      people: show.directors,
+    })}`,
     description: show.description
       ? `${show.description.replace(/<[^>]+>/g, "").slice(0, 160)}...`
       : "Learn more about this show at NOVA Nightsky Theater.",
@@ -83,20 +84,15 @@ const ShowContent = async ({ slug }: { slug: string }) => {
             {show.author}
           </h2> */}
 
-          <section>
-            <h2>Director</h2>
+          {show.directors?.length && (
+            <section>
+              <h2>Director{show.directors.length > 1 ? "s" : ""}</h2>
 
-            <p>
-              <Link
-                href={`/credits/${nameSlug(show.director)}/${
-                  show.director._id
-                }`}
-                className="link"
-              >
-                {fullName(show.director)}
-              </Link>
-            </p>
-          </section>
+              <p>
+                <PersonList people={show.directors} linkToCredits={true} />
+              </p>
+            </section>
+          )}
 
           {show.program && (
             <section>

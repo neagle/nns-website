@@ -41,10 +41,11 @@ interface CreditsContentProps {
 const CreditsContent = async ({ id, person }: CreditsContentProps) => {
   const { items: directed } = await wixClient.items
     .query("Shows")
-    .eq("director", id)
+    .hasSome("directors", id)
     .find();
 
   const showsDirected = directed as Show[];
+
   // Transform directed shows into credits
   const directorialCredits = showsDirected.map(
     (show) =>
