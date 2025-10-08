@@ -60,16 +60,9 @@ const ShowContent = async ({ slug }: { slug: string }) => {
           "xl:grid-cols-3",
         ])}
       >
-        <ShowLogo
-          show={show}
-          link={false}
-          className={classnames(["row-span-2"])}
-          noDirector={true}
-        />
+        <ShowLogo show={show} link={false} noDirector={true} centered={false} />
         <section
           className={classnames([
-            "xl:col-start-2",
-            "xl:row-start-1",
             "p-8",
             "md:pt-6",
             "md:pr-8",
@@ -122,6 +115,28 @@ const ShowContent = async ({ slug }: { slug: string }) => {
               </Link>
             </section>
           )}
+
+          {show.cast?.length ? (
+            <section>
+              <h2>Cast</h2>
+
+              <ul>
+                {manualSort(show.cast).map((credit: Credit) => (
+                  <li key={credit._id} className="mb-2">
+                    <Link
+                      href={`/credits/${nameSlug(credit.person)}/${
+                        credit.person._id
+                      }`}
+                      className="link text-primary/70 hover:text-primary transition-all"
+                    >
+                      {fullName(credit.person)}
+                    </Link>{" "}
+                    as <b className="text-primary/70">{credit.role}</b>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
 
           {show.crew?.length ? (
             <section>
@@ -189,13 +204,8 @@ const ShowContent = async ({ slug }: { slug: string }) => {
             </section>
           ) : null}
         </section>
-
         <section
           className={classnames([
-            "md:col-start-2",
-            "md:row-start-2",
-            "xl:col-start-3",
-            "xl:row-start-1",
             "p-8",
             "md:pb-8",
             "md:pr-8",
@@ -203,30 +213,10 @@ const ShowContent = async ({ slug }: { slug: string }) => {
             "flex",
             "flex-col",
             "gap-8",
+            "md:col-span-2",
+            "xl:col-span-1",
           ])}
         >
-          {show.cast?.length ? (
-            <section>
-              <h2>Cast</h2>
-
-              <ul>
-                {manualSort(show.cast).map((credit: Credit) => (
-                  <li key={credit._id} className="mb-2">
-                    <Link
-                      href={`/credits/${nameSlug(credit.person)}/${
-                        credit.person._id
-                      }`}
-                      className="link text-primary/70 hover:text-primary transition-all"
-                    >
-                      {fullName(credit.person)}
-                    </Link>{" "}
-                    as <b className="text-primary/70">{credit.role}</b>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
-
           {show.description && (
             <section>
               <h2 className="text-lg">Description</h2>

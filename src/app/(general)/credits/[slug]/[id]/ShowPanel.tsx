@@ -36,7 +36,7 @@ const ShowPanel = ({ credits }: ShowPanelProps) => {
         <ShowLogo
           show={show}
           targetWidth={150}
-          className="text-center overflow-hidden p-4 w-full"
+          className="text-center overflow-hidden w-full"
         />
       </figure>
       <div className="card-body">

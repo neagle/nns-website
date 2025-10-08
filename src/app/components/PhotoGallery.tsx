@@ -6,7 +6,6 @@ import { getWixImageDimensions } from "@/app/utils";
 import { getScaledToFitImageUrl } from "@/app/utils/wix/media";
 import Image from "next/image";
 import classnames from "classnames";
-import PhotoModal from "./PhotoModal";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 // Import Swiper React components
@@ -18,6 +17,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+
+// Prevent SSR for PhotoModal
+import dynamic from "next/dynamic";
+const PhotoModal = dynamic(() => import("./PhotoModal"), {
+  ssr: false,
+});
 
 interface PhotoGalleryProps {
   photos: Photo[];

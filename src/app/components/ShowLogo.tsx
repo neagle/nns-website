@@ -14,6 +14,7 @@ type Props = {
   targetHeight?: number;
   link?: boolean | string;
   noDirector?: boolean;
+  centered?: boolean;
 };
 
 // If no show logo -- hopefully only a placeholder till we get data entered for all shows
@@ -86,17 +87,9 @@ const ShowLogo = ({
   targetHeight,
   link = true,
   noDirector,
+  centered = true,
   ...rest
 }: Props) => {
-  // const styleBlock = {
-  //   backgroundImage: show.backgroundTexture
-  //     ? `url(${media.getImageUrl(show.backgroundTexture).url})`
-  //     : "none",
-  //   backgroundColor: show.backgroundColor || "transparent",
-  //   backgroundSize: "cover",
-  //   backgroundPosition: "center",
-  // };
-
   if (!show.logo) {
     return (
       <TextPanel
@@ -112,36 +105,38 @@ const ShowLogo = ({
 
   const styleBlock = getShowBackgroundStyle(show);
 
-  if (link) {
-    return (
-      <div style={styleBlock} className={classnames(className, {})} {...rest}>
+  const ShowImage = (
+    <WixImage
+      src={show.logo}
+      alt={show.title}
+      targetWidth={targetWidth}
+      targetHeight={targetHeight}
+      className={classnames("mx-auto", {
+        "p-[10%]": !show.nologopadding,
+      })}
+    />
+  );
+
+  return (
+    <div
+      style={styleBlock}
+      className={classnames({ flex: centered, "items-center": centered }, [
+        className,
+      ])}
+      {...rest}
+    >
+      {link ? (
         <Link
           href={typeof link === "string" ? link : `/shows/${show.slug}`}
           className={classnames(["flex", "text-center", "items-start"])}
         >
-          <WixImage
-            src={show.logo}
-            alt={show.title}
-            targetWidth={targetWidth}
-            targetHeight={targetHeight}
-            className="mx-auto"
-          />
+          {ShowImage}
         </Link>
-      </div>
-    );
-  } else {
-    return (
-      <div style={styleBlock} className={classnames(className, {})} {...rest}>
-        <WixImage
-          src={show.logo}
-          alt={show.title}
-          targetWidth={targetWidth}
-          targetHeight={targetHeight}
-          className="mx-auto"
-        />
-      </div>
-    );
-  }
+      ) : (
+        <>{ShowImage}</>
+      )}
+    </div>
+  );
 };
 
 export default ShowLogo;
