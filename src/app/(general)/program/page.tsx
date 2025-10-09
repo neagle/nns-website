@@ -64,7 +64,15 @@ const Program = async () => {
         <>
           <h2 className="mt-8 mb-4">Previous Shows</h2>
 
-          <section className="flex flex-wrap gap-4">
+          <section
+            className={classnames([
+              "flex",
+              "flex-wrap",
+              "gap-4",
+              "flex-col",
+              "md:flex-row",
+            ])}
+          >
             {shows.length &&
               shows.map((show, i) =>
                 i !== 0 ? (
