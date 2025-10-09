@@ -25,12 +25,7 @@ const ShowPanel = ({ credits }: ShowPanelProps) => {
   );
   return (
     <div
-      className={classnames([
-        "card",
-        "md:card-side",
-        "bg-base-200",
-        "shadow-md",
-      ])}
+      className={classnames(["card", "card-side", "bg-base-200", "shadow-md"])}
     >
       <figure className="shrink-0">
         <ShowLogo
