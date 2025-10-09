@@ -12,6 +12,7 @@ import PhotoGallery from "@/app/components/PhotoGallery";
 import ShowLogo from "@/app/components/ShowLogo";
 import CenterSpinner from "@/app/components/CenterSpinner";
 import PersonList, { getPersonList } from "@/app/components/PersonList";
+import FormattedDateTime from "@/app/components/FormattedDateTime";
 
 interface PageProps {
   params: Promise<{
@@ -49,6 +50,8 @@ export async function generateMetadata({
 
 const ShowContent = async ({ slug }: { slug: string }) => {
   const show = await getShowData(slug);
+  const openingDate = new Date(show.openingDate || "");
+  const now = new Date();
 
   return (
     <div className="">
@@ -76,6 +79,17 @@ const ShowContent = async ({ slug }: { slug: string }) => {
             <b className="text-xl text-primary/50 font-normal">by</b>{" "}
             {show.author}
           </h2> */}
+          {openingDate && openingDate > now ? (
+            <h2 className="text-secondary!">
+              Opening in{" "}
+              <FormattedDateTime date={openingDate} format="MMMM YYYY" />
+            </h2>
+          ) : (
+            <h2 className="text-primary">
+              Opened in{" "}
+              <FormattedDateTime date={openingDate} format="MMMM YYYY" />
+            </h2>
+          )}
 
           {show.directors?.length && (
             <section>
@@ -86,6 +100,17 @@ const ShowContent = async ({ slug }: { slug: string }) => {
               </p>
             </section>
           )}
+
+          {!show.noLongerAuditioning &&
+            show.auditions &&
+            openingDate &&
+            openingDate > now && (
+              <section>
+                <h2>Auditions</h2>
+
+                <div dangerouslySetInnerHTML={{ __html: show.auditions }} />
+              </section>
+            )}
 
           {show.program && (
             <section>
