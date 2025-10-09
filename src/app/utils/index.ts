@@ -176,6 +176,7 @@ export const getShowBackgroundStyle = (show: Show) => {
       backgroundImage,
       backgroundSize: "cover",
       backgroundPosition: "center",
+      backfaceVisibility: "hidden",
     };
     return backgroundStyle;
   }
