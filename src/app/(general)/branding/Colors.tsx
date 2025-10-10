@@ -10,6 +10,7 @@ const Colors = () => {
   });
   // const [format, setFormat] = useState("HEX");
   const colors = ["FDBF5D", "151843", "636260", "c4bdad", "ffffff"];
+  const highlightColors = ["2AA198", "268BD2", "D33682"];
   if (!format) {
     return;
   } else {
@@ -36,6 +37,17 @@ const Colors = () => {
         <div className="flex flex-col md:flex-row gap-4 w-full">
           {colors.map((color) => (
             <Color key={color} hex={color} format={format} className="flex-1" />
+          ))}
+        </div>
+        <h2>Highlight Colors</h2>
+        <div className="flex flex-col md:flex-row gap-4">
+          {highlightColors.map((color) => (
+            <Color
+              key={color}
+              hex={color}
+              format={format}
+              className="flex-1 h-[100px]"
+            />
           ))}
         </div>
       </>
