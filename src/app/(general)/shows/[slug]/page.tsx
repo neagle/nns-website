@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import React, { Suspense } from "react";
+import { notFound } from "next/navigation";
 import wixClient from "@/lib/wixClient";
 import type { Credit, Show, ShowWithData } from "@/app/types";
 import { media } from "@wix/sdk";
@@ -51,7 +52,9 @@ export async function generateMetadata({
 const ShowContent = async ({ slug }: { slug: string }) => {
   const show = await getShowData(slug);
 
-  if (!show) return;
+  if (!show) {
+    notFound();
+  }
 
   const openingDate = new Date(show?.openingDate || "");
   const now = new Date();
