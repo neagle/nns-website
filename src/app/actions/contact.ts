@@ -90,6 +90,14 @@ export async function submitContactForm(
   const subject = formData.get("subject");
   const message = formData.get("message");
 
+  console.log("firstName", firstName);
+  console.log("lastName", lastName);
+  console.log("email", email);
+  console.log("phoneNumber", phoneNumber);
+  console.log("address", address);
+  console.log("subject", subject);
+  console.log("message", message);
+
   const fields = {
     first_name_fe01: firstName,
     last_name_b4ca: lastName,
