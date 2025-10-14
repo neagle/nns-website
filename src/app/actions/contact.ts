@@ -108,6 +108,7 @@ export async function submitContactForm(
   }
 
   try {
+    console.log("Submitting contact form to Wix with fields:", fields);
     await wixClient.submissions.createSubmission({
       formId: "1ff9543e-318e-4617-9535-b4273beac2ea",
       submissions: fields,
