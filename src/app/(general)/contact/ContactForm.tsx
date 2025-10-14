@@ -33,7 +33,7 @@ export default function ContactForm() {
             <div className="md:grid md:grid-cols-2 md:gap-4">
               <FloatingLabelInput label="First Name" id="firstName" required />
               <FloatingLabelInput label="Last Name" id="lastName" required />
-              <FloatingLabelInput label="Email" id="emailName" required />
+              <FloatingLabelInput label="Email" id="email" required />
               <FloatingLabelInput
                 label="Phone"
                 id="phoneName"
