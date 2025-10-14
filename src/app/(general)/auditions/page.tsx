@@ -53,7 +53,8 @@ const AuditionContent = async () => {
   const { items } = await wixClient.items
     .query("Shows")
     .ge("openingDate", now.toISOString())
-    .eq("noLongerAuditioning", false)
+    .ne("noLongerAuditioning", true)
+    .ascending("openingDate")
     .find();
 
   const shows = items as Show[];
