@@ -115,10 +115,31 @@ const FeaturedShow = async () => {
                           </h3>
                         ) : null}
                         {show.auditions ? (
-                          <div
-                            className="my-2"
-                            dangerouslySetInnerHTML={{ __html: show.auditions }}
-                          />
+                          <div className="flex gap-8 flex-col xl:flex-row">
+                            <div
+                              className="my-2 grow"
+                              dangerouslySetInnerHTML={{
+                                __html: show.auditions,
+                              }}
+                            />
+
+                            {show.auditionLink && (
+                              <Link
+                                href={show.auditionLink}
+                                className={classnames([
+                                  "mt-4",
+                                  "btn",
+                                  "btn-primary",
+                                  "btn-full",
+                                  "hover:scale-110",
+                                  "transition-all",
+                                  "self-end",
+                                ])}
+                              >
+                                Sign Up to Audition
+                              </Link>
+                            )}
+                          </div>
                         ) : null}
                       </>
                     )}
