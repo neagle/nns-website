@@ -50,7 +50,10 @@ export async function generateMetadata({
 
 const ShowContent = async ({ slug }: { slug: string }) => {
   const show = await getShowData(slug);
-  const openingDate = new Date(show.openingDate || "");
+
+  if (!show) return;
+
+  const openingDate = new Date(show?.openingDate || "");
   const now = new Date();
 
   return (
@@ -91,7 +94,7 @@ const ShowContent = async ({ slug }: { slug: string }) => {
             </h2>
           )}
 
-          {show.directors?.length && (
+          {show?.directors?.length && (
             <section>
               <h2>Director{show.directors.length > 1 ? "s" : ""}</h2>
 
