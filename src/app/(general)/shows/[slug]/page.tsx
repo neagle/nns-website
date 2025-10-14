@@ -115,6 +115,15 @@ const ShowContent = async ({ slug }: { slug: string }) => {
                 <h2>Auditions</h2>
 
                 <div dangerouslySetInnerHTML={{ __html: show.auditions }} />
+
+                {show.auditionLink && (
+                  <Link
+                    href={show.auditionLink}
+                    className="mt-4 btn btn-primary btn-wide hover:scale-110 transition-all"
+                  >
+                    Sign Up to Audition
+                  </Link>
+                )}
               </section>
             )}
 
