@@ -4,15 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "next build && npm run generate-og-images",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "generate-og-images": "tsx scripts/generate-og-images.ts"
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.8",
     "@icons-pack/react-simple-icons": "^12.3.0",
     "@react-input/mask": "^2.0.4",
+    "@resvg/resvg-js": "^2.6.2",
     "@sindresorhus/slugify": "^2.2.1",
     "@types/google.maps": "^3.58.1",
     "@wix/crm": "^1.0.183",
@@ -25,10 +27,12 @@
     "@wix/sdk": "^1.15.14",
     "@wix/sdk-types": "^1.13.6",
     "@wix/stores": "^1.0.386",
+    "chalk": "^5.6.2",
     "classnames": "^2.5.1",
     "color-convert": "^3.0.1",
     "colorizr": "^3.0.7",
     "dayjs": "^1.11.13",
+    "dotenv": "^17.2.3",
     "html-to-image": "^1.11.13",
     "lucide-react": "^0.482.0",
     "motion": "^12.6.5",
@@ -40,6 +44,7 @@
     "react-dom": "^19.0.0",
     "sharp": "^0.34.1",
     "swiper": "^11.2.6",
+    "tsx": "^4.20.6",
     "usehooks-ts": "^3.1.1"
   },
   "devDependencies": {

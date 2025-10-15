@@ -38,6 +38,7 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const show = await getShowData(slug);
+  const ogImage = `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/og/shows/${slug}.png`;
 
   return {
     title: `${show.title}, by ${show.author}, directed by ${getPersonList({
@@ -46,6 +47,9 @@ export async function generateMetadata({
     description: show.description
       ? `${show.description.replace(/<[^>]+>/g, "").slice(0, 160)}...`
       : "Learn more about this show at NOVA Nightsky Theater.",
+    openGraph: {
+      images: [{ url: ogImage, width: 1200, height: 630, type: "image/png" }],
+    },
   };
 }
 
