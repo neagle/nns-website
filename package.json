@@ -7,12 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "generate-og-images": "tsx scripts/generate-og-images.ts"
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.8",
     "@icons-pack/react-simple-icons": "^12.3.0",
     "@react-input/mask": "^2.0.4",
+    "@resvg/resvg-js": "^2.6.2",
     "@sindresorhus/slugify": "^2.2.1",
     "@types/google.maps": "^3.58.1",
     "@wix/crm": "^1.0.183",
@@ -29,6 +31,7 @@
     "color-convert": "^3.0.1",
     "colorizr": "^3.0.7",
     "dayjs": "^1.11.13",
+    "dotenv": "^17.2.3",
     "html-to-image": "^1.11.13",
     "lucide-react": "^0.482.0",
     "motion": "^12.6.5",
@@ -38,8 +41,10 @@
     "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "satori": "^0.18.3",
     "sharp": "^0.34.1",
     "swiper": "^11.2.6",
+    "tsx": "^4.20.6",
     "usehooks-ts": "^3.1.1"
   },
   "devDependencies": {

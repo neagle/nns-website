@@ -7,6 +7,13 @@ import { plans } from "@wix/pricing-plans";
 import { redirects } from "@wix/redirects";
 import { files } from "@wix/media";
 
+console.log(
+  "checking env vars",
+  process.env.NEXT_PUBLIC_WIX_CLIENT_ID,
+  process.env.WIX_API_KEY,
+  process.env.WIX_SITE_ID
+);
+
 const wixClient = createClient({
   auth: OAuthStrategy({
     clientId: process.env.NEXT_PUBLIC_WIX_CLIENT_ID || "",
