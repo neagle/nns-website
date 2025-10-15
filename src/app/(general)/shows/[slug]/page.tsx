@@ -38,7 +38,7 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const show = await getShowData(slug);
-  const ogImage = `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/og/shows/${slug}.png`;
+  const ogImage = `https://www.novanightskytheater.com/og/shows/${slug}.png`;
 
   return {
     title: `${show.title}, by ${show.author}, directed by ${getPersonList({
