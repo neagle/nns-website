@@ -26,10 +26,19 @@ export async function generateMetadata({
   const { items: people } = await personQuery.find();
 
   const person = people[0] as Person;
+  const ogImage = `https://www.novanightskytheater.com/og/people/${person._id}.jpg`;
 
   return {
     title: `${fullName(person)} - Credits`,
     description: `NOVA Nightsky credits for ${fullName(person)}.`,
+    openGraph: {
+      images: [
+        {
+          url: ogImage,
+          type: "image/jpeg",
+        },
+      ],
+    },
   };
 }
 

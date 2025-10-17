@@ -3,13 +3,13 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 import { getScaledToFitImageUrl } from "@/app/utils/wix/media";
-import type { Show } from "@/app/types";
+import type { Person, Show } from "@/app/types";
 import wixClient from "@/lib/wixClient";
 import { getImageWithDimensions } from "@/app/actions/media";
 import chalk from "chalk";
 
 const SIZE = { width: 1200, height: 630, margin: 20 };
-const OUT_DIR = path.join(process.cwd(), "public", "og", "shows");
+const OUT_DIR = path.join(process.cwd(), "public", "og");
 
 // simple fetch with timeout
 async function fetchBuffer(url: string, ms = 8000): Promise<Buffer> {
@@ -29,6 +29,12 @@ async function fetchShows() {
   const { items } = await wixClient.items.query("Shows").find();
 
   return items as Show[];
+}
+
+async function fetchPeople() {
+  const { items } = await wixClient.items.query("People").limit(1000).find();
+
+  return items as Person[];
 }
 
 async function buildBackground(show: Show): Promise<Buffer> {
@@ -66,6 +72,32 @@ async function buildBackground(show: Show): Promise<Buffer> {
   }
 
   return await base.png().toBuffer();
+}
+
+async function renderPerson(person: Person): Promise<Buffer | null> {
+  // Create a jpg headshot image resized to fit inside the OG image size
+  if (!person.headshot) return null; // skip people without a headshot
+
+  let headshotBuf: Buffer;
+  try {
+    const headshotUrl = getScaledToFitImageUrl(
+      person.headshot,
+      SIZE.width,
+      SIZE.height,
+      {}
+    );
+    const raw = await fetchBuffer(headshotUrl);
+    // Normalize to JPG and constrain to OG size (preserve aspect ratio)
+    headshotBuf = await sharp(raw)
+      .resize(SIZE.width, SIZE.height, { fit: "inside" })
+      .jpeg()
+      .toBuffer();
+  } catch (e) {
+    // if headshot fetch/convert fails, skip this person
+    return null;
+  }
+
+  return headshotBuf;
 }
 
 async function renderShow(show: Show): Promise<Buffer | null> {
@@ -114,14 +146,9 @@ async function renderShow(show: Show): Promise<Buffer | null> {
   return finalPng;
 }
 
-async function run() {
-  console.log(
-    `🖼️  Generating Open Graph images for shows to ${chalk.cyan(OUT_DIR)}`
-  );
-  await fs.mkdir(OUT_DIR, { recursive: true });
-  const shows = await fetchShows();
-
-  const tasks = shows.map(async (show) => {
+async function buildShowImages(shows: Show[]) {
+  fs.mkdir(path.join(OUT_DIR, "shows"), { recursive: true });
+  return shows.map(async (show: Show) => {
     const slug = show.slug || show._id;
     try {
       const png = await renderShow(show);
@@ -129,13 +156,49 @@ async function run() {
         console.log(chalk.red(`(skip) ${slug} — no usable logo`));
         return;
       }
-      const file = path.join(OUT_DIR, `${slug}.png`);
+      const file = path.join(OUT_DIR, "shows", `${slug}.png`);
       await fs.writeFile(file, png);
       process.stdout.write(chalk.green("."));
     } catch (err) {
       console.warn(chalk.red(`OG FAIL for ${slug}:`, (err as Error).message));
     }
   });
+}
+
+async function buildPeopleImages(people: Person[]) {
+  fs.mkdir(path.join(OUT_DIR, "people"), { recursive: true });
+  return people.map(async (person: Person) => {
+    try {
+      const jpg = await renderPerson(person);
+      if (!jpg) {
+        process.stdout.write(chalk.red("."));
+        return;
+      }
+      const file = path.join(OUT_DIR, "people", `${person._id}.jpg`);
+      await fs.writeFile(file, jpg);
+      process.stdout.write(chalk.green("."));
+    } catch (err) {
+      console.warn(
+        chalk.red(`OG FAIL for person ${person._id}:`, (err as Error).message)
+      );
+    }
+  });
+}
+
+async function run() {
+  console.log(
+    `🖼️  Generating Open Graph images for shows and people to ${chalk.cyan(
+      OUT_DIR
+    )}`
+  );
+  await fs.mkdir(OUT_DIR, { recursive: true });
+  const shows = await fetchShows();
+  const people = await fetchPeople();
+
+  const tasks = [
+    ...(await buildShowImages(shows)),
+    ...(await buildPeopleImages(people)),
+  ];
 
   await Promise.all(tasks);
   console.log("✨Done!");

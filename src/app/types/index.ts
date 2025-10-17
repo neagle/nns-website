@@ -28,6 +28,7 @@ export interface Show extends WixDataItem {
 }
 
 export interface Person extends WixDataItem {
+  _id: string;
   firstName: string;
   middleName?: string;
   lastName: string;
