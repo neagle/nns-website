@@ -19,6 +19,7 @@ export interface Show extends WixDataItem {
   }[];
   auditions?: string;
   auditionLink?: string;
+  noLongerAuditioning?: boolean;
   logo: string;
   logoHorizontal?: string;
   backgroundTexture?: string;

@@ -114,7 +114,7 @@ const FeaturedShow = async () => {
                             />
                           </h3>
                         ) : null}
-                        {show.auditions ? (
+                        {show.auditions && !show.noLongerAuditioning ? (
                           <div className="flex gap-8 flex-col xl:flex-row">
                             <div
                               className="my-2 grow"

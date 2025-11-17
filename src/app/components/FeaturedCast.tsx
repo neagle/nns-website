@@ -40,6 +40,8 @@ const FeaturedCast: React.FC<Props> = ({ show }) => {
           );
           if (alternateHeadshot) {
             headshot = alternateHeadshot.src;
+          } else {
+            headshot = cast.person?.headshot;
           }
         } else {
           headshot = cast.person?.headshot;
