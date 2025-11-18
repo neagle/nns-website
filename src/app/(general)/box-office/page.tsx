@@ -9,17 +9,38 @@ import classnames from "classnames";
 import WixImage from "@/app/components/WixImage";
 import Link from "next/link";
 import { formatList } from "@/app/utils";
+import slugify from "@sindresorhus/slugify";
 
 export async function generateMetadata(): Promise<Metadata> {
   const shows = await getBoxOfficeData();
 
   const showTitles = Object.keys(shows);
 
-  return {
+  const metadata = {
     title: `Box Office: ${formatList(showTitles)}`,
     description:
       "Purchase tickets for upcoming shows at NOVA Nightsky Theater.",
   };
+
+  // If there's only one show in the box office, use its OG image
+  // In the future, we could add behavior for dealing with multiple shows, but
+  // it's a fine default behavior at the moment to default to the standard site
+  // OG Image.
+  if (showTitles.length === 1) {
+    const slug = slugify(showTitles[0], { separator: "-", lowercase: true });
+    const ogImage = `https://www.novanightskytheater.com/og/shows/${slug}.png`;
+
+    const openGraph = {
+      images: [{ url: ogImage, width: 1200, height: 630, type: "image/png" }],
+    };
+
+    return {
+      ...metadata,
+      openGraph,
+    };
+  }
+
+  return metadata;
 }
 
 const getBoxOfficeData = cache(async () => {
