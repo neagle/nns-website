@@ -6,8 +6,6 @@
     "dev": "next dev --turbopack",
     "build": "next build && npm run generate-og-images",
     "start": "next start",
-    "lint": "next lint",
-    "prepare": "husky",
     "generate-og-images": "tsx scripts/generate-og-images.ts"
   },
   "dependencies": {
@@ -33,16 +31,18 @@
     "colorizr": "^3.0.7",
     "dayjs": "^1.11.13",
     "dotenv": "^17.2.3",
+    "fuse.js": "^7.1.0",
     "html-to-image": "^1.11.13",
     "lucide-react": "^0.482.0",
     "motion": "^12.6.5",
-    "next": "^15.5.4",
+    "next": "^16.0.7",
     "nextjs-toploader": "^3.8.16",
     "probe-image-size": "^7.2.3",
     "qrcode.react": "^4.2.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "sharp": "^0.34.1",
+    "string-strip-html": "^13.5.0",
     "swiper": "^11.2.6",
     "tsx": "^4.20.6",
     "usehooks-ts": "^3.1.1"
@@ -58,7 +58,6 @@
     "daisyui": "^5.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.2.2",
-    "husky": "^9.1.7",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

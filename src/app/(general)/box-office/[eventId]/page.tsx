@@ -53,10 +53,6 @@ export async function generateMetadata({
 
 const EventContent = async ({ eventId }: { eventId: string }) => {
   const event = await getEventData(eventId);
-  console.log("event", event);
-
-  // console.log("event description", event.description);
-
   const startDate = event.dateAndTimeSettings!.startDate;
   const endDate = event.dateAndTimeSettings!.endDate;
   const timeZone = event.dateAndTimeSettings!.timeZoneId || "America/New_York";
