@@ -89,7 +89,21 @@ const ShowContent = async ({ slug }: { slug: string }) => {
             <b className="text-xl text-primary/50 font-normal">by</b>{" "}
             {show.author}
           </h2> */}
-          {openingDate && openingDate > now ? (
+          {show?.shows?.length ? (
+            <Link
+              href="/box-office"
+              className={classnames([
+                "btn",
+                "btn-lg",
+                "btn-wide",
+                "btn-primary",
+                "hover:scale-105",
+                "transition-all",
+              ])}
+            >
+              Buy Tickets
+            </Link>
+          ) : openingDate && openingDate > now ? (
             <h2 className="text-secondary!">
               Opening in{" "}
               <FormattedDateTime date={openingDate} format="MMMM YYYY" />
