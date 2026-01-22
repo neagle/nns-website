@@ -17,7 +17,7 @@
     "@types/google.maps": "^3.58.1",
     "@wix/crm": "^1.0.183",
     "@wix/data": "^1.0.211",
-    "@wix/events": "^1.0.452",
+    "@wix/events": "^1.0.715",
     "@wix/forms": "^1.0.231",
     "@wix/media": "^1.0.150",
     "@wix/pricing-plans": "^1.0.128",

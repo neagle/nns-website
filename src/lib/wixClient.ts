@@ -1,7 +1,7 @@
 import { createClient, ApiKeyStrategy, OAuthStrategy } from "@wix/sdk";
 import { collections, items } from "@wix/data";
 import { contacts } from "@wix/crm";
-import { wixEventsV2, orders } from "@wix/events";
+import { wixEventsV2, orders, ticketReservations } from "@wix/events";
 import { forms, submissions } from "@wix/forms";
 import { plans } from "@wix/pricing-plans";
 import { redirects } from "@wix/redirects";
@@ -22,6 +22,7 @@ const wixClient = createClient({
     plans,
     redirects,
     orders,
+    ticketReservations,
   },
 });
 

@@ -9,13 +9,18 @@ import timezone from "dayjs/plugin/timezone";
 import classnames from "classnames";
 import wixClient from "@/lib/wixClient";
 import type { Ticket } from "@/app/types";
-import { X, Plus, Minus } from "lucide-react";
+import { X, Plus, Minus, DollarSign } from "lucide-react";
 import Link from "next/link";
 
 type Props = {
   event: V3Event;
   className?: string;
   animationDuration?: number;
+};
+
+const isValidUserPrice = (price: string) => {
+  const regex = /^\d+(\.\d{2})?$/;
+  return regex.test(price);
 };
 
 const ShowTime = ({
@@ -30,6 +35,7 @@ const ShowTime = ({
   const [numTickets, setNumTickets] = useState(1);
   const [redirecting, setRedirecting] = useState(false);
   const [showTicketInfo, setShowTicketInfo] = useState(false);
+  const [userPrice, setUserPrice] = useState<string>("");
 
   // The first step in the ticket purchase flow is to check if tickets are
   // available
@@ -42,40 +48,62 @@ const ShowTime = ({
       limit: 100,
     });
 
-    const ticket = tickets.definitions[0] as unknown as Ticket;
+    const definitions = tickets.definitions || [];
+
+    const ticket = definitions[0] as unknown as Ticket;
     setTicketInfo(ticket);
   };
 
   const createRedirect = async (
     event: V3Event,
     ticket: Ticket,
-    quantity: number
+    quantity: number,
+    userPrice: string
   ) => {
     setRedirecting(true);
-    const reservation = await wixClient.orders.createReservation(
-      ticket.eventId,
-      {
-        ticketQuantities: [
-          {
-            ticketDefinitionId: ticket._id,
-            quantity,
-          },
-        ],
+
+    const options = {
+      tickets: [
+        {
+          ticketDefinitionId: ticket._id,
+          quantity,
+          ...(typeof userPrice === "string" && isValidUserPrice(userPrice)
+            ? {
+                ticketInfo: {
+                  guestPrice: parseFloat(userPrice).toFixed(2),
+                },
+              }
+            : {}),
+        },
+      ],
+    };
+
+    const reservation =
+      await wixClient.ticketReservations.createTicketReservation(options);
+
+    if (reservation._id) {
+      const redirect = await wixClient.redirects.createRedirectSession({
+        eventsCheckout: {
+          eventSlug: event.slug,
+          reservationId: reservation._id,
+        },
+        callbacks: { postFlowUrl: window.location.href },
+      });
+
+      if (!redirect.redirectSession) {
+        console.error("No redirect session found");
+        setRedirecting(false);
+        return;
       }
-    );
 
-    const redirect = await wixClient.redirects.createRedirectSession({
-      eventsCheckout: { eventSlug: event.slug, reservationId: reservation._id },
-      callbacks: { postFlowUrl: window.location.href },
-    });
-
-    if (!redirect.redirectSession) {
-      console.error("No redirect session found");
+      if (typeof redirect.redirectSession.fullUrl !== "string") {
+        throw new Error("Redirect URL is not a string");
+      } else {
+        window.location.href = redirect.redirectSession.fullUrl;
+      }
+    } else {
       setRedirecting(false);
-      return;
     }
-
-    window.location.href = redirect.redirectSession.fullUrl;
   };
 
   if (!event.dateAndTimeSettings) {
@@ -109,6 +137,10 @@ const ShowTime = ({
       fetchTicketsAvailability(event);
     }
   };
+
+  // "Pay What You Can" shows have a highest price of $0.00
+  const isPayWhatYouCan =
+    parseFloat(event?.registration?.tickets?.highestPrice?.value || "0") === 0;
 
   return (
     <div
@@ -184,7 +216,20 @@ const ShowTime = ({
             {startDate.format("MMM YYYY")}
           </div>
         </div>
-        <div className="grow-1">
+        <div className="grow-1 items-start flex flex-col">
+          {isPayWhatYouCan && (
+            <div
+              className={classnames([
+                "badge",
+                "badge-xs",
+                "badge-outline",
+                "mb-2",
+                "badge-accent",
+              ])}
+            >
+              Pay What You Can!
+            </div>
+          )}
           <div
             className={classnames({}, [
               "font-bold",
@@ -265,102 +310,128 @@ const ShowTime = ({
               "text-sm",
               "flex",
               "w-full",
-              // "mt-2",
               "relative",
-              "flex-wrap",
+              "flex-col",
             ])}
           >
-            <button
-              className={classnames([
-                "text-xs",
-                "p-1",
-                "absolute",
-                "top-0",
-                "-translate-y-full",
-                "right-0",
-                "cursor-pointer",
-                "rounded-full",
-                "bg-base-100",
-                "opacity-50",
-                "hover:opacity-100",
-                "transition-all",
-              ])}
-              onClick={(e: MouseEvent) => {
-                e.stopPropagation();
-                setShowTicketInfo(false);
-                setTicketInfo(null);
-              }}
-            >
-              <X size={14} />
-            </button>
-            <Link
-              className="btn btn-xs btn-info"
-              href={`/box-office/${event._id}`}
-            >
-              Info
-            </Link>
-
-            <div
-              className={classnames([
-                "flex",
-                "gap-1",
-                "items-center",
-                "grow-1",
-                "justify-end",
-              ])}
-            >
-              <button>
-                <Minus
-                  className={classnames(
-                    {
-                      "cursor-pointer text-primary": numTickets > 1,
-                      "opacity-50": numTickets === 1,
-                    },
-                    [
-                      "transition-all",
-                      "scale-80",
-                      "hover:scale-110",
-                      "focus:scale-110",
-                    ]
-                  )}
-                  onClick={() => setNumTickets(Math.max(numTickets - 1, 1))}
-                />
-              </button>
+            {isPayWhatYouCan && (
+              <div className="mb-2">
+                <label className="input input-xs validator">
+                  <DollarSign />
+                  <input
+                    type="text"
+                    pattern="^\d+(\.\d{2})?$"
+                    placeholder="Your Price Per Ticket"
+                    defaultValue={userPrice}
+                    onChange={(e) => setUserPrice(e.target.value)}
+                  />
+                </label>
+              </div>
+            )}
+            <div className="flex">
               <button
-                className={classnames(["btn", "btn-xs", "btn-primary"])}
-                onClick={() => createRedirect(event, ticketInfo, numTickets)}
+                className={classnames({ "-mt-1": isPayWhatYouCan }, [
+                  "text-xs",
+                  "p-1",
+                  "absolute",
+                  "top-0",
+                  "-translate-y-full",
+                  "right-0",
+                  "cursor-pointer",
+                  "rounded-full",
+                  "bg-base-100",
+                  "opacity-50",
+                  "hover:opacity-100",
+                  "transition-all",
+                ])}
+                onClick={(e: MouseEvent) => {
+                  e.stopPropagation();
+                  setShowTicketInfo(false);
+                  setTicketInfo(null);
+                }}
               >
-                {redirecting ? (
-                  "Loading..."
-                ) : (
-                  <span>
-                    Buy <b className="font-mono">{numTickets}</b>{" "}
-                    {numTickets === 1 ? "Ticket" : "Tickets"}
-                  </span>
-                )}
+                <X size={14} />
               </button>
-              <button>
-                <Plus
-                  className={classnames(
-                    {
-                      "cursor-pointer text-primary":
-                        numTickets < ticketInfo.limitPerCheckout,
-                      "opacity-50": numTickets === ticketInfo.limitPerCheckout,
-                    },
-                    [
-                      "transition-all",
-                      "scale-80",
-                      "hover:scale-110",
-                      "focus:scale-110",
-                    ]
-                  )}
+              <Link
+                className="btn btn-xs btn-info"
+                href={`/box-office/${event._id}`}
+              >
+                Info
+              </Link>
+
+              <div
+                className={classnames([
+                  "flex",
+                  "gap-1",
+                  "items-center",
+                  "grow-1",
+                  "justify-end",
+                ])}
+              >
+                <button>
+                  <Minus
+                    className={classnames(
+                      {
+                        "cursor-pointer text-primary": numTickets > 1,
+                        "opacity-50": numTickets === 1,
+                      },
+                      [
+                        "transition-all",
+                        "scale-80",
+                        "hover:scale-110",
+                        "focus:scale-110",
+                      ]
+                    )}
+                    onClick={() => setNumTickets(Math.max(numTickets - 1, 1))}
+                  />
+                </button>
+                <button
+                  className={classnames([
+                    "btn",
+                    "btn-xs",
+                    "btn-primary",
+                    "transition-all",
+                    "opacity-100",
+                    "cursor-pointer",
+                  ])}
                   onClick={() =>
-                    setNumTickets(
-                      Math.min(numTickets + 1, ticketInfo.limitPerCheckout)
-                    )
+                    createRedirect(event, ticketInfo, numTickets, userPrice)
                   }
-                />
-              </button>
+                  disabled={isPayWhatYouCan && !isValidUserPrice(userPrice)}
+                >
+                  {redirecting ? (
+                    "Loading..."
+                  ) : (
+                    <span>
+                      Buy <b className="font-mono">{numTickets}</b>{" "}
+                      {numTickets === 1 ? "Ticket" : "Tickets"}
+                    </span>
+                  )}
+                </button>
+                <button>
+                  <Plus
+                    className={classnames(
+                      {
+                        "cursor-pointer text-primary":
+                          numTickets < ticketInfo.limitPerCheckout,
+                        "opacity-50":
+                          numTickets === ticketInfo.limitPerCheckout,
+                      },
+                      [
+                        "transition-all",
+                        "scale-80",
+                        "hover:scale-110",
+                        "focus:scale-110",
+                      ]
+                    )}
+                    onClick={() =>
+                      setNumTickets(
+                        Math.min(numTickets + 1, ticketInfo.limitPerCheckout)
+                      )
+                    }
+                  />
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
