@@ -20,7 +20,7 @@ const Nightsky = ({
   twinkle = true,
 }: Props) => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div></div>}>
       <div
         className={classnames(className, [
           "p-4",
