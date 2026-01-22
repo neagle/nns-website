@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import wixClient from "@/lib/wixClient";
-import type { V3Event } from "@wix/auto_sdk_events_wix-events-v-2";
+import type { Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import type { Ticket } from "@/app/types";
 import { Plus, Minus } from "lucide-react";
 import classnames from "classnames";
@@ -15,7 +15,7 @@ import classnames from "classnames";
 const WIX_SERVICE_FEE = 0.025;
 
 interface Props {
-  event: V3Event;
+  event: Event;
   className?: string;
 }
 
@@ -24,7 +24,7 @@ const Tickets = ({ event, className = "" }: Props) => {
   const [quantity, setQuantity] = useState<number>(1);
   const [redirecting, setRedirecting] = useState<boolean>(false);
 
-  const fetchTicketsAvailability = async (event: V3Event) => {
+  const fetchTicketsAvailability = async (event: Event) => {
     // Wait -- used for debugging
     // await new Promise((resolve) => setTimeout(resolve, 10000));
 
@@ -33,7 +33,8 @@ const Tickets = ({ event, className = "" }: Props) => {
       limit: 100,
     });
 
-    const ticket = tickets.definitions[0] as unknown as Ticket;
+    const definitions = tickets.definitions || [];
+    const ticket = definitions[0] as unknown as Ticket;
     setTicketInfo(ticket);
   };
 
@@ -42,7 +43,7 @@ const Tickets = ({ event, className = "" }: Props) => {
   }, [event]);
 
   const createRedirect = async (
-    event: V3Event,
+    event: Event,
     ticket: Ticket,
     quantity: number
   ) => {
@@ -70,7 +71,7 @@ const Tickets = ({ event, className = "" }: Props) => {
       return;
     }
 
-    window.location.href = redirect.redirectSession.fullUrl;
+    window.location.href = redirect.redirectSession.fullUrl || "/";
   };
 
   const currencySymbol = ticketInfo?.price.currency === "USD" ? "$" : "";

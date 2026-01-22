@@ -79,7 +79,6 @@ export interface Address {
   subdivision: string; // "VA"
 }
 
-/* Probably deprecated by V3Event type */
 export interface Event extends WixDataItem {
   title: string;
   dateAndTimeSettings: {

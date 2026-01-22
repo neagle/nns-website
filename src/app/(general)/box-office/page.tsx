@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import React, { cache, Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import ShowTime from "@/app/components/ShowTime";
-import type { V3Event } from "@wix/auto_sdk_events_wix-events-v-2";
+import type { Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import classnames from "classnames";
 import WixImage from "@/app/components/WixImage";
 import Link from "next/link";
@@ -51,8 +51,8 @@ const getBoxOfficeData = cache(async () => {
     .find();
 
   // Group events by show
-  const shows: Record<string, V3Event[]> = events.reduce(
-    (acc: Record<string, V3Event[]>, event) => {
+  const shows: Record<string, Event[]> = events.reduce(
+    (acc: Record<string, Event[]>, event) => {
       if (!event.title) {
         return acc;
       }

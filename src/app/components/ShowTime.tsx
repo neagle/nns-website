@@ -2,7 +2,7 @@
 
 import React, { useState, MouseEvent } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import type { V3Event } from "@wix/auto_sdk_events_wix-events-v-2";
+import type { Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
@@ -13,7 +13,7 @@ import { X, Plus, Minus, DollarSign } from "lucide-react";
 import Link from "next/link";
 
 type Props = {
-  event: V3Event;
+  event: Event;
   className?: string;
   animationDuration?: number;
 };
@@ -39,7 +39,7 @@ const ShowTime = ({
 
   // The first step in the ticket purchase flow is to check if tickets are
   // available
-  const fetchTicketsAvailability = async (event: V3Event) => {
+  const fetchTicketsAvailability = async (event: Event) => {
     // Wait -- used for debugging
     // await new Promise((resolve) => setTimeout(resolve, 10000));
 
@@ -55,7 +55,7 @@ const ShowTime = ({
   };
 
   const createRedirect = async (
-    event: V3Event,
+    event: Event,
     ticket: Ticket,
     quantity: number,
     userPrice: string

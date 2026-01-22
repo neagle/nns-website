@@ -47,7 +47,7 @@ const Plan = ({ plan, className = "" }: PlanProps) => {
       return;
     }
 
-    window.location.href = redirect.redirectSession.fullUrl;
+    window.location.href = redirect.redirectSession.fullUrl || "/";
   };
 
   return (
