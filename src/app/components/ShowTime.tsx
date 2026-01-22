@@ -321,7 +321,7 @@ const ShowTime = ({
                   <input
                     type="text"
                     pattern="^\d+(\.\d{2})?$"
-                    placeholder="Your Price Per Ticket"
+                    placeholder="Your Price per Ticket"
                     defaultValue={userPrice}
                     onChange={(e) => setUserPrice(e.target.value)}
                   />

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import wixClient from "@/lib/wixClient";
 import type { Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import type { Ticket } from "@/app/types";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, DollarSign } from "lucide-react";
 import classnames from "classnames";
 
 // Currently, the Wix service fee is 2.5%
@@ -23,6 +23,10 @@ const Tickets = ({ event, className = "" }: Props) => {
   const [ticketInfo, setTicketInfo] = useState<Ticket | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [redirecting, setRedirecting] = useState<boolean>(false);
+  const [userPrice, setUserPrice] = useState<string>("");
+
+  const isPayWhatYouCan =
+    parseFloat(event?.registration?.tickets?.highestPrice?.value || "0") === 0;
 
   const fetchTicketsAvailability = async (event: Event) => {
     // Wait -- used for debugging
@@ -45,40 +49,61 @@ const Tickets = ({ event, className = "" }: Props) => {
   const createRedirect = async (
     event: Event,
     ticket: Ticket,
-    quantity: number
+    quantity: number,
+    userPrice?: string
   ) => {
     setRedirecting(true);
-    const reservation = await wixClient.orders.createReservation(
-      ticket.eventId,
-      {
-        ticketQuantities: [
-          {
-            ticketDefinitionId: ticket._id,
-            quantity,
-          },
-        ],
+
+    const options = {
+      tickets: [
+        {
+          ticketDefinitionId: ticket._id,
+          quantity,
+          ...(typeof userPrice === "string"
+            ? {
+                ticketInfo: {
+                  guestPrice: parseFloat(userPrice).toFixed(2),
+                },
+              }
+            : {}),
+        },
+      ],
+    };
+
+    const reservation =
+      await wixClient.ticketReservations.createTicketReservation(options);
+
+    if (reservation._id) {
+      const redirect = await wixClient.redirects.createRedirectSession({
+        eventsCheckout: {
+          eventSlug: event.slug,
+          reservationId: reservation._id,
+        },
+        callbacks: { postFlowUrl: window.location.href },
+      });
+
+      if (!redirect.redirectSession) {
+        console.error("No redirect session found");
+        setRedirecting(false);
+        return;
       }
-    );
 
-    const redirect = await wixClient.redirects.createRedirectSession({
-      eventsCheckout: { eventSlug: event.slug, reservationId: reservation._id },
-      callbacks: { postFlowUrl: window.location.href },
-    });
-
-    if (!redirect.redirectSession) {
-      console.error("No redirect session found");
+      window.location.href = redirect.redirectSession.fullUrl || "/";
+    } else {
       setRedirecting(false);
-      return;
     }
-
-    window.location.href = redirect.redirectSession.fullUrl || "/";
   };
 
   const currencySymbol = ticketInfo?.price.currency === "USD" ? "$" : "";
-  const price = ticketInfo ? parseInt(ticketInfo?.price?.value) * quantity : 0;
-  const serviceFee = ticketInfo
-    ? parseInt(ticketInfo.price.value) * quantity * WIX_SERVICE_FEE
-    : 0;
+
+  let ticketPrice = 0;
+  if (isPayWhatYouCan) {
+    ticketPrice = parseInt(userPrice, 10);
+  } else {
+    ticketPrice = ticketInfo ? parseInt(ticketInfo?.price?.value, 10) : 0;
+  }
+  const price = ticketInfo ? ticketPrice * quantity : 0;
+  const serviceFee = ticketInfo ? ticketPrice * quantity * WIX_SERVICE_FEE : 0;
   const total = ticketInfo ? price + serviceFee : 0;
 
   return ticketInfo ? (
@@ -92,12 +117,36 @@ const Tickets = ({ event, className = "" }: Props) => {
         <section className="grow-1">
           <p className="uppercase text-sm opacity-70">Price</p>
           <div className="text-lg leading-tight">
-            <span>{currencySymbol}</span>
-            <span>{price.toFixed(2)}</span>
-            <span className="text-xs block">
-              +{currencySymbol}
-              {serviceFee.toFixed(2)} ticket service fee
-            </span>
+            {isPayWhatYouCan && (
+              <div>
+                <label className="input input-md validator mb-2">
+                  <DollarSign />
+                  <input
+                    type="text"
+                    pattern="^\d+(\.\d{2})?$"
+                    placeholder="Your Price per Ticket"
+                    defaultValue={userPrice}
+                    onChange={(e) => setUserPrice(e.target.value)}
+                  />
+                </label>
+              </div>
+            )}
+            {typeof price === "number" && !isNaN(price) && (
+              <>
+                <span>{currencySymbol}</span>
+                {price.toFixed(2)}{" "}
+                {quantity > 1 && (
+                  <span className="opacity-50 text-xs">
+                    ({currencySymbol}
+                    {ticketPrice} / ticket)
+                  </span>
+                )}
+                <span className="text-xs block">
+                  +{currencySymbol}
+                  {serviceFee.toFixed(2)} ticket service fee
+                </span>
+              </>
+            )}
           </div>
         </section>
         <section>
@@ -136,17 +185,25 @@ const Tickets = ({ event, className = "" }: Props) => {
         </section>
       </div>
       <section className="text-right">
-        <p>
-          <span className="opacity-70 uppercase text-sm">Total:</span>{" "}
-          <span className="font-bold">
-            {currencySymbol}
-            {total.toFixed(2)}
-          </span>
-        </p>
+        {typeof price === "number" && !isNaN(price) && (
+          <p>
+            <span className="opacity-70 uppercase text-sm">Total:</span>{" "}
+            <span className="font-bold">
+              {currencySymbol}
+              {total.toFixed(2)}
+            </span>
+          </p>
+        )}
         <button
+          disabled={typeof price !== "number" || isNaN(price)}
           onClick={() => {
             if (!redirecting) {
-              createRedirect(event, ticketInfo, quantity);
+              createRedirect(
+                event,
+                ticketInfo,
+                quantity,
+                isPayWhatYouCan ? userPrice : undefined
+              );
             }
           }}
           className={classnames({ "opacity-50": redirecting }, [

@@ -66,6 +66,11 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
   const location = event.location!;
   const locationAddress = location?.address as Address;
 
+  const isPayWhatYouCan =
+    parseFloat(event?.registration?.tickets?.highestPrice?.value || "0") === 0;
+
+  console.log("isPayWhatYouCan", isPayWhatYouCan);
+
   return (
     <div className="p-4 md:p-6 xl:p-8 md:grid md:grid-cols-[auto_1fr] md:gap-8">
       <WixImage
@@ -77,6 +82,11 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
       />
       <section className="w-full flex flex-col gap-8">
         <section>
+          {isPayWhatYouCan && (
+            <div className="badge badge-outline badge-accent mb-2">
+              Pay What You Can!
+            </div>
+          )}
           <h1 className="text-2xl">
             <FormattedDateTime
               date={startDate}
@@ -111,7 +121,6 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
               timeZone={timeZone}
             />
           </h2>
-
           <Link
             href="/box-office"
             className="btn btn-xs hover:scale-110 transition-all mt-2"
