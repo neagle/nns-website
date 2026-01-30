@@ -6,6 +6,7 @@ import Header from "@/app/components/Header";
 import Footer from "@/app/components/Footer";
 import QRCode from "@/app/components/QRCode";
 import NextTopLoader from "nextjs-toploader";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const dunbarLow = localFont({
   src: [
@@ -75,6 +76,7 @@ export default function RootLayout({
         </Suspense>
         <main className="flex-grow bg-base-100">{children}</main>
         <Footer />
+        <SpeedInsights />
       </body>
     </html>
   );
