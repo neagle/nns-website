@@ -36,7 +36,7 @@
     "html-to-image": "^1.11.13",
     "lucide-react": "^0.482.0",
     "motion": "^12.6.5",
-    "next": "16.0.10",
+    "next": "^16.1.6",
     "nextjs-toploader": "^3.8.16",
     "probe-image-size": "^7.2.3",
     "qrcode.react": "^4.2.0",
