@@ -83,6 +83,11 @@ const BoxOfficeContent = async () => {
   return (
     <>
       {Object.keys(shows).map(async (show) => {
+        const title = shows[show][0].title;
+        const slug = slugify(title || "", {
+          separator: "-",
+          lowercase: true,
+        });
         const id = shows[show][0]._id;
         const imageUrl = shows[show][0].mainImage;
 
@@ -90,7 +95,8 @@ const BoxOfficeContent = async () => {
           <section key={id} className="last-of-type:mt-8">
             <div className={classnames(["flex", "flex-col", "md:flex-row"])}>
               {imageUrl && (
-                <div
+                <Link
+                  href={`/shows/${slug}`}
                   className={classnames([
                     "mb-4",
                     "md:mb-0",
@@ -98,6 +104,8 @@ const BoxOfficeContent = async () => {
                     "flex",
                     "items-start",
                     "justify-center",
+                    "hover:scale-105",
+                    "transition-transform",
                   ])}
                 >
                   <WixImage
@@ -107,7 +115,7 @@ const BoxOfficeContent = async () => {
                     alt={show}
                     targetHeight={400}
                   />
-                </div>
+                </Link>
               )}
               <div className="grow-1">
                 <div
