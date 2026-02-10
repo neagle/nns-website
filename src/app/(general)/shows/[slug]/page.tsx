@@ -85,10 +85,16 @@ const ShowContent = async ({ slug }: { slug: string }) => {
             "gap-8",
           ])}
         >
-          {/* <h2 className="text-2xl">
-            <b className="text-xl text-primary/50 font-normal">by</b>{" "}
-            {show.author}
-          </h2> */}
+          <div>
+            <h1 className="text-3xl font-bold">{show.title}</h1>
+            <h2 className="text-xl text-primary/70! font-normal! capitalize! font-sans!">
+              <b className="text-sm text-primary/50 font-normal lowercase">
+                by
+              </b>{" "}
+              {show.author}
+            </h2>
+          </div>
+
           {show?.shows?.length ? (
             <Link
               href="/box-office"
