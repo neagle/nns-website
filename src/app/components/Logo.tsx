@@ -39,6 +39,7 @@ const Logo = ({
       style={styleBlock}
     >
       <span>N</span>
+      <span className="sr-only">O</span>
       <b
         aria-hidden="true"
         className={classnames([
