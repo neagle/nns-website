@@ -329,6 +329,12 @@ const ShowTime = ({
               "flex-col",
             ])}
           >
+            {ticketInfo.limitPerCheckout < 10 ? (
+              <div className="text-right mr-6 mb-1 text-xs">
+                {ticketInfo.limitPerCheckout} ticket
+                {ticketInfo.limitPerCheckout === 1 ? "" : "s"} left
+              </div>
+            ) : null}
             {isPayWhatYouCan && (
               <div className="mb-2">
                 <label className="input input-xs validator">
