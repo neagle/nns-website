@@ -31,6 +31,8 @@ const ShowTime = ({
   dayjs.extend(utc);
   dayjs.extend(timezone);
 
+  const isSoldOut = event.registration?.tickets?.soldOut;
+
   const [ticketInfo, setTicketInfo] = useState<Ticket | null>(null);
   const [numTickets, setNumTickets] = useState(1);
   const [redirecting, setRedirecting] = useState(false);
@@ -119,6 +121,9 @@ const ShowTime = ({
 
   const handleClick = async (e: MouseEvent) => {
     e.preventDefault();
+    if (isSoldOut) {
+      return;
+    }
 
     if (!event._id) {
       console.error("Event ID is missing");
@@ -148,13 +153,15 @@ const ShowTime = ({
       className={classnames(
         className,
         {
-          "cursor-pointer": !showTicketInfo,
+          "cursor-pointer": !showTicketInfo && !isSoldOut,
           "cursor-default": showTicketInfo,
-          "hover:scale-105": !showTicketInfo,
+          "hover:scale-105": !showTicketInfo && !isSoldOut,
+          "focus:scale-105": !showTicketInfo && !isSoldOut,
         },
         {
-          "bg-info/25": event.status !== "CANCELED",
-          "hover:bg-info/40": event.status !== "CANCELED",
+          "bg-info/25": event.status !== "CANCELED" && !isSoldOut,
+          "bg-info/10": isSoldOut,
+          "hover:bg-info/40": event.status !== "CANCELED" && !isSoldOut,
           "bg-error/25": event.status === "CANCELED",
           "hover:bg-error/25": event.status === "CANCELED",
           "scale-105": showTicketInfo,
@@ -167,11 +174,7 @@ const ShowTime = ({
           "px-3",
 
           "transition-all",
-          "hover:scale-105",
-          "focus:scale-105",
           "overflow-hidden",
-          // "outline",
-          // "outline-red-500",
         ]
       )}
       onClick={handleClick}
@@ -217,7 +220,19 @@ const ShowTime = ({
           </div>
         </div>
         <div className="grow-1 items-start flex flex-col">
-          {isPayWhatYouCan && (
+          {isSoldOut && (
+            <div
+              className={classnames([
+                "badge",
+                "badge-xs",
+                "mb-2",
+                "badge-error",
+              ])}
+            >
+              Sold out!
+            </div>
+          )}
+          {isPayWhatYouCan && !isSoldOut && (
             <div
               className={classnames([
                 "badge",
