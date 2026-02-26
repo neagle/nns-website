@@ -50,7 +50,16 @@ const OpenAuditions = async () => {
       </div>
       <Link
         href="/auditions"
-        className="btn btn-secondary scale-95 hover:scale-100 transition-all"
+        className={classnames([
+          "btn",
+          "btn-secondary",
+          "scale-95",
+          "hover:scale-100",
+          "transition-all",
+          "w-full",
+          "md:w-2/3",
+          "lg:w-auto",
+        ])}
       >
         Audition Information &amp; Signups
       </Link>
