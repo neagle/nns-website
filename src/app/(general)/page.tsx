@@ -2,6 +2,7 @@ export const revalidate = 60;
 
 import { Suspense } from "react";
 import FeaturedShow from "@/app/components/FeaturedShow";
+import OpenAuditions from "@/app/components/OpenAuditions";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
           </div>
         }
       >
+        <OpenAuditions />
         <FeaturedShow />
       </Suspense>
     </div>
