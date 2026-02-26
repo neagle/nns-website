@@ -6,6 +6,7 @@ import classnames from "classnames";
 import ShowLogo from "@/app/components/ShowLogo";
 import Link from "next/link";
 import CenterSpinner from "@/app/components/CenterSpinner";
+import PersonList from "@/app/components/PersonList";
 
 export const dynamic = "force-dynamic";
 
@@ -55,6 +56,7 @@ const AuditionContent = async () => {
     .ge("openingDate", now.toISOString())
     .ne("noLongerAuditioning", true)
     .ascending("openingDate")
+    .include("directors")
     .find();
 
   const shows = items as Show[];
@@ -82,7 +84,16 @@ const AuditionContent = async () => {
                 {show.auditionLink && (
                   <Link
                     href={show.auditionLink}
-                    className="mt-4 btn btn-primary btn-wide hover:scale-110 transition-all"
+                    className={classnames([
+                      "md:sticky",
+                      "top-5",
+                      "mt-4",
+                      "btn",
+                      "btn-primary",
+                      "btn-wide",
+                      "hover:scale-110",
+                      "transition-all",
+                    ])}
                   >
                     Sign Up to Audition
                   </Link>
@@ -90,10 +101,54 @@ const AuditionContent = async () => {
               </section>
 
               <section>
+                <div className="mb-4">
+                  <h1 className="text-xl font-bold">{show.title}</h1>
+                  <h2 className="text-lg text-primary/70! font-normal! capitalize! font-sans!">
+                    <b className="text-sm text-primary/50 font-normal lowercase">
+                      by
+                    </b>{" "}
+                    {show.author}
+                  </h2>
+
+                  {show?.adaptors && (
+                    <div className="mt-1 text-sm">
+                      <span className="text-xs text-primary/50">
+                        Adapted by
+                      </span>{" "}
+                      <span className="text-primary/70">{show?.adaptors}</span>
+                    </div>
+                  )}
+                </div>
+
+                {show?.directors?.length && (
+                  <section className="mb-4">
+                    <h2>Director{show.directors.length > 1 ? "s" : ""}</h2>
+
+                    <p>
+                      <PersonList
+                        people={show.directors}
+                        linkToCredits={true}
+                      />
+                    </p>
+                  </section>
+                )}
                 {show.auditions ? (
-                  <div dangerouslySetInnerHTML={{ __html: show.auditions }} />
+                  <div
+                    className="prose mb-4"
+                    dangerouslySetInnerHTML={{ __html: show.auditions }}
+                  />
                 ) : (
                   <p className="text-lg">Audition information coming soon!</p>
+                )}
+
+                {show.description && (
+                  <section>
+                    <h2 className="text-base">Description</h2>
+                    <div
+                      className="prose"
+                      dangerouslySetInnerHTML={{ __html: show.description }}
+                    ></div>
+                  </section>
                 )}
               </section>
             </section>

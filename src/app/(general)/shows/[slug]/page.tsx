@@ -93,6 +93,13 @@ const ShowContent = async ({ slug }: { slug: string }) => {
               </b>{" "}
               {show.author}
             </h2>
+
+            {show?.adaptors && (
+              <div className="mt-2 text-sm">
+                <span className="text-xs text-primary/50">Adapted by</span>{" "}
+                <span className="text-primary/70">{show?.adaptors}</span>
+              </div>
+            )}
           </div>
 
           {show?.shows?.length ? (
@@ -138,7 +145,10 @@ const ShowContent = async ({ slug }: { slug: string }) => {
               <section>
                 <h2>Auditions</h2>
 
-                <div dangerouslySetInnerHTML={{ __html: show.auditions }} />
+                <div
+                  className="prose"
+                  dangerouslySetInnerHTML={{ __html: show.auditions }}
+                />
 
                 {show.auditionLink && (
                   <Link
