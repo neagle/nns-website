@@ -2,7 +2,7 @@ import React from "react";
 import wixClient from "@/lib/wixClient";
 import type { Show } from "@/app/types";
 import Link from "next/link";
-import { BadgeAlert } from "lucide-react";
+import { BadgeAlert, Users } from "lucide-react";
 import classnames from "classnames";
 
 const OpenAuditions = async () => {
@@ -31,23 +31,10 @@ const OpenAuditions = async () => {
         "lg:flex-row",
         "items-center",
         "p-2",
-        "hover:[&_svg]:scale-110",
-        "hover:[&_svg]:text-secondary",
+        // "hover:[&_svg]:scale-110",
+        // "hover:[&_svg]:text-secondary",
       ])}
     >
-      <div className="flex items-center mb-4 lg:mb-0 grow">
-        <BadgeAlert
-          size={36}
-          className="text-info mr-4 transition-all shrink-0"
-        />
-        <div>
-          <h3 className="font-bold text-info!">Audition Signups</h3>
-          <div className="text-sm leading-tight">
-            Auditions are currently open for <strong>{show.title}</strong>, by{" "}
-            {show.author}
-          </div>
-        </div>
-      </div>
       <Link
         href="/auditions"
         className={classnames([
@@ -61,8 +48,41 @@ const OpenAuditions = async () => {
           "lg:w-auto",
         ])}
       >
-        Audition Information &amp; Signups
+        <Users />
+        Audition Info &amp; Sign Up
       </Link>
+      <div
+        className={classnames([
+          "flex",
+          "items-center",
+          "ml-4",
+          "mb-4",
+          "lg:mb-0",
+          // "outline",
+          "grow",
+        ])}
+      >
+        <div>
+          {/* <h3 className="font-bold text-info!">Audition Signups</h3> */}
+          <Link
+            href="/auditions"
+            className={classnames([
+              "text-base",
+              "leading-tight",
+              "underline",
+              "underline-offset-4",
+              // "decoration-dotted",
+              "decoration-base-content/30",
+              "hover:text-primary",
+              "hover:decoration-primary/30",
+              "transition-colors",
+            ])}
+          >
+            Auditions are currently open for <strong>{show.title}</strong>, by{" "}
+            {show.author}
+          </Link>
+        </div>
+      </div>
     </div>
   ));
 };

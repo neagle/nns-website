@@ -18,9 +18,17 @@ export const metadata: Metadata = {
 const Page = async () => {
   return (
     <div className="grid gap-4 md:grid-cols-[1fr_2fr] h-full">
-      <section className="p-4">
-        <h1 className="text-xl mb-4">Auditions</h1>
-        <div className="md:text-lg leading-tight [&>p]:mb-3 [&>p]:last-of-type:mb-0">
+      <section className="p-4 lg:p-8">
+        <h1 className="text-3xl mb-4">Auditions</h1>
+        <div
+          className={classnames([
+            "md:text-base",
+            "leading-tight",
+            "[&>p]:mb-3",
+            "[&>p]:last-of-type:mb-0",
+            "text-pretty",
+          ])}
+        >
           <p>
             We believe the word <em>community</em> is the most important word in
             &ldquo;community theater.&rdquo;
@@ -32,14 +40,14 @@ const Page = async () => {
 
           <p>
             NOVA Nightsky Theater welcomes friends of all races, cultural
-            backgrounds, abilities, sexual orientation, &amp; gender identity to
+            backgrounds, abilities, sexual orientation, and gender identity to
             audition for our shows.
           </p>
 
           <p>Audition sides will be emailed to you prior to auditions.</p>
         </div>
       </section>
-      <section className={classnames(["bg-base-300", "p-4"])}>
+      <section className={classnames(["bg-base-300"])}>
         <Suspense fallback={<CenterSpinner />}>
           <AuditionContent />
         </Suspense>
@@ -77,17 +85,17 @@ const AuditionContent = async () => {
                 "h-full",
                 "bg-base-300",
                 "p-4",
+                "lg:p-8",
               ])}
             >
               <section>
-                <ShowLogo show={show} />
+                <ShowLogo show={show} className="mb-4" />
                 {show.auditionLink && (
                   <Link
                     href={show.auditionLink}
                     className={classnames([
                       "md:sticky",
                       "top-5",
-                      "mt-4",
                       "btn",
                       "btn-primary",
                       "w-full",
@@ -104,7 +112,7 @@ const AuditionContent = async () => {
 
               <section>
                 <div className="mb-4">
-                  <h1 className="text-xl font-bold">{show.title}</h1>
+                  <h1 className="text-2xl font-bold">{show.title}</h1>
                   <h2 className="text-lg text-primary/70! font-normal! capitalize! font-sans!">
                     <b className="text-sm text-primary/50 font-normal lowercase">
                       by
@@ -136,7 +144,7 @@ const AuditionContent = async () => {
                 )}
                 {show.auditions ? (
                   <div
-                    className="prose mb-4"
+                    className="prose mb-4 text-pretty"
                     dangerouslySetInnerHTML={{ __html: show.auditions }}
                   />
                 ) : (

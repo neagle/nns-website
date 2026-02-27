@@ -146,7 +146,7 @@ const ShowContent = async ({ slug }: { slug: string }) => {
                 <h2>Auditions</h2>
 
                 <div
-                  className="prose"
+                  className="prose text-pretty"
                   dangerouslySetInnerHTML={{ __html: show.auditions }}
                 />
 
