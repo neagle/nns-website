@@ -10,10 +10,43 @@ import PersonList from "@/app/components/PersonList";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Auditions",
-  description: "Audition for a show with NOVA Nightsky Theater.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  // If there's a show in the future, with an audition link, without "no longer
+  // auditioning" checked, feature it in the OG Image
+  const now = new Date();
+  const { items } = await wixClient.items
+    .query("Shows")
+    .ge("openingDate", now.toISOString())
+    .isNotEmpty("auditionLink")
+    .ne("noLongerAuditioning", true)
+    .ascending("openingDate")
+    .find();
+
+  const shows = items as Show[];
+  if (!shows.length) {
+    return {
+      title: "Auditions",
+      description: "Audition for a show with NOVA Nightsky Theater.",
+    };
+  }
+
+  // We're only going to deal with the first show; in theory,
+  // there aren't multiple shows auditioning at once.
+  // If there ever are, it's fine to feature just the first one.
+  const show = shows[0];
+
+  const ogImage = `https://www.novanightskytheater.com/og/shows/${show.slug}.png`;
+
+  return {
+    title: `Audition for ${show.title}, by ${show.author}`,
+    description: show.description
+      ? `${show.description.replace(/<[^>]+>/g, "").slice(0, 160)}...`
+      : "Learn more about this show at NOVA Nightsky Theater.",
+    openGraph: {
+      images: [{ url: ogImage, width: 1200, height: 630, type: "image/png" }],
+    },
+  };
+}
 
 const Page = async () => {
   return (
