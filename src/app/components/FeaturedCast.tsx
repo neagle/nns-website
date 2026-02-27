@@ -15,16 +15,18 @@ const FeaturedCast: React.FC<Props> = ({ show }) => {
     <div
       className={classnames(
         {
-          "2xl:grid-cols-3": show.cast.length > 2,
-          "xl:grid-cols-2": show.cast.length > 2,
+          "xl:grid-cols-3": show.cast.length % 3 === 0,
+          "xl:grid-cols-2": show.cast.length % 2 === 0,
+          "xl:grid-cols-4": show.cast.length % 4 === 0,
         },
         [
           "grid",
           "gap-8",
-          "md:grid-cols-1",
+          "sm:grid-cols-1",
+          "md:grid-cols-2",
           "justify-items-center",
           "items-start",
-        ]
+        ],
       )}
     >
       {manualSort(show.cast).map((cast: Credit) => {
@@ -36,7 +38,7 @@ const FeaturedCast: React.FC<Props> = ({ show }) => {
             (headshot: AlternateHeadshot) =>
               // The title of the headshot must exactly match
               // the title of the show
-              headshot.title === show.title
+              headshot.title === show.title,
           );
           if (alternateHeadshot) {
             headshot = alternateHeadshot.src;

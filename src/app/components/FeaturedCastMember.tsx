@@ -53,7 +53,7 @@ const FeaturedCastMember = ({
   return (
     <Link
       // className="text-primary font-bold "
-      style={{ width: `${width}px` }}
+      // style={{ width: `${width}px` }}
       className={classnames(className, [
         "block",
         "flex",
