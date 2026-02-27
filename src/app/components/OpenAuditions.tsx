@@ -44,6 +44,8 @@ const OpenAuditions = async () => {
           "hover:scale-100",
           "transition-all",
           "w-full",
+          "mb-4",
+          "lg:mb-0",
           "md:w-2/3",
           "lg:w-auto",
         ])}
@@ -58,8 +60,9 @@ const OpenAuditions = async () => {
           "ml-4",
           "mb-4",
           "lg:mb-0",
-          // "outline",
           "grow",
+          "text-center",
+          "lg:text-left",
         ])}
       >
         <div>
