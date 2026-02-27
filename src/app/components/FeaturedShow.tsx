@@ -27,8 +27,8 @@ const FeaturedShow = async () => {
   const showsWithData = await getShowsWithData({ shows });
 
   return (
-    <div className="h-full">
-      <ul className="h-full flex flex-col">
+    <div>
+      <ul className="flex flex-col">
         {showsWithData.map(async (show) => {
           const backgroundStyle = getShowBackgroundStyle(show);
 
