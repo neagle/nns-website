@@ -26,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!shows.length) {
     return {
       title: "Auditions",
-      description: "Audition for a show with NOVA Nightsky Theater.",
+      description: "Audition info for upcoming shows at NOVA Nightsky Theater.",
     };
   }
 
@@ -38,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const ogImage = `https://www.novanightskytheater.com/og/shows/${show.slug}.png`;
 
   return {
-    title: `Audition for ${show.title}, by ${show.author}`,
+    title: `Audition info for ${show.title}, by ${show.author}`,
     description: show.description
       ? `${show.description.replace(/<[^>]+>/g, "").slice(0, 160)}...`
       : "Learn more about this show at NOVA Nightsky Theater.",
