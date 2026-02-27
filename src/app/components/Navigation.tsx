@@ -238,7 +238,7 @@ const Navigation = ({ seasons }: Props) => {
             "lg:hidden",
           ])}
         >
-          <ul className="menu menu-compact p-0">
+          <ul className="menu menu-compact p-0 w-40">
             {(() => {
               const result: React.ReactNode[] = [];
 
