@@ -4,12 +4,14 @@ interface Props {
   disableInteractions?: boolean;
   fontSize?: number;
   breakWords?: boolean;
+  className?: string;
 }
 
 const Logo = ({
   fontSize,
   disableInteractions = false,
   breakWords = false,
+  className = "",
 }: Props) => {
   const styleBlock = {
     fontSize: fontSize ? `${fontSize}px` : undefined,
@@ -31,10 +33,11 @@ const Logo = ({
           "inline-block",
           "filter drop-shadow-[0_0_5px_rgba(0,0,0,0.7)]!",
         ],
+        className,
         {
           "hover:[&_svg]:transform hover:[&_svg]:scale-x-120 hover:[&_svg]:scale-y-120 hover:[&_svg]:rotate-180 hover:[&_svg>path]:fill-[hsl(37,100%,90%)]":
             !disableInteractions,
-        }
+        },
       )}
       style={styleBlock}
     >
@@ -56,7 +59,7 @@ const Logo = ({
             {
               "transition-all": !disableInteractions,
               "transition-none": disableInteractions,
-            }
+            },
           )}
         >
           <path
