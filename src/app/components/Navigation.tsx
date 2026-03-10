@@ -9,6 +9,14 @@ type Props = {
   seasons: string[];
 };
 
+type AuthState = {
+  loggedIn: boolean;
+  role?: "none" | "house" | "admin";
+  isHouse?: boolean;
+  isAdmin: boolean;
+  email: string | null;
+};
+
 interface navItem {
   label: string | React.ReactNode;
   href?: string;
@@ -18,6 +26,27 @@ interface navItem {
 
 const Navigation = ({ seasons }: Props) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [auth, setAuth] = useState<AuthState>({
+    loggedIn: false,
+    role: "none",
+    isHouse: false,
+    isAdmin: false,
+    email: null,
+  });
+
+  const role = auth.role || "none";
+  const canAccessHouse =
+    auth.isHouse || auth.isAdmin || role === "house" || role === "admin";
+  const canAccessAdmin = auth.isAdmin || role === "admin";
+
+  React.useEffect(() => {
+    fetch("/api/auth/me")
+      .then((r) => r.json())
+      .then((data) => setAuth(data))
+      .catch(() => {
+        // ignore
+      });
+  }, []);
 
   const navItems: navItem[] = [
     {
@@ -56,6 +85,15 @@ const Navigation = ({ seasons }: Props) => {
         { label: "Contact Us", href: "/contact" },
       ],
     },
+
+    ...(auth.loggedIn
+      ? ([
+          ...(canAccessHouse ? [{ label: "House", href: "/house" }] : []),
+          ...(canAccessAdmin ? [{ label: "Admin", href: "/admin" }] : []),
+          { label: "Log out", href: "/api/auth/logout?next=/" },
+        ] as navItem[])
+      : []),
+
     {
       label: <SiFacebook />,
       href: "https://www.facebook.com/novanightskytheater/",

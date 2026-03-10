@@ -1,4 +1,5 @@
 import type { WixDataItem } from "@wix/wix-data-items-sdk";
+import type { EventGuest } from "@wix/auto_sdk_events_guests";
 
 export interface Show extends WixDataItem {
   _id: string;
@@ -150,4 +151,9 @@ export interface Ticket {
     pricingType: string; // "STANDARD"
   };
   saleStatus: string; // "SALE_STARTED"
+}
+
+export interface GroupedGuests {
+  buyer: EventGuest | null;
+  tickets: EventGuest[];
 }

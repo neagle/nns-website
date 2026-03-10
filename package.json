@@ -32,6 +32,7 @@
     "colorizr": "^3.0.7",
     "dayjs": "^1.11.13",
     "dotenv": "^17.2.3",
+    "fast-fuzzy": "^1.12.0",
     "fuse.js": "^7.1.0",
     "html-to-image": "^1.11.13",
     "lucide-react": "^0.575.0",
