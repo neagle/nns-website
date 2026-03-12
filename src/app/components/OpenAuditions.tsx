@@ -31,8 +31,6 @@ const OpenAuditions = async () => {
         "lg:flex-row",
         "items-center",
         "p-2",
-        // "hover:[&_svg]:scale-110",
-        // "hover:[&_svg]:text-secondary",
       ])}
     >
       <Link
@@ -57,16 +55,13 @@ const OpenAuditions = async () => {
         className={classnames([
           "flex",
           "items-center",
-          "ml-4",
-          "mb-4",
-          "lg:mb-0",
+          "lg:ml-4",
           "grow",
           "text-center",
           "lg:text-left",
         ])}
       >
-        <div>
-          {/* <h3 className="font-bold text-info!">Audition Signups</h3> */}
+        <div className="">
           <Link
             href="/auditions"
             className={classnames([
