@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "type": "local",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"],
+      "tools": ["*"]
+    },
+    "wix": {
+      "type": "http",
+      "url": "https://mcp.wix.com/mcp",
+      "tools": [
+        "SearchWixWDSDocumentation",
+        "SearchWixRESTDocumentation",
+        "SearchWixSDKDocumentation",
+        "SearchBuildAppsDocumentation",
+        "SearchWixHeadlessDocumentation",
+        "WixBusinessFlowsDocumentation",
+        "ReadFullDocsArticle",
+        "ReadFullDocsMethodSchema",
+        "ListWixSites"
+      ]
+    }
+  }
+}
