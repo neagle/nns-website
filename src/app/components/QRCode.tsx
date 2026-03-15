@@ -32,10 +32,7 @@ const getDefaultCampaign = (pageTitle: string, pathname: string) => {
     return "homepage";
   }
 
-  const slug = pathname
-    .split("/")
-    .filter(Boolean)
-    .join("-");
+  const slug = pathname.split("/").filter(Boolean).join("-");
 
   return slugify(slug || "page", { separator: "-", lowercase: true });
 };
@@ -63,7 +60,7 @@ const QrCode = () => {
 
   const defaultCampaign = useMemo(
     () => getDefaultCampaign(pageTitle, pathname),
-    [pageTitle, pathname]
+    [pageTitle, pathname],
   );
 
   const trackedUrl = useMemo(() => {
@@ -114,7 +111,7 @@ const QrCode = () => {
 
     const loadLogo = async () => {
       const url = await getSvgDataUrl(
-        `/svg/star.svg?fill=${inColor ? COLOR_NEUTRAL : COLOR_PRIMARY}`
+        `/svg/star.svg?fill=${inColor ? COLOR_NEUTRAL : COLOR_PRIMARY}`,
       );
       setLogoUrl(url);
     };
@@ -165,31 +162,25 @@ const QrCode = () => {
 
   return (
     <>
-      <div className="fixed bottom-4 right-4 w-[18rem] p-3 bg-base-100 rounded-lg shadow-lg z-40">
-        <div
-          className={classnames([
-            "absolute",
-            "-top-7",
-            "right-0",
-            "cursor-pointer",
-            "bg-base-100",
-            "hover:text-primary",
-            "transition-all",
-            "rounded-full",
-            "p-1",
-            "shadow-lg",
-            "z-50",
-          ])}
-          onClick={handleClose}
-        >
-          <CircleX size={24} />
-        </div>
-
+      <div
+        className={classnames([
+          "fixed",
+          "bottom-4",
+          "right-4",
+          "w-[18rem]",
+          "p-3",
+          "bg-base-100",
+          "rounded-lg",
+          "shadow-lg",
+          "shadow-primary",
+          "z-40",
+        ])}
+      >
         <div className="flex gap-3 items-start">
           <div
             className={classnames(
               { "bg-white": !inColor, "bg-primary": inColor },
-              ["rounded", "overflow-hidden", "shrink-0"]
+              ["rounded", "overflow-hidden", "shrink-0"],
             )}
           >
             <QRCodeSVG
@@ -211,14 +202,22 @@ const QrCode = () => {
             />
           </div>
 
-          <div className="min-w-0 grow flex flex-col gap-2">
+          <div className="min-w-0 grow flex flex-col gap-2 ">
             <div>
-              <label
-                htmlFor="qr-tracking-campaign"
-                className="block text-xs font-bold uppercase tracking-wide text-primary/80"
-              >
-                Tracking campaign
-              </label>
+              <div className="flex">
+                <label
+                  htmlFor="qr-tracking-campaign"
+                  className="block text-xs font-bold uppercase tracking-wide text-primary/80"
+                >
+                  Tracking campaign
+                </label>
+                <button
+                  className="btn btn-ghost btn-xs ml-2"
+                  onClick={handleClose}
+                >
+                  <CircleX />
+                </button>
+              </div>
               <input
                 id="qr-tracking-campaign"
                 name="qr-tracking-campaign"
@@ -247,7 +246,9 @@ const QrCode = () => {
 
             <div className="rounded bg-base-200 p-2 text-[11px] leading-tight">
               <p className="font-bold text-primary/70">Encoded URL</p>
-              <p className="mt-1 break-all text-base-content/80">{trackedUrl}</p>
+              <p className="mt-1 break-all text-base-content/80">
+                {trackedUrl}
+              </p>
             </div>
 
             <div className="flex items-center justify-between">
@@ -321,7 +322,7 @@ const QrCode = () => {
                         }),
                       }))
                     }
-                    className="input input-bordered mt-1 w-full"
+                    className="input input-bordered input-xs mt-1 w-full"
                   />
                 </div>
 
@@ -345,7 +346,7 @@ const QrCode = () => {
                         }),
                       }))
                     }
-                    className="input input-bordered mt-1 w-full"
+                    className="input input-bordered input-xs mt-1 w-full"
                   />
                 </div>
 
@@ -370,7 +371,7 @@ const QrCode = () => {
                         }),
                       }));
                     }}
-                    className="input input-bordered mt-1 w-full"
+                    className="input input-bordered input-xs mt-1 w-full"
                   />
                 </div>
 
@@ -394,7 +395,7 @@ const QrCode = () => {
                         }),
                       }))
                     }
-                    className="input input-bordered mt-1 w-full"
+                    className="input input-bordered input-xs mt-1 w-full"
                     placeholder="optional"
                   />
                 </div>
@@ -419,7 +420,7 @@ const QrCode = () => {
                         }),
                       }))
                     }
-                    className="input input-bordered mt-1 w-full"
+                    className="input input-bordered input-xs mt-1 w-full"
                     placeholder="optional"
                   />
                 </div>
@@ -427,13 +428,15 @@ const QrCode = () => {
 
               <div className="rounded bg-base-200 p-3 text-xs leading-relaxed">
                 <p className="font-bold text-primary/70">Tracked URL preview</p>
-                <p className="mt-1 break-all text-base-content/80">{trackedUrl}</p>
+                <p className="mt-1 break-all text-base-content/80">
+                  {trackedUrl}
+                </p>
               </div>
 
               <div className="card-actions justify-end">
                 <button
                   type="button"
-                  className="btn btn-ghost"
+                  className="btn btn-ghost btn-xs"
                   onClick={() => {
                     setIsCampaignDirty(false);
                     setTracking({
@@ -449,7 +452,7 @@ const QrCode = () => {
                 </button>
                 <button
                   type="button"
-                  className="btn btn-primary"
+                  className="btn btn-primary btn-xs"
                   onClick={() => setIsAdvancedOpen(false)}
                 >
                   Done
