@@ -70,6 +70,12 @@ const page = async () => {
           That will generate a QR Code that links to that specific URL. You can
           use this to generate codes for specific shows or pages.
         </p>
+        <p>
+          QR codes can also include Google Analytics-friendly tracking
+          parameters. The QR code panel includes a simple campaign field for
+          flyer names, plus an advanced editor for full UTM fields when you need
+          more control.
+        </p>
         <Link className="link" href="/?qrCode">
           View the homepage with a QR Code.
         </Link>
