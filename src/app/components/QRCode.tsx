@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import slugify from "@sindresorhus/slugify";
 import { QRCodeSVG } from "qrcode.react";
 import classnames from "classnames";
@@ -48,8 +48,8 @@ const QrCode = () => {
   const [inColor, setInColor] = useState(false);
   const [pageTitle, setPageTitle] = useState("");
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
-  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [isCampaignDirty, setIsCampaignDirty] = useState(false);
+  const advancedDialogRef = useRef<HTMLDialogElement>(null);
   const [tracking, setTracking] = useState<TrackingFields>({
     source: DEFAULT_UTM_SOURCE,
     medium: DEFAULT_UTM_MEDIUM,
@@ -151,7 +151,6 @@ const QrCode = () => {
   };
 
   const handleClose = () => {
-    setIsAdvancedOpen(false);
     const params = new URLSearchParams(searchParams.toString());
     params.delete("qrCode");
     const query = params.toString();
@@ -166,8 +165,12 @@ const QrCode = () => {
         className={classnames([
           "fixed",
           "bottom-4",
+          "md:bottom-4",
           "right-4",
-          "w-[18rem]",
+          "left-4",
+          "md:left-auto",
+          "md:right-4",
+          "md:w-[18rem]",
           "p-3",
           "bg-base-100",
           "rounded-lg",
@@ -176,11 +179,19 @@ const QrCode = () => {
           "z-40",
         ])}
       >
-        <div className="flex gap-3 items-start">
+        <div
+          className={classnames([
+            "flex",
+            "gap-3",
+            "items-start",
+            "flex-col",
+            "md:flex-row",
+          ])}
+        >
           <div
             className={classnames(
               { "bg-white": !inColor, "bg-primary": inColor },
-              ["rounded", "overflow-hidden", "shrink-0"],
+              ["rounded", "overflow-hidden", "shrink-0", "mx-auto"],
             )}
           >
             <QRCodeSVG
@@ -204,10 +215,18 @@ const QrCode = () => {
 
           <div className="min-w-0 grow flex flex-col gap-2 ">
             <div>
-              <div className="flex">
+              <div className={classnames(["flex", "items-center"])}>
                 <label
                   htmlFor="qr-tracking-campaign"
-                  className="block text-xs font-bold uppercase tracking-wide text-primary/80"
+                  className={classnames([
+                    "block",
+                    "text-xs",
+                    "font-bold",
+                    "uppercase",
+                    "tracking-wide",
+                    "text-primary/80",
+                    "grow",
+                  ])}
                 >
                   Tracking campaign
                 </label>
@@ -265,7 +284,7 @@ const QrCode = () => {
               <button
                 type="button"
                 className="btn btn-ghost btn-xs"
-                onClick={() => setIsAdvancedOpen(true)}
+                onClick={() => advancedDialogRef.current?.showModal()}
               >
                 <Settings2 size={14} />
                 Advanced
@@ -279,189 +298,187 @@ const QrCode = () => {
         </div>
       </div>
 
-      {isAdvancedOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="card w-full max-w-lg bg-base-100 shadow-2xl">
-            <div className="card-body">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h2 className="card-title">Advanced tracking</h2>
-                  <p className="text-sm text-base-content/70">
-                    Adjust the UTM fields that will be embedded in the QR code.
-                  </p>
-                </div>
+      <dialog
+        ref={advancedDialogRef}
+        className={classnames([
+          "modal",
+          "modal-bottom",
+          "sm:modal-middle",
+          "px-4",
+          "pb-4",
+        ])}
+      >
+        <div className={classnames(["modal-box", "rounded", "rounded-lg"])}>
+          <form method="dialog">
+            <button
+              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              aria-label="Close advanced tracking"
+            >
+              <CircleX size={18} />
+            </button>
+          </form>
 
-                <button
-                  type="button"
-                  className="btn btn-ghost btn-sm btn-circle"
-                  onClick={() => setIsAdvancedOpen(false)}
-                  aria-label="Close advanced tracking"
-                >
-                  <CircleX size={20} />
-                </button>
-              </div>
+          <h2 className="font-bold text-lg">Advanced tracking</h2>
+          <p className="text-sm text-base-content/70 mt-1">
+            Adjust the UTM fields that will be embedded in the QR code.
+          </p>
 
-              <div className="grid gap-3 md:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="utm-source"
-                    className="block text-xs font-bold uppercase tracking-wide text-primary/80"
-                  >
-                    UTM source
-                  </label>
-                  <input
-                    id="utm-source"
-                    type="text"
-                    value={tracking.source}
-                    onChange={(event) =>
-                      setTracking((prev) => ({
-                        ...prev,
-                        source: slugify(event.target.value, {
-                          separator: "-",
-                          lowercase: true,
-                        }),
-                      }))
-                    }
-                    className="input input-bordered input-xs mt-1 w-full"
-                  />
-                </div>
+          <div className="grid gap-3 md:grid-cols-2 mt-4">
+            <div>
+              <label
+                htmlFor="utm-source"
+                className="block text-xs font-bold uppercase tracking-wide text-primary/80"
+              >
+                UTM source
+              </label>
+              <input
+                id="utm-source"
+                type="text"
+                value={tracking.source}
+                onChange={(event) =>
+                  setTracking((prev) => ({
+                    ...prev,
+                    source: slugify(event.target.value, {
+                      separator: "-",
+                      lowercase: true,
+                    }),
+                  }))
+                }
+                className="input input-bordered input-xs mt-1 w-full"
+              />
+            </div>
 
-                <div>
-                  <label
-                    htmlFor="utm-medium"
-                    className="block text-xs font-bold uppercase tracking-wide text-primary/80"
-                  >
-                    UTM medium
-                  </label>
-                  <input
-                    id="utm-medium"
-                    type="text"
-                    value={tracking.medium}
-                    onChange={(event) =>
-                      setTracking((prev) => ({
-                        ...prev,
-                        medium: slugify(event.target.value, {
-                          separator: "-",
-                          lowercase: true,
-                        }),
-                      }))
-                    }
-                    className="input input-bordered input-xs mt-1 w-full"
-                  />
-                </div>
+            <div>
+              <label
+                htmlFor="utm-medium"
+                className="block text-xs font-bold uppercase tracking-wide text-primary/80"
+              >
+                UTM medium
+              </label>
+              <input
+                id="utm-medium"
+                type="text"
+                value={tracking.medium}
+                onChange={(event) =>
+                  setTracking((prev) => ({
+                    ...prev,
+                    medium: slugify(event.target.value, {
+                      separator: "-",
+                      lowercase: true,
+                    }),
+                  }))
+                }
+                className="input input-bordered input-xs mt-1 w-full"
+              />
+            </div>
 
-                <div className="md:col-span-2">
-                  <label
-                    htmlFor="utm-campaign"
-                    className="block text-xs font-bold uppercase tracking-wide text-primary/80"
-                  >
-                    UTM campaign
-                  </label>
-                  <input
-                    id="utm-campaign"
-                    type="text"
-                    value={tracking.campaign}
-                    onChange={(event) => {
-                      setIsCampaignDirty(true);
-                      setTracking((prev) => ({
-                        ...prev,
-                        campaign: slugify(event.target.value, {
-                          separator: "-",
-                          lowercase: true,
-                        }),
-                      }));
-                    }}
-                    className="input input-bordered input-xs mt-1 w-full"
-                  />
-                </div>
+            <div className="md:col-span-2">
+              <label
+                htmlFor="utm-campaign"
+                className="block text-xs font-bold uppercase tracking-wide text-primary/80"
+              >
+                UTM campaign
+              </label>
+              <input
+                id="utm-campaign"
+                type="text"
+                value={tracking.campaign}
+                onChange={(event) => {
+                  setIsCampaignDirty(true);
+                  setTracking((prev) => ({
+                    ...prev,
+                    campaign: slugify(event.target.value, {
+                      separator: "-",
+                      lowercase: true,
+                    }),
+                  }));
+                }}
+                className="input input-bordered input-xs mt-1 w-full"
+              />
+            </div>
 
-                <div>
-                  <label
-                    htmlFor="utm-content"
-                    className="block text-xs font-bold uppercase tracking-wide text-primary/80"
-                  >
-                    UTM content
-                  </label>
-                  <input
-                    id="utm-content"
-                    type="text"
-                    value={tracking.content}
-                    onChange={(event) =>
-                      setTracking((prev) => ({
-                        ...prev,
-                        content: slugify(event.target.value, {
-                          separator: "-",
-                          lowercase: true,
-                        }),
-                      }))
-                    }
-                    className="input input-bordered input-xs mt-1 w-full"
-                    placeholder="optional"
-                  />
-                </div>
+            <div>
+              <label
+                htmlFor="utm-content"
+                className="block text-xs font-bold uppercase tracking-wide text-primary/80"
+              >
+                UTM content
+              </label>
+              <input
+                id="utm-content"
+                type="text"
+                value={tracking.content}
+                onChange={(event) =>
+                  setTracking((prev) => ({
+                    ...prev,
+                    content: slugify(event.target.value, {
+                      separator: "-",
+                      lowercase: true,
+                    }),
+                  }))
+                }
+                className="input input-bordered input-xs mt-1 w-full"
+                placeholder="optional"
+              />
+            </div>
 
-                <div>
-                  <label
-                    htmlFor="utm-term"
-                    className="block text-xs font-bold uppercase tracking-wide text-primary/80"
-                  >
-                    UTM term
-                  </label>
-                  <input
-                    id="utm-term"
-                    type="text"
-                    value={tracking.term}
-                    onChange={(event) =>
-                      setTracking((prev) => ({
-                        ...prev,
-                        term: slugify(event.target.value, {
-                          separator: "-",
-                          lowercase: true,
-                        }),
-                      }))
-                    }
-                    className="input input-bordered input-xs mt-1 w-full"
-                    placeholder="optional"
-                  />
-                </div>
-              </div>
-
-              <div className="rounded bg-base-200 p-3 text-xs leading-relaxed">
-                <p className="font-bold text-primary/70">Tracked URL preview</p>
-                <p className="mt-1 break-all text-base-content/80">
-                  {trackedUrl}
-                </p>
-              </div>
-
-              <div className="card-actions justify-end">
-                <button
-                  type="button"
-                  className="btn btn-ghost btn-xs"
-                  onClick={() => {
-                    setIsCampaignDirty(false);
-                    setTracking({
-                      source: DEFAULT_UTM_SOURCE,
-                      medium: DEFAULT_UTM_MEDIUM,
-                      campaign: defaultCampaign,
-                      content: "",
-                      term: "",
-                    });
-                  }}
-                >
-                  Reset defaults
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary btn-xs"
-                  onClick={() => setIsAdvancedOpen(false)}
-                >
-                  Done
-                </button>
-              </div>
+            <div>
+              <label
+                htmlFor="utm-term"
+                className="block text-xs font-bold uppercase tracking-wide text-primary/80"
+              >
+                UTM term
+              </label>
+              <input
+                id="utm-term"
+                type="text"
+                value={tracking.term}
+                onChange={(event) =>
+                  setTracking((prev) => ({
+                    ...prev,
+                    term: slugify(event.target.value, {
+                      separator: "-",
+                      lowercase: true,
+                    }),
+                  }))
+                }
+                className="input input-bordered input-xs mt-1 w-full"
+                placeholder="optional"
+              />
             </div>
           </div>
+
+          <div className="rounded bg-base-200 p-3 text-xs leading-relaxed mt-4">
+            <p className="font-bold text-primary/70">Tracked URL preview</p>
+            <p className="mt-1 break-all text-base-content/80">{trackedUrl}</p>
+          </div>
+
+          <div className="modal-action">
+            <button
+              type="button"
+              className="btn btn-ghost btn-xs"
+              onClick={() => {
+                setIsCampaignDirty(false);
+                setTracking({
+                  source: DEFAULT_UTM_SOURCE,
+                  medium: DEFAULT_UTM_MEDIUM,
+                  campaign: defaultCampaign,
+                  content: "",
+                  term: "",
+                });
+              }}
+            >
+              Reset defaults
+            </button>
+            <form method="dialog">
+              <button className="btn btn-primary btn-xs">Done</button>
+            </form>
+          </div>
         </div>
-      )}
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
     </>
   );
 };
