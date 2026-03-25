@@ -7,6 +7,7 @@ import Footer from "@/app/components/Footer";
 import QRCode from "@/app/components/QRCode";
 import NextTopLoader from "nextjs-toploader";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const dunbarLow = localFont({
   src: [
@@ -49,7 +50,8 @@ const noah = localFont({
 export const metadata: Metadata = {
   title: {
     template: "%s | NOVA Nightsky Theater",
-    default: "Community Theater | NOVA Nightsky Theater | Falls Church",
+    default:
+      "NOVA Nightsky Theater | Community Theater in Falls Church, Virginia",
   },
   description:
     "NOVA Nightsky Theater is community theater group in Falls Church VA performing outdoors and indoors in unconventional places.",
@@ -78,6 +80,7 @@ export default function RootLayout({
         <Footer />
         <SpeedInsights />
       </body>
+      <GoogleAnalytics gaId="G-ZM98GBVML7" />
     </html>
   );
 }
