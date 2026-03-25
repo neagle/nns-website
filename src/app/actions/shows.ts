@@ -1,5 +1,5 @@
 import type { Show, Credit } from "@/app/types";
-import wixClient from "@/lib/wixClient";
+import wixClient, { wixApiClient } from "@/lib/wixClient";
 
 type Props = {
   shows: Show[];
@@ -87,4 +87,13 @@ export const getShowsWithData = async ({
     })
   );
   return showsWithData;
+};
+
+export const getShows = async (): Promise<Show[]> => {
+  "use server";
+  const { items } = await wixApiClient.items
+    .query("Shows")
+    .descending("openingDate")
+    .find();
+  return items as Show[];
 };
