@@ -20,7 +20,17 @@ const parseNamesFromText = (text: string): ParsedPerson[] => {
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line) => {
-      const parts = line.split(/\s+/);
+      // If the line contains a tab, treat it as "Role\tFirst [Middle] Last"
+      // (the two-column Google Sheets format)
+      let role = "";
+      let namePart = line;
+      if (line.includes("\t")) {
+        const tabIndex = line.indexOf("\t");
+        role = line.slice(0, tabIndex).trim();
+        namePart = line.slice(tabIndex + 1).trim();
+      }
+
+      const parts = namePart.split(/\s+/);
       const firstName = parts[0] ?? "";
       const lastName = parts.length > 1 ? parts[parts.length - 1] : "";
       const middleName = parts.length > 2 ? parts.slice(1, -1).join(" ") : "";
@@ -29,6 +39,7 @@ const parseNamesFromText = (text: string): ParsedPerson[] => {
         firstName,
         middleName,
         lastName,
+        role,
         isDuplicate: false,
         isIncluded: true,
       };
@@ -145,23 +156,29 @@ const AddPeopleForm = ({ shows }: AddPeopleFormProps) => {
         insertedIds = inserted.map((item) => item._id).filter(Boolean) as string[];
       }
 
-      const existingIds = duplicatePeople
-        .map((p) => p.duplicateId)
-        .filter(Boolean) as string[];
+      // Build { personId, role } pairs — inserted people match positionally with newPeople
+      const newCredits = insertedIds.map((personId, i) => ({
+        personId,
+        role: newPeople[i]?.role ?? "",
+      }));
+      const duplicateCredits = duplicatePeople
+        .filter((p): p is typeof p & { duplicateId: string } => !!p.duplicateId)
+        .map((p) => ({ personId: p.duplicateId, role: p.role }));
 
-      const allPersonIds = [...insertedIds, ...existingIds];
-      if (allPersonIds.length > 0) {
+      const allCredits = [...newCredits, ...duplicateCredits];
+      if (allCredits.length > 0) {
         await addCredits({
-          credits: allPersonIds.map((personId) => ({
+          credits: allCredits.map(({ personId, role }) => ({
             person: personId,
             show: showId,
             category,
+            role: role || undefined,
           })),
         });
       }
 
       const newCount = newPersonRecords.length;
-      const dupeCount = existingIds.length;
+      const dupeCount = duplicateCredits.length;
       const parts: string[] = [];
       if (newCount > 0)
         parts.push(
@@ -201,12 +218,13 @@ const AddPeopleForm = ({ shows }: AddPeopleFormProps) => {
       <section>
         <h2 className="text-lg font-semibold mb-1">Paste Names</h2>
         <p className="text-sm text-base-content/60 mb-3">
-          One name per line from Google Sheets. Format:{" "}
-          <code className="bg-base-200 px-1 rounded">First [Middle] Last</code>
+          One name per line. Optionally paste two columns from Google Sheets
+          (role and name separated by a tab):{" "}
+          <code className="bg-base-200 px-1 rounded">Thyona↦Melanie Gordon</code>
         </p>
         <textarea
           className="textarea textarea-bordered w-full h-48 font-mono text-sm"
-          placeholder={"John Smith\nMary Jane Watson\nSullivan den Bergh"}
+          placeholder={"John Smith\nMary Jane Watson\nThyona\tMelanie Gordon"}
           value={rawText}
           onChange={(e) => setRawText(e.target.value)}
         />

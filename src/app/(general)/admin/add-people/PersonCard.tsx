@@ -7,6 +7,7 @@ export interface ParsedPerson {
   firstName: string;
   middleName: string;
   lastName: string;
+  role: string;
   isDuplicate: boolean;
   duplicateId?: string;
   isIncluded: boolean;
@@ -73,6 +74,14 @@ const PersonCard = ({ person, onChange, onRemove }: PersonCardProps) => {
           placeholder="Last"
           value={person.lastName}
           onChange={(e) => handleField("lastName", e.target.value)}
+          disabled={!person.isIncluded}
+        />
+        <input
+          type="text"
+          className="input input-sm input-bordered w-32 min-w-0"
+          placeholder="Role (optional)"
+          value={person.role}
+          onChange={(e) => handleField("role", e.target.value)}
           disabled={!person.isIncluded}
         />
       </div>

@@ -12,6 +12,7 @@ export interface NewCredit {
   person: string;
   show: string;
   category: "cast" | "crew";
+  role?: string;
 }
 
 export const getPeople = async ({ people }: { people: Person[] }) => {
@@ -59,10 +60,11 @@ export const addPeople = async ({
 
 export const addCredits = async ({ credits }: { credits: NewCredit[] }) => {
   // Wix reference fields expect { _id: "..." } objects, not bare ID strings.
-  const creditItems = credits.map(({ person, show, category }) => ({
+  const creditItems = credits.map(({ person, show, category, role }) => ({
     person: { _id: person },
     show: { _id: show },
     category,
+    ...(role ? { role } : {}),
   }));
   const result = await wixApiClient.items.bulkInsert("Credits", creditItems);
   if (result.errors?.length) {
