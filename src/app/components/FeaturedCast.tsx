@@ -15,9 +15,9 @@ const FeaturedCast: React.FC<Props> = ({ show }) => {
     <div
       className={classnames(
         {
-          "xl:grid-cols-3": show.cast.length % 3 === 0,
           "xl:grid-cols-2": show.cast.length % 2 === 0,
-          "xl:grid-cols-4": show.cast.length % 4 === 0,
+          "xl:grid-cols-3": show.cast.length % 3 === 0,
+          "xl:grid-cols-4": show.cast.length >= 4,
         },
         [
           "grid",
