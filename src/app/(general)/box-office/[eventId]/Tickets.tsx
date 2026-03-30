@@ -16,22 +16,23 @@ const WIX_SERVICE_FEE = 0.025;
 
 interface Props {
   event: Event;
+  /** Server-fetched ticket definitions. Seeds initial state so the panel renders immediately. */
+  initialTicketDefinitions?: Ticket[];
   className?: string;
 }
 
-const Tickets = ({ event, className = "" }: Props) => {
-  const [ticketInfo, setTicketInfo] = useState<Ticket | null>(null);
+const Tickets = ({ event, initialTicketDefinitions, className = "" }: Props) => {
+  const [ticketInfo, setTicketInfo] = useState<Ticket | null>(
+    initialTicketDefinitions?.[0] ?? null,
+  );
   const [quantity, setQuantity] = useState<number>(1);
   const [redirecting, setRedirecting] = useState<boolean>(false);
   const [userPrice, setUserPrice] = useState<string>("");
 
-  const isPayWhatYouCan =
-    parseFloat(event?.registration?.tickets?.highestPrice?.value || "0") === 0;
+  // "DONATION" is Wix's pricingType for Pay What You Can events.
+  const isPayWhatYouCan = ticketInfo?.pricing?.pricingType === "DONATION";
 
   const fetchTicketsAvailability = async (event: Event) => {
-    // Wait -- used for debugging
-    // await new Promise((resolve) => setTimeout(resolve, 10000));
-
     const tickets = await wixClient.orders.queryAvailableTickets({
       filter: { eventId: event._id },
       limit: 100,
@@ -42,6 +43,7 @@ const Tickets = ({ event, className = "" }: Props) => {
     setTicketInfo(ticket);
   };
 
+  // Re-fetch on mount to get fresh availability data even when seeded from server.
   useEffect(() => {
     fetchTicketsAvailability(event);
   }, [event]);
@@ -50,7 +52,7 @@ const Tickets = ({ event, className = "" }: Props) => {
     event: Event,
     ticket: Ticket,
     quantity: number,
-    userPrice?: string
+    userPrice?: string,
   ) => {
     setRedirecting(true);
 
@@ -158,7 +160,7 @@ const Tickets = ({ event, className = "" }: Props) => {
                   "opacity-50": quantity <= 1,
                   "hover:scale-120": quantity > 1,
                 },
-                ["cursor-pointer", "p-1", "transform-all"]
+                ["cursor-pointer", "p-1", "transform-all"],
               )}
               onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))}
             >
@@ -171,11 +173,11 @@ const Tickets = ({ event, className = "" }: Props) => {
                   "opacity-50": quantity >= ticketInfo.limitPerCheckout,
                   "hover:scale-120": quantity < ticketInfo.limitPerCheckout,
                 },
-                ["cursor-pointer", "p-1", "transform-all"]
+                ["cursor-pointer", "p-1", "transform-all"],
               )}
               onClick={() =>
                 setQuantity((prev) =>
-                  Math.min(prev + 1, ticketInfo.limitPerCheckout)
+                  Math.min(prev + 1, ticketInfo.limitPerCheckout),
                 )
               }
             >
@@ -202,7 +204,7 @@ const Tickets = ({ event, className = "" }: Props) => {
                 event,
                 ticketInfo,
                 quantity,
-                isPayWhatYouCan ? userPrice : undefined
+                isPayWhatYouCan ? userPrice : undefined,
               );
             }
           }}

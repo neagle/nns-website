@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, MouseEvent } from "react";
+import React, { useRef, useState, MouseEvent } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import dayjs from "dayjs";
@@ -14,6 +14,8 @@ import Link from "next/link";
 
 type Props = {
   event: Event;
+  /** Server-fetched ticket definitions. Seeds initial state and enables immediate badge display. */
+  ticketDefinitions?: Ticket[];
   className?: string;
   animationDuration?: number;
 };
@@ -25,6 +27,7 @@ const isValidUserPrice = (price: string) => {
 
 const ShowTime = ({
   event,
+  ticketDefinitions,
   className = "",
   animationDuration = 0.2,
 }: Props) => {
@@ -33,34 +36,42 @@ const ShowTime = ({
 
   const isSoldOut = event.registration?.tickets?.soldOut;
 
-  const [ticketInfo, setTicketInfo] = useState<Ticket | null>(null);
+  const [ticketInfo, setTicketInfo] = useState<Ticket | null>(
+    ticketDefinitions?.[0] ?? null,
+  );
   const [numTickets, setNumTickets] = useState(1);
   const [redirecting, setRedirecting] = useState(false);
   const [showTicketInfo, setShowTicketInfo] = useState(false);
   const [userPrice, setUserPrice] = useState<string>("");
 
-  // The first step in the ticket purchase flow is to check if tickets are
-  // available
+  // Prevents concurrent in-flight fetches (e.g. rapid hover in/out).
+  const isFetchingRef = useRef(false);
+
+  // "DONATION" is Wix's pricingType for Pay What You Can events.
+  const isPayWhatYouCan = ticketInfo?.pricing?.pricingType === "DONATION";
+
   const fetchTicketsAvailability = async (event: Event) => {
-    // Wait -- used for debugging
-    // await new Promise((resolve) => setTimeout(resolve, 10000));
+    if (isFetchingRef.current) return;
+    isFetchingRef.current = true;
+    try {
+      const tickets = await wixClient.orders.queryAvailableTickets({
+        filter: { eventId: event._id },
+        limit: 100,
+      });
 
-    const tickets = await wixClient.orders.queryAvailableTickets({
-      filter: { eventId: event._id },
-      limit: 100,
-    });
-
-    const definitions = tickets.definitions || [];
-
-    const ticket = definitions[0] as unknown as Ticket;
-    setTicketInfo(ticket);
+      const definitions = tickets.definitions || [];
+      const ticket = definitions[0] as unknown as Ticket;
+      setTicketInfo(ticket);
+    } finally {
+      isFetchingRef.current = false;
+    }
   };
 
   const createRedirect = async (
     event: Event,
     ticket: Ticket,
     quantity: number,
-    userPrice: string
+    userPrice: string,
   ) => {
     setRedirecting(true);
 
@@ -114,7 +125,7 @@ const ShowTime = ({
   }
 
   const startDate = dayjs(event.dateAndTimeSettings.startDate).tz(
-    "America/New_York"
+    "America/New_York",
   );
   // Set showType based on whether the startDate is before or after 5 PM
   const showType = startDate.hour() < 17 ? "Matinee" : "Night";
@@ -135,17 +146,11 @@ const ShowTime = ({
     fetchTicketsAvailability(event);
   };
 
-  // Try to anticipate clicks a little bit by fetching ticket info on mouse
-  // hover
+  // Pre-fetch ticket info on hover so the panel opens instantly.
+  // Always re-fetches to keep availability counts fresh.
   const handleHover = () => {
-    if (!ticketInfo) {
-      fetchTicketsAvailability(event);
-    }
+    fetchTicketsAvailability(event);
   };
-
-  // "Pay What You Can" shows have a highest price of $0.00
-  const isPayWhatYouCan =
-    parseFloat(event?.registration?.tickets?.highestPrice?.value || "0") === 0;
 
   return (
     <div
@@ -175,7 +180,7 @@ const ShowTime = ({
 
           "transition-all",
           "overflow-hidden",
-        ]
+        ],
       )}
       onClick={handleClick}
     >
@@ -195,7 +200,7 @@ const ShowTime = ({
                 "text-error": event.status === "CANCELED",
                 "opacity-50": event.status === "CANCELED",
               },
-              ["text-[1.875em]", "leading-[1.2em]", "text-center", "font-bold"]
+              ["text-[1.875em]", "leading-[1.2em]", "text-center", "font-bold"],
             )}
           >
             {startDate.format("D")}
@@ -213,7 +218,7 @@ const ShowTime = ({
                 "whitespace-nowrap",
                 "font-bold",
                 "mb-1",
-              ]
+              ],
             )}
           >
             {startDate.format("MMM YYYY")}
@@ -270,7 +275,7 @@ const ShowTime = ({
               {
                 "opacity-50": event.status === "CANCELED",
               },
-              ["leading-[1em]", "text-left"]
+              ["leading-[1em]", "text-left"],
             )}
           >
             {startDate.format("h:mm")} <span>{startDate.format("A")}</span>
@@ -368,7 +373,6 @@ const ShowTime = ({
                 onClick={(e: MouseEvent) => {
                   e.stopPropagation();
                   setShowTicketInfo(false);
-                  setTicketInfo(null);
                 }}
               >
                 <X size={14} />
@@ -401,7 +405,7 @@ const ShowTime = ({
                         "scale-80",
                         "hover:scale-110",
                         "focus:scale-110",
-                      ]
+                      ],
                     )}
                     onClick={() => setNumTickets(Math.max(numTickets - 1, 1))}
                   />
@@ -443,11 +447,11 @@ const ShowTime = ({
                         "scale-80",
                         "hover:scale-110",
                         "focus:scale-110",
-                      ]
+                      ],
                     )}
                     onClick={() =>
                       setNumTickets(
-                        Math.min(numTickets + 1, ticketInfo.limitPerCheckout)
+                        Math.min(numTickets + 1, ticketInfo.limitPerCheckout),
                       )
                     }
                   />

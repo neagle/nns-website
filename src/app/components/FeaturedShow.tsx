@@ -190,7 +190,15 @@ const FeaturedShow = async () => {
                 <div className={classnames(["gap-2", "flex", "flex-col"])}>
                   {show.shows?.length ? (
                     show.shows.map((event) => {
-                      return <ShowTime key={event._id} event={event} />;
+                      return (
+                        <ShowTime
+                          key={event._id}
+                          event={event}
+                          ticketDefinitions={
+                            show.ticketDefinitionsByEventId?.[event._id!] ?? []
+                          }
+                        />
+                      );
                     })
                   ) : (
                     <p className="text-center text-lg">

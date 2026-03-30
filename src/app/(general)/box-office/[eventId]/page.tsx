@@ -5,7 +5,7 @@ import Link from "next/link";
 import WixImage from "@/app/components/WixImage";
 // import { getScaledToFitImageUrl } from "@/app/utils/wix/media";
 import FormattedDateTime from "@/app/components/FormattedDateTime";
-import type { Address } from "@/app/types";
+import type { Address, Ticket } from "@/app/types";
 import Tickets from "./Tickets";
 import { CalendarPlus2, Accessibility } from "lucide-react";
 import dayjs from "dayjs";
@@ -24,19 +24,25 @@ interface PageProps {
 }
 
 const getEventData = async (eventId: string) => {
-  const { items: events } = await wixClient.wixEventsV2
-    .queryEvents()
-    .eq("_id", eventId)
-    .find();
+  const [eventsResult, ticketsResult] = await Promise.all([
+    wixClient.wixEventsV2.queryEvents().eq("_id", eventId).find(),
+    wixClient.orders.queryAvailableTickets({
+      filter: { eventId },
+      limit: 100,
+    }),
+  ]);
 
-  return events[0];
+  return {
+    event: eventsResult.items[0],
+    ticketDefinitions: (ticketsResult.definitions || []) as unknown as Ticket[],
+  };
 };
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { eventId } = await params;
-  const event = await getEventData(eventId);
+  const { event } = await getEventData(eventId);
   const startDate = event.dateAndTimeSettings!.startDate;
   const timeZone = event.dateAndTimeSettings!.timeZoneId || "America/New_York";
   // TODO: Finish setting up ogImage
@@ -52,7 +58,7 @@ export async function generateMetadata({
 }
 
 const EventContent = async ({ eventId }: { eventId: string }) => {
-  const event = await getEventData(eventId);
+  const { event, ticketDefinitions } = await getEventData(eventId);
   const startDate = event.dateAndTimeSettings!.startDate;
   const endDate = event.dateAndTimeSettings!.endDate;
   const timeZone = event.dateAndTimeSettings!.timeZoneId || "America/New_York";
@@ -66,10 +72,9 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
   const location = event.location!;
   const locationAddress = location?.address as Address;
 
-  const isPayWhatYouCan =
-    parseFloat(event?.registration?.tickets?.highestPrice?.value || "0") === 0;
-
-  console.log("isPayWhatYouCan", isPayWhatYouCan);
+  const isPayWhatYouCan = ticketDefinitions.some(
+    (t) => t.pricing?.pricingType === "DONATION",
+  );
 
   return (
     <div className="p-4 md:p-6 xl:p-8 md:grid md:grid-cols-[auto_1fr] md:gap-8">
@@ -170,7 +175,7 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
           <div>
             <iframe
               src={`https://www.google.com/maps/embed/v1/place?q=${encodeURI(
-                locationAddress.formatted
+                locationAddress.formatted,
               )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
               allowFullScreen
               loading="lazy"
@@ -194,7 +199,7 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
           <Suspense
             fallback={<div className="loading loading-bars loading-sm"></div>}
           >
-            <Tickets event={event} />
+            <Tickets event={event} initialTicketDefinitions={ticketDefinitions} />
           </Suspense>
         </section>
 

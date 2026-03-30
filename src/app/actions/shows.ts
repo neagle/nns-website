@@ -1,4 +1,4 @@
-import type { Show, Credit } from "@/app/types";
+import type { Show, Credit, Ticket } from "@/app/types";
 import wixClient from "@/lib/wixClient";
 
 type Props = {
@@ -78,11 +78,31 @@ export const getShowsWithData = async ({
         showsQuery.find(),
       ]);
 
+      const ticketResults = await Promise.all(
+        events.items.map((event) =>
+          event._id
+            ? wixClient.orders.queryAvailableTickets({
+                filter: { eventId: event._id },
+                limit: 100,
+              })
+            : Promise.resolve({ definitions: [] }),
+        ),
+      );
+
+      const ticketDefinitionsByEventId: Record<string, Ticket[]> = {};
+      events.items.forEach((event, i) => {
+        if (event._id) {
+          ticketDefinitionsByEventId[event._id] = (ticketResults[i].definitions ||
+            []) as unknown as Ticket[];
+        }
+      });
+
       return {
         ...show,
         cast: cast.items,
         crew: sortCreditsByPerson(crew.items as Credit[]),
         shows: events.items,
+        ticketDefinitionsByEventId,
       };
     })
   );

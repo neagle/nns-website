@@ -5,6 +5,7 @@ import React, { cache, Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import ShowTime from "@/app/components/ShowTime";
 import type { Event } from "@wix/auto_sdk_events_wix-events-v-2";
+import type { Ticket } from "@/app/types";
 import classnames from "classnames";
 import WixImage from "@/app/components/WixImage";
 import Link from "next/link";
@@ -12,7 +13,7 @@ import { formatList } from "@/app/utils";
 import slugify from "@sindresorhus/slugify";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const shows = await getBoxOfficeData();
+  const { shows } = await getBoxOfficeData();
 
   const showTitles = Object.keys(shows);
 
@@ -50,6 +51,25 @@ const getBoxOfficeData = cache(async () => {
     .ascending("dateAndTimeSettings.startDate")
     .find();
 
+  const ticketResults = await Promise.all(
+    events.map((event) =>
+      event._id
+        ? wixClient.orders.queryAvailableTickets({
+            filter: { eventId: event._id },
+            limit: 100,
+          })
+        : Promise.resolve({ definitions: [] }),
+    ),
+  );
+
+  const ticketDefinitionsByEventId: Record<string, Ticket[]> = {};
+  events.forEach((event, i) => {
+    if (event._id) {
+      ticketDefinitionsByEventId[event._id] = (ticketResults[i].definitions ||
+        []) as unknown as Ticket[];
+    }
+  });
+
   // Group events by show
   const shows: Record<string, Event[]> = events.reduce(
     (acc: Record<string, Event[]>, event) => {
@@ -63,14 +83,14 @@ const getBoxOfficeData = cache(async () => {
       acc[event.title].push(event);
       return acc;
     },
-    {}
+    {},
   );
 
-  return shows;
+  return { shows, ticketDefinitionsByEventId };
 });
 
 const BoxOfficeContent = async () => {
-  const shows = await getBoxOfficeData();
+  const { shows, ticketDefinitionsByEventId } = await getBoxOfficeData();
 
   if (Object.keys(shows).length === 0) {
     return (
@@ -131,7 +151,15 @@ const BoxOfficeContent = async () => {
                   ])}
                 >
                   {shows[show].map((event) => {
-                    return <ShowTime key={event._id} event={event} />;
+                    return (
+                      <ShowTime
+                        key={event._id}
+                        event={event}
+                        ticketDefinitions={
+                          ticketDefinitionsByEventId[event._id!] ?? []
+                        }
+                      />
+                    );
                   })}
                 </div>
               </div>
