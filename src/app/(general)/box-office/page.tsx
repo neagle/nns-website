@@ -185,7 +185,7 @@ const BoxOffice = async () => {
 
       <hr className="mt-8 mb-4" />
 
-      <p>
+      <p className="mb-4 md:mb-0">
         Looking for season tickets?{" "}
         <Link href="/box-office/subscriptions">
           Check out our subscriptions.
