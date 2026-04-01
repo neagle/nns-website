@@ -308,11 +308,14 @@ const ShowTime = ({
       {/*
         Ticket panel — height: 0 → auto via CSS grid-template-rows trick.
         The inner div needs overflow-hidden so content is clipped at height 0.
+        The close button is a sibling of the overflow-hidden div (not inside it)
+        so it can position itself above the panel without being clipped.
       */}
       <div
         style={{ gridTemplateRows: showTicketInfo && ticketInfo ? "1fr" : "0fr" }}
         className={classnames([
           "grid",
+          "relative",
           "transition-[grid-template-rows,opacity,margin-top]",
           "duration-200",
           {
@@ -321,6 +324,31 @@ const ShowTime = ({
           },
         ])}
       >
+        {/* Close button sits above the panel, outside overflow-hidden */}
+        {ticketInfo && (
+          <button
+            className={classnames([
+              "text-xs",
+              "p-1",
+              "absolute",
+              "top-0",
+              "-translate-y-full",
+              "right-0",
+              "cursor-pointer",
+              "rounded-full",
+              "bg-base-100",
+              "opacity-50",
+              "hover:opacity-100",
+              "transition-all",
+            ])}
+            onClick={(e: MouseEvent) => {
+              e.stopPropagation();
+              setShowTicketInfo(false);
+            }}
+          >
+            <X size={14} />
+          </button>
+        )}
         <div className="overflow-hidden">
           {ticketInfo && (
             <div
@@ -328,7 +356,6 @@ const ShowTime = ({
                 "text-sm",
                 "flex",
                 "w-full",
-                "relative",
                 "flex-col",
               ])}
             >
@@ -353,28 +380,6 @@ const ShowTime = ({
                 </div>
               )}
               <div className="flex">
-                <button
-                  className={classnames({ "-mt-1": isPayWhatYouCan }, [
-                    "text-xs",
-                    "p-1",
-                    "absolute",
-                    "top-0",
-                    "-translate-y-full",
-                    "right-0",
-                    "cursor-pointer",
-                    "rounded-full",
-                    "bg-base-100",
-                    "opacity-50",
-                    "hover:opacity-100",
-                    "transition-all",
-                  ])}
-                  onClick={(e: MouseEvent) => {
-                    e.stopPropagation();
-                    setShowTicketInfo(false);
-                  }}
-                >
-                  <X size={14} />
-                </button>
                 <Link
                   className="btn btn-xs btn-info"
                   href={`/box-office/${event._id}`}
