@@ -25,12 +25,12 @@ const PersonList = ({
           {linkToCredits ? (
             <Link
               href={`/credits/${nameSlug(person)}/${person._id}`}
-              className="link"
+              className="link text-nowrap"
             >
               {fullName(person)}
             </Link>
           ) : (
-            <span>{fullName(person)}</span>
+            <span className="text-nowrap">{fullName(person)}</span>
           )}
           {/* If there are two people, add "and" between their names */}
           {serialize && index === 0 && people.length === 2 && " and "}
@@ -69,7 +69,7 @@ export const getPersonList = ({
   }
   // If there are more than two people, return "Name1, Name2, and Name3"
   return `${people.slice(0, -1).map(fullName).join(", ")}, and ${fullName(
-    people[people.length - 1]
+    people[people.length - 1],
   )}`;
 };
 

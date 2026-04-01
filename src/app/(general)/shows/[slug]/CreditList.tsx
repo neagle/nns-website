@@ -38,17 +38,15 @@ const CreditList = ({ category, data }: CreditListProps) => {
 
   return (
     <section>
-      <h2>{category}</h2>
+      <h2 className="mb-2">{category}</h2>
       <ul>
         {manualSort(data).map((credit: Credit) => {
-          console.log("credit", credit);
           const credItem = Array.isArray(credit) ? credit[0] : credit;
           return (
             <li key={credItem._id} className="grid grid-cols-2 gap-x-2">
               <div
                 className={classnames([
                   "align-top",
-                  "text-right",
                   "leading-tight",
                   "pr-2",
                   "pb-2",
