@@ -75,6 +75,11 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
   const isPayWhatYouCan = ticketDefinitions.some(
     (t) => t.pricing?.pricingType === "DONATION",
   );
+  const donationTicket = ticketDefinitions.find(
+    (t) => t.pricing?.pricingType === "DONATION",
+  );
+  const minimumPrice = Number(donationTicket?.pricing?.minPrice?.value || "0");
+  const minimumPriceDisplay = minimumPrice.toFixed(2);
 
   return (
     <div className="p-4 md:p-6 xl:p-8 md:grid md:grid-cols-[auto_1fr] md:gap-8">
@@ -199,7 +204,10 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
           <Suspense
             fallback={<div className="loading loading-bars loading-sm"></div>}
           >
-            <Tickets event={event} initialTicketDefinitions={ticketDefinitions} />
+            <Tickets
+              event={event}
+              initialTicketDefinitions={ticketDefinitions}
+            />
           </Suspense>
         </section>
 
