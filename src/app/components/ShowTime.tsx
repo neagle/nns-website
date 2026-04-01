@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useRef, useState, MouseEvent } from "react";
-import { AnimatePresence, motion } from "motion/react";
 import type { Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 import classnames from "classnames";
 import wixClient from "@/lib/wixClient";
 import type { Ticket } from "@/app/types";
@@ -17,7 +19,6 @@ type Props = {
   /** Server-fetched ticket definitions. Seeds initial state and enables immediate badge display. */
   ticketDefinitions?: Ticket[];
   className?: string;
-  animationDuration?: number;
 };
 
 const isValidUserPrice = (price: string) => {
@@ -29,11 +30,7 @@ const ShowTime = ({
   event,
   ticketDefinitions,
   className = "",
-  animationDuration = 0.2,
 }: Props) => {
-  dayjs.extend(utc);
-  dayjs.extend(timezone);
-
   const isSoldOut = event.registration?.tickets?.soldOut;
 
   const [ticketInfo, setTicketInfo] = useState<Ticket | null>(
@@ -282,185 +279,187 @@ const ShowTime = ({
           </div>
         </div>
       </div>
-      <AnimatePresence initial={false}>
-        {showTicketInfo && !ticketInfo && (
-          <motion.div
-            className={classnames([
-              "flex",
-              "justify-center",
-              "items-center",
-              "absolute",
-              "bg-base-100/70",
-              "top-0",
-              "right-0",
-              "bottom-0",
-              "left-0",
-            ])}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <div className="loading loading-bars text-primary" />
-          </motion.div>
-        )}
-        {showTicketInfo && ticketInfo && (
-          <motion.div
-            key="ticket-info"
-            initial={{ opacity: 0, height: 0, marginTop: 0 }}
-            animate={{
-              opacity: 1,
-              height: "auto",
-              marginTop: "0.5rem",
-              transition: {
-                duration: animationDuration,
-                opacity: { delay: animationDuration / 2 },
-              },
-            }}
-            exit={{
-              opacity: 0,
-              height: 0,
-              marginTop: 0,
-              transition: {
-                duration: animationDuration,
-                height: { delay: animationDuration / 2 },
-              },
-            }}
-            className={classnames([
-              "text-sm",
-              "flex",
-              "w-full",
-              "relative",
-              "flex-col",
-            ])}
-          >
-            {ticketInfo.limitPerCheckout < 10 ? (
-              <div className="text-right mr-6 mb-1 text-xs">
-                {ticketInfo.limitPerCheckout} ticket
-                {ticketInfo.limitPerCheckout === 1 ? "" : "s"} left
-              </div>
-            ) : null}
-            {isPayWhatYouCan && (
-              <div className="mb-2">
-                <label className="input input-xs validator">
-                  <DollarSign />
-                  <input
-                    type="text"
-                    pattern="^\d+(\.\d{2})?$"
-                    placeholder="Your Price per Ticket"
-                    defaultValue={userPrice}
-                    onChange={(e) => setUserPrice(e.target.value)}
-                  />
-                </label>
-              </div>
-            )}
-            <div className="flex">
-              <button
-                className={classnames({ "-mt-1": isPayWhatYouCan }, [
-                  "text-xs",
-                  "p-1",
-                  "absolute",
-                  "top-0",
-                  "-translate-y-full",
-                  "right-0",
-                  "cursor-pointer",
-                  "rounded-full",
-                  "bg-base-100",
-                  "opacity-50",
-                  "hover:opacity-100",
-                  "transition-all",
-                ])}
-                onClick={(e: MouseEvent) => {
-                  e.stopPropagation();
-                  setShowTicketInfo(false);
-                }}
-              >
-                <X size={14} />
-              </button>
-              <Link
-                className="btn btn-xs btn-info"
-                href={`/box-office/${event._id}`}
-              >
-                Info
-              </Link>
 
-              <div
-                className={classnames([
-                  "flex",
-                  "gap-1",
-                  "items-center",
-                  "grow-1",
-                  "justify-end",
-                ])}
-              >
-                <button>
-                  <Minus
-                    className={classnames(
-                      {
-                        "cursor-pointer text-primary": numTickets > 1,
-                        "opacity-50": numTickets === 1,
-                      },
-                      [
-                        "transition-all",
-                        "scale-80",
-                        "hover:scale-110",
-                        "focus:scale-110",
-                      ],
-                    )}
-                    onClick={() => setNumTickets(Math.max(numTickets - 1, 1))}
-                  />
-                </button>
+      {/* Loading overlay — fades in/out with CSS opacity transition */}
+      <div
+        className={classnames(
+          [
+            "flex",
+            "justify-center",
+            "items-center",
+            "absolute",
+            "bg-base-100/70",
+            "top-0",
+            "right-0",
+            "bottom-0",
+            "left-0",
+            "transition-opacity",
+            "duration-200",
+          ],
+          {
+            "opacity-100 pointer-events-auto": showTicketInfo && !ticketInfo,
+            "opacity-0 pointer-events-none": !(showTicketInfo && !ticketInfo),
+          },
+        )}
+      >
+        <div className="loading loading-bars text-primary" />
+      </div>
+
+      {/*
+        Ticket panel — height: 0 → auto via CSS grid-template-rows trick.
+        The inner div needs overflow-hidden so content is clipped at height 0.
+      */}
+      <div
+        style={{ gridTemplateRows: showTicketInfo && ticketInfo ? "1fr" : "0fr" }}
+        className={classnames([
+          "grid",
+          "transition-[grid-template-rows,opacity,margin-top]",
+          "duration-200",
+          {
+            "opacity-100 mt-2": showTicketInfo && ticketInfo,
+            "opacity-0 mt-0": !(showTicketInfo && ticketInfo),
+          },
+        ])}
+      >
+        <div className="overflow-hidden">
+          {ticketInfo && (
+            <div
+              className={classnames([
+                "text-sm",
+                "flex",
+                "w-full",
+                "relative",
+                "flex-col",
+              ])}
+            >
+              {ticketInfo.limitPerCheckout < 10 ? (
+                <div className="text-right mr-6 mb-1 text-xs">
+                  {ticketInfo.limitPerCheckout} ticket
+                  {ticketInfo.limitPerCheckout === 1 ? "" : "s"} left
+                </div>
+              ) : null}
+              {isPayWhatYouCan && (
+                <div className="mb-2">
+                  <label className="input input-xs validator">
+                    <DollarSign />
+                    <input
+                      type="text"
+                      pattern="^\d+(\.\d{2})?$"
+                      placeholder="Your Price per Ticket"
+                      defaultValue={userPrice}
+                      onChange={(e) => setUserPrice(e.target.value)}
+                    />
+                  </label>
+                </div>
+              )}
+              <div className="flex">
                 <button
-                  className={classnames([
-                    "btn",
-                    "btn-xs",
-                    "btn-primary",
-                    "transition-all",
-                    "opacity-100",
+                  className={classnames({ "-mt-1": isPayWhatYouCan }, [
+                    "text-xs",
+                    "p-1",
+                    "absolute",
+                    "top-0",
+                    "-translate-y-full",
+                    "right-0",
                     "cursor-pointer",
+                    "rounded-full",
+                    "bg-base-100",
+                    "opacity-50",
+                    "hover:opacity-100",
+                    "transition-all",
                   ])}
-                  onClick={() =>
-                    createRedirect(event, ticketInfo, numTickets, userPrice)
-                  }
-                  disabled={isPayWhatYouCan && !isValidUserPrice(userPrice)}
+                  onClick={(e: MouseEvent) => {
+                    e.stopPropagation();
+                    setShowTicketInfo(false);
+                  }}
                 >
-                  {redirecting ? (
-                    "Loading..."
-                  ) : (
-                    <span>
-                      Buy <b className="font-mono">{numTickets}</b>{" "}
-                      {numTickets === 1 ? "Ticket" : "Tickets"}
-                    </span>
-                  )}
+                  <X size={14} />
                 </button>
-                <button>
-                  <Plus
-                    className={classnames(
-                      {
-                        "cursor-pointer text-primary":
-                          numTickets < ticketInfo.limitPerCheckout,
-                        "opacity-50":
-                          numTickets === ticketInfo.limitPerCheckout,
-                      },
-                      [
-                        "transition-all",
-                        "scale-80",
-                        "hover:scale-110",
-                        "focus:scale-110",
-                      ],
-                    )}
+                <Link
+                  className="btn btn-xs btn-info"
+                  href={`/box-office/${event._id}`}
+                >
+                  Info
+                </Link>
+
+                <div
+                  className={classnames([
+                    "flex",
+                    "gap-1",
+                    "items-center",
+                    "grow-1",
+                    "justify-end",
+                  ])}
+                >
+                  <button>
+                    <Minus
+                      className={classnames(
+                        {
+                          "cursor-pointer text-primary": numTickets > 1,
+                          "opacity-50": numTickets === 1,
+                        },
+                        [
+                          "transition-all",
+                          "scale-80",
+                          "hover:scale-110",
+                          "focus:scale-110",
+                        ],
+                      )}
+                      onClick={() => setNumTickets(Math.max(numTickets - 1, 1))}
+                    />
+                  </button>
+                  <button
+                    className={classnames([
+                      "btn",
+                      "btn-xs",
+                      "btn-primary",
+                      "transition-all",
+                      "opacity-100",
+                      "cursor-pointer",
+                    ])}
                     onClick={() =>
-                      setNumTickets(
-                        Math.min(numTickets + 1, ticketInfo.limitPerCheckout),
-                      )
+                      createRedirect(event, ticketInfo, numTickets, userPrice)
                     }
-                  />
-                </button>
+                    disabled={isPayWhatYouCan && !isValidUserPrice(userPrice)}
+                  >
+                    {redirecting ? (
+                      "Loading..."
+                    ) : (
+                      <span>
+                        Buy <b className="font-mono">{numTickets}</b>{" "}
+                        {numTickets === 1 ? "Ticket" : "Tickets"}
+                      </span>
+                    )}
+                  </button>
+                  <button>
+                    <Plus
+                      className={classnames(
+                        {
+                          "cursor-pointer text-primary":
+                            numTickets < ticketInfo.limitPerCheckout,
+                          "opacity-50":
+                            numTickets === ticketInfo.limitPerCheckout,
+                        },
+                        [
+                          "transition-all",
+                          "scale-80",
+                          "hover:scale-110",
+                          "focus:scale-110",
+                        ],
+                      )}
+                      onClick={() =>
+                        setNumTickets(
+                          Math.min(numTickets + 1, ticketInfo.limitPerCheckout),
+                        )
+                      }
+                    />
+                  </button>
+                </div>
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

@@ -26,20 +26,20 @@ const dunbarLow = localFont({
 const noah = localFont({
   src: [
     {
-      path: "../../../public/fonts/noah/noah-regular.woff",
+      path: "../../../public/fonts/noah/noah-regular.woff2",
       weight: "400",
     },
     {
-      path: "../../../public/fonts/noah/noah-regularitalic.woff",
+      path: "../../../public/fonts/noah/noah-regularitalic.woff2",
       weight: "400",
       style: "italic",
     },
     {
-      path: "../../../public/fonts/noah/noah-bold.woff",
+      path: "../../../public/fonts/noah/noah-bold.woff2",
       weight: "700",
     },
     {
-      path: "../../../public/fonts/noah/noah-bolditalic.woff",
+      path: "../../../public/fonts/noah/noah-bolditalic.woff2",
       weight: "700",
       style: "italic",
     },
