@@ -44,10 +44,6 @@ const ShowTime = ({
   // Prevents concurrent in-flight fetches (e.g. rapid hover in/out).
   const isFetchingRef = useRef(false);
 
-  // Debounce the hover fetch so rapid mouse-overs don't trigger state updates
-  // mid-CSS-transition, which causes the background color to flicker.
-  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   // "DONATION" is Wix's pricingType for Pay What You Can events.
   const isPayWhatYouCan = ticketInfo?.pricing?.pricingType === "DONATION";
 
@@ -148,26 +144,14 @@ const ShowTime = ({
   };
 
   // Pre-fetch ticket info on hover so the panel opens instantly.
-  // Debounced: only fires if the user lingers for 150ms, so rapid
-  // mouse-overs don't trigger state updates that interrupt CSS transitions.
+  // Always re-fetches to keep availability counts fresh.
   const handleHover = () => {
-    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
-    hoverTimerRef.current = setTimeout(() => {
-      fetchTicketsAvailability(event);
-    }, 150);
-  };
-
-  const handleMouseLeave = () => {
-    if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current);
-      hoverTimerRef.current = null;
-    }
+    fetchTicketsAvailability(event);
   };
 
   return (
     <div
       onMouseEnter={handleHover}
-      onMouseLeave={handleMouseLeave}
       className={classnames(
         className,
         {
@@ -175,9 +159,6 @@ const ShowTime = ({
           "cursor-default": showTicketInfo,
           "hover:scale-105": !showTicketInfo && !isSoldOut,
           "focus:scale-105": !showTicketInfo && !isSoldOut,
-          // Elevate the hovered card above its siblings so the scale-up
-          // doesn't visually bleed behind adjacent cards.
-          "hover:z-10": !showTicketInfo && !isSoldOut,
         },
         {
           "bg-info/25": event.status !== "CANCELED" && !isSoldOut,
@@ -189,11 +170,12 @@ const ShowTime = ({
           "opacity-50": redirecting,
         },
         [
-          "relative",
           "rounded-lg",
-          "transition",
+          "transition-all",
           "py-2",
           "px-3",
+
+          "transition-all",
           "overflow-hidden",
         ],
       )}
