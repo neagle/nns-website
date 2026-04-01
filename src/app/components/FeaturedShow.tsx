@@ -25,11 +25,25 @@ const FeaturedShow = async () => {
   // Get cast, crew, and events for each show
   // These require separate queries to the Wix API
   const showsWithData = await getShowsWithData({ shows });
+  const sortedShows = showsWithData.sort((a, b) => {
+    // Sort all shows with showtimes first, then by opening date
+    if (a.shows?.length && !b.shows?.length) {
+      return -1;
+    } else if (!a.shows?.length && b.shows?.length) {
+      return 1;
+    } else if (a.openingDate && b.openingDate) {
+      return (
+        new Date(a.openingDate).getTime() - new Date(b.openingDate).getTime()
+      );
+    } else {
+      return 0;
+    }
+  });
 
   return (
     <div>
       <ul className="flex flex-col">
-        {showsWithData.map(async (show) => {
+        {sortedShows.map(async (show) => {
           const backgroundStyle = getShowBackgroundStyle(show);
 
           return (
@@ -176,7 +190,15 @@ const FeaturedShow = async () => {
                 <div className={classnames(["gap-2", "flex", "flex-col"])}>
                   {show.shows?.length ? (
                     show.shows.map((event) => {
-                      return <ShowTime key={event._id} event={event} />;
+                      return (
+                        <ShowTime
+                          key={event._id}
+                          event={event}
+                          ticketDefinitions={
+                            show.ticketDefinitionsByEventId?.[event._id!] ?? []
+                          }
+                        />
+                      );
                     })
                   ) : (
                     <p className="text-center text-lg">

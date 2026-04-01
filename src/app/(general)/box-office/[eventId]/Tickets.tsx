@@ -5,6 +5,7 @@ import type { Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import type { Ticket } from "@/app/types";
 import { Plus, Minus, DollarSign } from "lucide-react";
 import classnames from "classnames";
+import { motion } from "motion/react";
 
 // Currently, the Wix service fee is 2.5%
 // It makes me nervous to have something like this hard-coded, but it doesn't
@@ -14,24 +15,82 @@ import classnames from "classnames";
 // whole price up front.
 const WIX_SERVICE_FEE = 0.025;
 
+const isValidUserPrice = (price: string) => {
+  const regex = /^\d+(\.\d{2})?$/;
+  return regex.test(price);
+};
+
+const formatPrice = (amount: number) => amount.toFixed(2);
+
 interface Props {
   event: Event;
+  /** Server-fetched ticket definitions. Seeds initial state so the panel renders immediately. */
+  initialTicketDefinitions?: Ticket[];
   className?: string;
 }
 
-const Tickets = ({ event, className = "" }: Props) => {
-  const [ticketInfo, setTicketInfo] = useState<Ticket | null>(null);
+const Tickets = ({
+  event,
+  initialTicketDefinitions,
+  className = "",
+}: Props) => {
+  const [ticketInfo, setTicketInfo] = useState<Ticket | null>(
+    initialTicketDefinitions?.[0] ?? null,
+  );
   const [quantity, setQuantity] = useState<number>(1);
   const [redirecting, setRedirecting] = useState<boolean>(false);
   const [userPrice, setUserPrice] = useState<string>("");
+  const [debouncedUserPrice, setDebouncedUserPrice] = useState<string>("");
+  const [hasEditedPrice, setHasEditedPrice] = useState(false);
 
-  const isPayWhatYouCan =
-    parseFloat(event?.registration?.tickets?.highestPrice?.value || "0") === 0;
+  // "DONATION" is Wix's pricingType for Pay What You Can events.
+  const isPayWhatYouCan = ticketInfo?.pricing?.pricingType === "DONATION";
+  const minimumPrice = Number(ticketInfo?.pricing?.minPrice?.value || "0");
+  const minimumPriceDisplay = formatPrice(minimumPrice);
+
+  useEffect(() => {
+    if (!isPayWhatYouCan) {
+      setDebouncedUserPrice("");
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setDebouncedUserPrice(userPrice);
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [isPayWhatYouCan, userPrice]);
+
+  const parsedUserPrice = Number(userPrice);
+  const debouncedParsedUserPrice = Number(debouncedUserPrice);
+  const hasTypedPrice = hasEditedPrice && userPrice.trim().length > 0;
+  const hasDebouncedValidPrice = isValidUserPrice(debouncedUserPrice);
+  const hasPriceFormatError =
+    isPayWhatYouCan &&
+    hasTypedPrice &&
+    debouncedUserPrice.trim().length > 0 &&
+    !hasDebouncedValidPrice;
+  const hasMinimumPriceError =
+    isPayWhatYouCan &&
+    hasTypedPrice &&
+    debouncedUserPrice.trim().length > 0 &&
+    hasDebouncedValidPrice &&
+    !Number.isNaN(debouncedParsedUserPrice) &&
+    debouncedParsedUserPrice < minimumPrice;
+  const priceErrorMessage = hasPriceFormatError
+    ? "Enter a valid amount like 15 or 15.00."
+    : hasMinimumPriceError
+      ? `Minimum is $${minimumPriceDisplay} per ticket.`
+      : null;
+
+  const canSubmitPayWhatYouCan =
+    isPayWhatYouCan &&
+    userPrice.trim().length > 0 &&
+    isValidUserPrice(userPrice) &&
+    !Number.isNaN(parsedUserPrice) &&
+    parsedUserPrice >= minimumPrice;
 
   const fetchTicketsAvailability = async (event: Event) => {
-    // Wait -- used for debugging
-    // await new Promise((resolve) => setTimeout(resolve, 10000));
-
     const tickets = await wixClient.orders.queryAvailableTickets({
       filter: { eventId: event._id },
       limit: 100,
@@ -42,6 +101,7 @@ const Tickets = ({ event, className = "" }: Props) => {
     setTicketInfo(ticket);
   };
 
+  // Re-fetch on mount to get fresh availability data even when seeded from server.
   useEffect(() => {
     fetchTicketsAvailability(event);
   }, [event]);
@@ -50,7 +110,7 @@ const Tickets = ({ event, className = "" }: Props) => {
     event: Event,
     ticket: Ticket,
     quantity: number,
-    userPrice?: string
+    userPrice?: string,
   ) => {
     setRedirecting(true);
 
@@ -98,9 +158,9 @@ const Tickets = ({ event, className = "" }: Props) => {
 
   let ticketPrice = 0;
   if (isPayWhatYouCan) {
-    ticketPrice = parseInt(userPrice, 10);
+    ticketPrice = parsedUserPrice;
   } else {
-    ticketPrice = ticketInfo ? parseInt(ticketInfo?.price?.value, 10) : 0;
+    ticketPrice = ticketInfo ? Number(ticketInfo.price.value) : 0;
   }
   const price = ticketInfo ? ticketPrice * quantity : 0;
   const serviceFee = ticketInfo ? ticketPrice * quantity * WIX_SERVICE_FEE : 0;
@@ -115,7 +175,14 @@ const Tickets = ({ event, className = "" }: Props) => {
           <p className="text-lg font-bold leading-tight">{ticketInfo.name}</p>
         </section>
         <section className="grow-1">
-          <p className="uppercase text-sm opacity-70">Price</p>
+          <p className="uppercase text-sm opacity-70">
+            Price{" "}
+            {isPayWhatYouCan && minimumPrice > 0 ? (
+              <span className="opacity-50">(min: ${minimumPriceDisplay})</span>
+            ) : (
+              ""
+            )}
+          </p>
           <div className="text-lg leading-tight">
             {isPayWhatYouCan && (
               <div>
@@ -125,10 +192,26 @@ const Tickets = ({ event, className = "" }: Props) => {
                     type="text"
                     pattern="^\d+(\.\d{2})?$"
                     placeholder="Your Price per Ticket"
-                    defaultValue={userPrice}
-                    onChange={(e) => setUserPrice(e.target.value)}
+                    value={userPrice}
+                    onChange={(e) => {
+                      setHasEditedPrice(true);
+                      setUserPrice(e.target.value);
+                    }}
                   />
                 </label>
+                <motion.div
+                  initial={false}
+                  animate={{
+                    height: priceErrorMessage ? "auto" : 0,
+                    opacity: priceErrorMessage ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.18, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
+                  <p className="text-error text-sm mb-2">
+                    {priceErrorMessage ?? ""}
+                  </p>
+                </motion.div>
               </div>
             )}
             {typeof price === "number" && !isNaN(price) && (
@@ -158,7 +241,7 @@ const Tickets = ({ event, className = "" }: Props) => {
                   "opacity-50": quantity <= 1,
                   "hover:scale-120": quantity > 1,
                 },
-                ["cursor-pointer", "p-1", "transform-all"]
+                ["cursor-pointer", "p-1", "transform-all"],
               )}
               onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))}
             >
@@ -171,11 +254,11 @@ const Tickets = ({ event, className = "" }: Props) => {
                   "opacity-50": quantity >= ticketInfo.limitPerCheckout,
                   "hover:scale-120": quantity < ticketInfo.limitPerCheckout,
                 },
-                ["cursor-pointer", "p-1", "transform-all"]
+                ["cursor-pointer", "p-1", "transform-all"],
               )}
               onClick={() =>
                 setQuantity((prev) =>
-                  Math.min(prev + 1, ticketInfo.limitPerCheckout)
+                  Math.min(prev + 1, ticketInfo.limitPerCheckout),
                 )
               }
             >
@@ -195,14 +278,18 @@ const Tickets = ({ event, className = "" }: Props) => {
           </p>
         )}
         <button
-          disabled={typeof price !== "number" || isNaN(price)}
+          disabled={
+            typeof price !== "number" ||
+            isNaN(price) ||
+            (isPayWhatYouCan ? !canSubmitPayWhatYouCan : false)
+          }
           onClick={() => {
             if (!redirecting) {
               createRedirect(
                 event,
                 ticketInfo,
                 quantity,
-                isPayWhatYouCan ? userPrice : undefined
+                isPayWhatYouCan ? userPrice : undefined,
               );
             }
           }}

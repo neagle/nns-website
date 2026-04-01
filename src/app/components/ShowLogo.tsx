@@ -3,7 +3,7 @@ import type { Show } from "@/app/types";
 import WixImage from "@/app/components/WixImage";
 import Link from "next/link";
 import classnames from "classnames";
-import { convert, random, textColor } from "colorizr";
+import { convert, textColor } from "colorizr";
 import { getPersonList } from "./PersonList";
 import { getShowBackgroundStyle } from "@/app/utils";
 
@@ -15,6 +15,18 @@ type Props = {
   link?: boolean | string;
   noDirector?: boolean;
   centered?: boolean;
+  priority?: boolean;
+};
+
+// Derives a consistent background color from a string so server and client
+// always agree, eliminating the hydration mismatch from random().
+const colorFromString = (str: string): string => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, 40%, 30%)`;
 };
 
 // If no show logo -- hopefully only a placeholder till we get data entered for all shows
@@ -31,7 +43,10 @@ const TextPanel = ({
   width?: number;
   noDirector?: boolean;
 }) => {
-  const backgroundColor = convert(show.backgroundColor || random(), "hex");
+  const backgroundColor = convert(
+    show.backgroundColor || colorFromString(show.title || show._id || ""),
+    "hex",
+  );
   const color = convert(textColor(backgroundColor), "hex");
 
   const TextPanelContent = (
@@ -44,7 +59,6 @@ const TextPanel = ({
           },
           ["opacity-70", "mb-2", "leading-tight"]
         )}
-        suppressHydrationWarning={true}
         style={{ color }}
       >
         {show.title}
@@ -64,9 +78,6 @@ const TextPanel = ({
         ["w-full", "h-full", "flex", "flex-col", "p-[1.5rem]"],
         className
       )}
-      // There is a bit of a mystery here: the color seems to change format
-      // between server/client even though we're explicitly setting it to hex
-      suppressHydrationWarning={true}
       style={{ backgroundColor, color }}
     >
       {link ? (
@@ -88,6 +99,7 @@ const ShowLogo = ({
   link = true,
   noDirector,
   centered = true,
+  priority = false,
   ...rest
 }: Props) => {
   if (!show.logo) {
@@ -111,6 +123,7 @@ const ShowLogo = ({
       alt={show.title}
       targetWidth={targetWidth}
       targetHeight={targetHeight}
+      priority={priority}
       className={classnames("mx-auto", {
         "p-[10%]": !show.nologopadding,
       })}

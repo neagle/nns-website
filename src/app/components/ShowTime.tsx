@@ -1,11 +1,14 @@
 "use client";
 
-import React, { useState, MouseEvent } from "react";
+import React, { useEffect, useRef, useState, MouseEvent } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { Event } from "@wix/auto_sdk_events_wix-events-v-2";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 import classnames from "classnames";
 import wixClient from "@/lib/wixClient";
 import type { Ticket } from "@/app/types";
@@ -14,6 +17,8 @@ import Link from "next/link";
 
 type Props = {
   event: Event;
+  /** Server-fetched ticket definitions. Seeds initial state and enables immediate badge display. */
+  ticketDefinitions?: Ticket[];
   className?: string;
   animationDuration?: number;
 };
@@ -23,44 +28,98 @@ const isValidUserPrice = (price: string) => {
   return regex.test(price);
 };
 
+const formatPrice = (amount: number) => amount.toFixed(2);
+
 const ShowTime = ({
   event,
+  ticketDefinitions,
   className = "",
   animationDuration = 0.2,
 }: Props) => {
-  dayjs.extend(utc);
-  dayjs.extend(timezone);
-
   const isSoldOut = event.registration?.tickets?.soldOut;
 
-  const [ticketInfo, setTicketInfo] = useState<Ticket | null>(null);
+  const [ticketInfo, setTicketInfo] = useState<Ticket | null>(
+    ticketDefinitions?.[0] ?? null,
+  );
   const [numTickets, setNumTickets] = useState(1);
   const [redirecting, setRedirecting] = useState(false);
   const [showTicketInfo, setShowTicketInfo] = useState(false);
   const [userPrice, setUserPrice] = useState<string>("");
+  const [debouncedUserPrice, setDebouncedUserPrice] = useState<string>("");
+  const [hasEditedPrice, setHasEditedPrice] = useState(false);
 
-  // The first step in the ticket purchase flow is to check if tickets are
-  // available
+  // Prevents concurrent in-flight fetches (e.g. rapid hover in/out).
+  const isFetchingRef = useRef(false);
+
+  // "DONATION" is Wix's pricingType for Pay What You Can events.
+  const isPayWhatYouCan = ticketInfo?.pricing?.pricingType === "DONATION";
+  const minimumPrice = Number(ticketInfo?.pricing?.minPrice?.value || "0");
+  const minimumPriceDisplay = formatPrice(minimumPrice);
+
+  useEffect(() => {
+    if (!isPayWhatYouCan) {
+      setDebouncedUserPrice("");
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setDebouncedUserPrice(userPrice);
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [isPayWhatYouCan, userPrice]);
+
+  const parsedUserPrice = Number(userPrice);
+  const debouncedParsedUserPrice = Number(debouncedUserPrice);
+  const hasTypedPrice = hasEditedPrice && userPrice.trim().length > 0;
+  const hasDebouncedValidPrice = isValidUserPrice(debouncedUserPrice);
+  const hasPriceFormatError =
+    isPayWhatYouCan &&
+    hasTypedPrice &&
+    debouncedUserPrice.trim().length > 0 &&
+    !hasDebouncedValidPrice;
+  const hasMinimumPriceError =
+    isPayWhatYouCan &&
+    hasTypedPrice &&
+    debouncedUserPrice.trim().length > 0 &&
+    hasDebouncedValidPrice &&
+    !Number.isNaN(debouncedParsedUserPrice) &&
+    debouncedParsedUserPrice < minimumPrice;
+  const canSubmitPayWhatYouCan =
+    isPayWhatYouCan &&
+    userPrice.trim().length > 0 &&
+    isValidUserPrice(userPrice) &&
+    !Number.isNaN(parsedUserPrice) &&
+    parsedUserPrice >= minimumPrice;
+
+  const priceErrorMessage = hasPriceFormatError
+    ? "Enter a valid amount like 15 or 15.00."
+    : hasMinimumPriceError
+      ? `Minimum is $${minimumPriceDisplay} per ticket.`
+      : null;
+
   const fetchTicketsAvailability = async (event: Event) => {
-    // Wait -- used for debugging
-    // await new Promise((resolve) => setTimeout(resolve, 10000));
+    if (isFetchingRef.current) return;
+    isFetchingRef.current = true;
+    try {
+      const tickets = await wixClient.orders.queryAvailableTickets({
+        filter: { eventId: event._id },
+        limit: 100,
+      });
 
-    const tickets = await wixClient.orders.queryAvailableTickets({
-      filter: { eventId: event._id },
-      limit: 100,
-    });
-
-    const definitions = tickets.definitions || [];
-
-    const ticket = definitions[0] as unknown as Ticket;
-    setTicketInfo(ticket);
+      const definitions = tickets.definitions || [];
+      const ticket = definitions[0] as unknown as Ticket;
+      setTicketInfo(ticket);
+    } finally {
+      isFetchingRef.current = false;
+    }
   };
 
   const createRedirect = async (
     event: Event,
     ticket: Ticket,
     quantity: number,
-    userPrice: string
+    userPrice: string,
   ) => {
     setRedirecting(true);
 
@@ -114,7 +173,7 @@ const ShowTime = ({
   }
 
   const startDate = dayjs(event.dateAndTimeSettings.startDate).tz(
-    "America/New_York"
+    "America/New_York",
   );
   // Set showType based on whether the startDate is before or after 5 PM
   const showType = startDate.hour() < 17 ? "Matinee" : "Night";
@@ -135,17 +194,11 @@ const ShowTime = ({
     fetchTicketsAvailability(event);
   };
 
-  // Try to anticipate clicks a little bit by fetching ticket info on mouse
-  // hover
+  // Pre-fetch ticket info on hover so the panel opens instantly.
+  // Always re-fetches to keep availability counts fresh.
   const handleHover = () => {
-    if (!ticketInfo) {
-      fetchTicketsAvailability(event);
-    }
+    fetchTicketsAvailability(event);
   };
-
-  // "Pay What You Can" shows have a highest price of $0.00
-  const isPayWhatYouCan =
-    parseFloat(event?.registration?.tickets?.highestPrice?.value || "0") === 0;
 
   return (
     <div
@@ -169,13 +222,11 @@ const ShowTime = ({
         },
         [
           "rounded-lg",
-          "transition-all",
+          "transition-transform",
+          "transition-colors",
           "py-2",
           "px-3",
-
-          "transition-all",
-          "overflow-hidden",
-        ]
+        ],
       )}
       onClick={handleClick}
     >
@@ -195,7 +246,7 @@ const ShowTime = ({
                 "text-error": event.status === "CANCELED",
                 "opacity-50": event.status === "CANCELED",
               },
-              ["text-[1.875em]", "leading-[1.2em]", "text-center", "font-bold"]
+              ["text-[1.875em]", "leading-[1.2em]", "text-center", "font-bold"],
             )}
           >
             {startDate.format("D")}
@@ -213,7 +264,7 @@ const ShowTime = ({
                 "whitespace-nowrap",
                 "font-bold",
                 "mb-1",
-              ]
+              ],
             )}
           >
             {startDate.format("MMM YYYY")}
@@ -270,13 +321,14 @@ const ShowTime = ({
               {
                 "opacity-50": event.status === "CANCELED",
               },
-              ["leading-[1em]", "text-left"]
+              ["leading-[1em]", "text-left"],
             )}
           >
             {startDate.format("h:mm")} <span>{startDate.format("A")}</span>
           </div>
         </div>
       </div>
+
       <AnimatePresence initial={false}>
         {showTicketInfo && !ticketInfo && (
           <motion.div
@@ -337,16 +389,53 @@ const ShowTime = ({
             ) : null}
             {isPayWhatYouCan && (
               <div className="mb-2">
-                <label className="input input-xs validator">
+                <label
+                  className={classnames([
+                    "input",
+                    "input-xs",
+                    "validator",
+                    "border-0",
+                    "mt-1",
+                    "w-full",
+                    "has-focus:outline-accent",
+                    "has-focus:outline-2",
+                    "has-focus:-outline-offset-2",
+                  ])}
+                >
                   <DollarSign />
                   <input
                     type="text"
                     pattern="^\d+(\.\d{2})?$"
-                    placeholder="Your Price per Ticket"
-                    defaultValue={userPrice}
-                    onChange={(e) => setUserPrice(e.target.value)}
+                    placeholder={`${isPayWhatYouCan && minimumPrice > 0 ? `Your Price (min: $${minimumPriceDisplay})` : "Your Price Per Ticket"}`}
+                    value={userPrice}
+                    onChange={(e) => {
+                      setHasEditedPrice(true);
+                      setUserPrice(e.target.value);
+                    }}
                   />
                 </label>
+                <motion.div
+                  initial={false}
+                  animate={{
+                    height: priceErrorMessage ? "auto" : 0,
+                    opacity: priceErrorMessage ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                >
+                  <div
+                    className={classnames([
+                      "alert",
+                      "alert-error",
+                      "text-xxs",
+                      "rounded-sm",
+                      "leading-tight",
+                      "p-1",
+                      "mt-1",
+                    ])}
+                  >
+                    {priceErrorMessage || "\u00A0"}
+                  </div>
+                </motion.div>
               </div>
             )}
             <div className="flex">
@@ -368,7 +457,6 @@ const ShowTime = ({
                 onClick={(e: MouseEvent) => {
                   e.stopPropagation();
                   setShowTicketInfo(false);
-                  setTicketInfo(null);
                 }}
               >
                 <X size={14} />
@@ -401,7 +489,7 @@ const ShowTime = ({
                         "scale-80",
                         "hover:scale-110",
                         "focus:scale-110",
-                      ]
+                      ],
                     )}
                     onClick={() => setNumTickets(Math.max(numTickets - 1, 1))}
                   />
@@ -418,7 +506,7 @@ const ShowTime = ({
                   onClick={() =>
                     createRedirect(event, ticketInfo, numTickets, userPrice)
                   }
-                  disabled={isPayWhatYouCan && !isValidUserPrice(userPrice)}
+                  disabled={isPayWhatYouCan ? !canSubmitPayWhatYouCan : false}
                 >
                   {redirecting ? (
                     "Loading..."
@@ -443,11 +531,11 @@ const ShowTime = ({
                         "scale-80",
                         "hover:scale-110",
                         "focus:scale-110",
-                      ]
+                      ],
                     )}
                     onClick={() =>
                       setNumTickets(
-                        Math.min(numTickets + 1, ticketInfo.limitPerCheckout)
+                        Math.min(numTickets + 1, ticketInfo.limitPerCheckout),
                       )
                     }
                   />
