@@ -12,7 +12,7 @@ export const fullName = ({
 
 export function debounce<T extends (...args: unknown[]) => void>(
   func: T,
-  delay: number
+  delay: number,
 ): (...args: Parameters<T>) => void {
   let timeout: ReturnType<typeof setTimeout>;
   return (...args: Parameters<T>) => {
@@ -25,7 +25,7 @@ export function debounce<T extends (...args: unknown[]) => void>(
 
 export function getWixImageDimensions(wixUrl: string) {
   const match = /originWidth=(?<width>\d+)&originHeight=(?<height>\d+)/g.exec(
-    wixUrl
+    wixUrl,
   )?.groups;
   if (!match) {
     throw new Error(`Could not parse Wix image dimensions: ${wixUrl}`);
@@ -122,7 +122,7 @@ export const getFirstMiddleLastNamesFromSlug = (slug: string) => {
 export const slugifyFirstMiddleLastNames = (
   firstName: string,
   middleName: string,
-  lastName: string
+  lastName: string,
 ) => {
   const slug = [firstName, middleName, lastName]
     .filter((name) => !!name)
@@ -150,7 +150,7 @@ export const getShowBackgroundStyle = (show: Show) => {
       url.hash
         .replace("#", "")
         .split("&")
-        .map((param) => param.split("="))
+        .map((param) => param.split("=")),
     );
 
     let backgroundStyle: React.CSSProperties = {};

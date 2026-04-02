@@ -1,5 +1,9 @@
 # Copilot instructions for `nns-website`
 
+## Working with Copilot
+
+- **Never make git commits without explicit user authorization.** Complete the work, then wait for the user to say something like "go ahead and commit" or "commit that" before running `git commit`. The user will review changes before committing.
+
 ## Build, test, and lint commands
 
 Use the `package.json` scripts that already exist:

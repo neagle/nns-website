@@ -64,6 +64,7 @@ export interface ShowWithData extends Show {
   cast: Credit[];
   crew: Credit[][];
   shows: Show[];
+  ticketDefinitionsByEventId: Record<string, Ticket[]>;
 }
 
 export interface Address {
@@ -146,8 +147,12 @@ export interface Ticket {
   policy: string;
   price: Price;
   pricing: {
-    fixedPrice: Price;
-    pricingType: string; // "STANDARD"
+    /** Present when pricingType is "STANDARD". */
+    fixedPrice?: Price;
+    /** Present when pricingType is "DONATION" (Pay What You Can). The minimum acceptable price. */
+    minPrice?: Price;
+    /** "STANDARD" for fixed-price tickets; "DONATION" for Pay What You Can. */
+    pricingType: "STANDARD" | "DONATION";
   };
   saleStatus: string; // "SALE_STARTED"
 }

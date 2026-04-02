@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import React, { Suspense } from "react";
 import { notFound } from "next/navigation";
 import wixClient from "@/lib/wixClient";
-import type { Credit, Show, ShowWithData } from "@/app/types";
+import type { Show, ShowWithData } from "@/app/types";
 import { media } from "@wix/sdk";
-import { manualSort, fullName, nameSlug } from "@/app/utils";
 import classnames from "classnames";
 import Link from "next/link";
 import { getShowsWithData } from "@/app/actions/shows";
@@ -14,6 +13,7 @@ import ShowLogo from "@/app/components/ShowLogo";
 import CenterSpinner from "@/app/components/CenterSpinner";
 import PersonList, { getPersonList } from "@/app/components/PersonList";
 import FormattedDateTime from "@/app/components/FormattedDateTime";
+import CreditList from "./CreditList";
 
 interface PageProps {
   params: Promise<{
@@ -191,91 +191,10 @@ const ShowContent = async ({ slug }: { slug: string }) => {
           )}
 
           {show.cast?.length ? (
-            <section>
-              <h2>Cast</h2>
-
-              <ul>
-                {manualSort(show.cast).map((credit: Credit) => (
-                  <li key={credit._id} className="mb-2">
-                    <Link
-                      href={`/credits/${nameSlug(credit.person)}/${
-                        credit.person._id
-                      }`}
-                      className="link text-primary/70 hover:text-primary transition-all"
-                    >
-                      {fullName(credit.person)}
-                    </Link>{" "}
-                    as <b className="text-primary/70">{credit.role}</b>
-                  </li>
-                ))}
-              </ul>
-            </section>
+            <CreditList category="Cast" data={show.cast} />
           ) : null}
-
           {show.crew?.length ? (
-            <section>
-              <h2>Crew</h2>
-              <table className="mt-1">
-                <tbody>
-                  {show.crew.map((crew) => {
-                    return (
-                      <tr key={crew[0]._id}>
-                        <td
-                          className={classnames([
-                            "align-top",
-                            "text-right",
-                            "leading-tight",
-                            "pr-2",
-                            "pb-2",
-                            "text-sm",
-                          ])}
-                        >
-                          <Link
-                            href={`/credits/${nameSlug(crew[0].person)}/${
-                              crew[0].person._id
-                            }`}
-                            className={classnames([
-                              "link",
-                              // "text-sm",
-                              "text-primary/70",
-                              "hover:text-primary",
-                              "transition-all",
-                            ])}
-                          >
-                            {fullName(crew[0].person)}
-                          </Link>
-                        </td>
-                        <td
-                          className={classnames([
-                            "align-top",
-                            "leading-tight",
-                            "pb-2",
-                            "text-sm",
-                          ])}
-                        >
-                          <ul>
-                            {crew.map((credit) => {
-                              return (
-                                <li
-                                  key={credit._id}
-                                  className={classnames([
-                                    // "leading-tight",
-                                    "[&+li]:mt-1",
-                                    // "text-sm",
-                                  ])}
-                                >
-                                  {credit.role}
-                                </li>
-                              );
-                            })}{" "}
-                          </ul>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </section>
+            <CreditList category="Crew" data={show.crew} />
           ) : null}
         </section>
         <section

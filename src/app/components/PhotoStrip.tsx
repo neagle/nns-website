@@ -66,7 +66,25 @@ const PhotoStrip = ({
     styleObject.height = `${height}px`;
   }
 
-  return isMounted ? (
+  // Reserve space before Swiper hydrates to prevent CLS.
+  // The skeleton matches the gallery's dimensions so nothing shifts when it mounts.
+  if (!isMounted) {
+    return (
+      <div
+        style={styleObject}
+        className={classnames([
+          "md:w-[300px]",
+          "md:h-[500px]",
+          "h-[300px]",
+          "rounded-lg",
+          "bg-base-200",
+          "animate-pulse",
+        ])}
+      />
+    );
+  }
+
+  return (
     <div
       style={styleObject}
       className={classnames([
@@ -249,7 +267,7 @@ const PhotoStrip = ({
         </div>
       </div>
     </div>
-  ) : null;
+  );
 };
 
 export default PhotoStrip;

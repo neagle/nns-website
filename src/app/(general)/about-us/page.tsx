@@ -105,6 +105,7 @@ const Page = async () => {
             src="/images/photographs/general/all-the-board.jpg"
             width="2930"
             height="1496"
+            sizes="(max-width: 768px) 100vw, 40vw"
             alt="NOVA Nightsky's Board: Adam Ressa, Jaclyn Robertson, and Sarah Baczewski"
           />
         </div>

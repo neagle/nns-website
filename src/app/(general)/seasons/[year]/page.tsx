@@ -47,11 +47,12 @@ const Shows = async ({ startOfYear, endOfYear }: ShowsProps) => {
 
   return (
     <>
-      {shows.map(async (show) => {
+      {shows.map((show, index) => {
         return (
           <ShowLogo
             key={show._id}
             show={show}
+            priority={index < 4}
             className={classnames([
               "flex",
               "items-center",

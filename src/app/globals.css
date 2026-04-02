@@ -163,3 +163,7 @@ p > a {
 .bounce-up-higher {
   visibility: visible;
 }
+
+.text-xxs {
+  font-size: 0.625rem;
+}
