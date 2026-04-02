@@ -5,6 +5,12 @@ export const dynamic = "force-dynamic";
 
 const adminTools = [
   {
+    href: "/admin/analytics",
+    title: "Analytics",
+    description:
+      "View ticket sales, revenue estimates, and performance trends across all shows.",
+  },
+  {
     href: "/admin/add-people",
     title: "Add People",
     description:
