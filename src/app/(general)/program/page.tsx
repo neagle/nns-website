@@ -1,5 +1,3 @@
-export const revalidate = 60;
-
 import { Metadata } from "next";
 import React from "react";
 import wixClient from "@/lib/wixClient";
@@ -95,7 +93,7 @@ const Program = async () => {
                   >
                     {show.title}
                   </Link>
-                ) : null
+                ) : null,
               )}
           </section>
         </>
