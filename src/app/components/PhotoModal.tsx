@@ -1,210 +1,121 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  ReactNode,
-  MouseEvent,
-} from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { media } from "@wix/sdk";
-import classnames from "classnames";
-import { createPortal } from "react-dom";
 import Image from "next/image";
 import type { Photo } from "@/app/types";
-import { X } from "lucide-react";
 
 interface PhotoModalProps {
   photo: Photo;
-  isOpen?: boolean;
-  onClose?: () => void;
-  /** The child component(s), e.g. <Image /> */
-  children: ReactNode;
+  alreadyLoaded?: boolean;
+  onImageLoaded?: () => void;
 }
 
+/**
+ * Renders the full-size image for the gallery lightbox.
+ * Contains no dialog or portal — the shared backdrop lives in PhotoGallery.
+ */
 const PhotoModal = ({
   photo,
-  children,
-  isOpen = false,
-  onClose,
+  alreadyLoaded = false,
+  onImageLoaded,
 }: PhotoModalProps) => {
   const [isLoading, setIsLoading] = useState(true);
+  // Delayed spinner: only show after 150 ms so cached images never flash.
+  const [showSpinner, setShowSpinner] = useState(false);
   const [scaledUrl, setScaledUrl] = useState("");
   const [finalWidth, setFinalWidth] = useState(0);
   const [finalHeight, setFinalHeight] = useState(0);
 
-  const [windowWidth, setWindowWidth] = useState(0);
-  const [windowHeight, setWindowHeight] = useState(0);
-
-  // Measure the window size
-  const handleResize = useCallback(() => {
-    setWindowWidth(window.innerWidth);
-    setWindowHeight(window.innerHeight);
-  }, []);
-
   useEffect(() => {
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [handleResize]);
-
-  // Calculate scaled dimensions when modal opens or window size changes
-  useEffect(() => {
-    if (!isOpen) {
-      setScaledUrl("");
-      setIsLoading(true);
+    if (!isLoading) {
+      setShowSpinner(false);
       return;
     }
+    const timer = setTimeout(() => setShowSpinner(true), 150);
+    return () => clearTimeout(timer);
+  }, [isLoading]);
 
-    if (!photo?.src || !windowWidth || !windowHeight) return;
+  // Compute URL synchronously before the browser paints.
+  useLayoutEffect(() => {
+    if (!photo?.src || !photo.settings) return;
 
-    if (!photo.settings) {
-      return;
-    }
     const { width: originalW, height: originalH } = photo.settings;
+    const containerW = Math.round(window.innerWidth * 0.9);
+    const containerH = Math.round(window.innerHeight * 0.9);
+    const scaleFactor = Math.min(containerW / originalW, containerH / originalH);
+    const w = Math.round(originalW * scaleFactor);
+    const h = Math.round(originalH * scaleFactor);
 
-    // Bounding box: 90% of the viewport
-    const containerW = Math.round(windowWidth * 0.9);
-    const containerH = Math.round(windowHeight * 0.9);
-
-    // Calculate scale factor to maintain aspect ratio
-    const scaleFactor = Math.min(
-      containerW / originalW,
-      containerH / originalH
-    );
-
-    // Scaled dimensions
-    const calculatedWidth = Math.round(originalW * scaleFactor);
-    const calculatedHeight = Math.round(originalH * scaleFactor);
-
-    setFinalWidth(calculatedWidth);
-    setFinalHeight(calculatedHeight);
-
-    // Get the scaled image URL from Wix (no cropping)
-    const newUrl = media.getScaledToFillImageUrl(
-      photo.src,
-      calculatedWidth,
-      calculatedHeight,
-      {}
-    );
+    setFinalWidth(w);
+    setFinalHeight(h);
+    const newUrl = media.getScaledToFillImageUrl(photo.src, w, h, {});
     setScaledUrl(newUrl);
-    setIsLoading(true);
-  }, [isOpen, photo, windowWidth, windowHeight]);
+    setIsLoading(!alreadyLoaded);
+  }, [photo, alreadyLoaded]);
 
-  // Close modal when clicking the backdrop
-  const handleBackdropClick = (e: MouseEvent<HTMLDialogElement>) => {
-    if (e.target === e.currentTarget) {
-      if (onClose) onClose();
-    }
+  // Recalculate when window is resized.
+  useEffect(() => {
+    if (!photo?.src || !photo.settings) return;
+
+    const handleResize = () => {
+      if (!photo.settings) return;
+      const { width: originalW, height: originalH } = photo.settings;
+      const containerW = Math.round(window.innerWidth * 0.9);
+      const containerH = Math.round(window.innerHeight * 0.9);
+      const scaleFactor = Math.min(containerW / originalW, containerH / originalH);
+      const w = Math.round(originalW * scaleFactor);
+      const h = Math.round(originalH * scaleFactor);
+      setFinalWidth(w);
+      setFinalHeight(h);
+      const newUrl = media.getScaledToFillImageUrl(photo.src, w, h, {});
+      setScaledUrl(newUrl);
+      setIsLoading(true);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [photo]);
+
+  const handleImageLoaded = () => {
+    setIsLoading(false);
+    onImageLoaded?.();
   };
 
-  const modalContent = (
-    <dialog
-      className={classnames({ "modal-open": isOpen, "bg-black/90!": isOpen }, [
-        "modal",
-      ])}
-      onClick={handleBackdropClick}
-    >
-      <div
-        className={classnames([
-          "modal-box",
-          "relative",
-          "w-auto",
-          "max-w-none",
-          "h-auto",
-          "p-0",
-          "shadow-lg",
-          "shadow-yellow-500/50",
-        ])}
-      >
-        {/* Close button */}
-        {!isLoading && (
-          <button
-            type="button"
-            className={classnames([
-              "btn",
-              "btn-sm",
-              "btn-circle",
-              "absolute",
-              "right-2",
-              "top-2",
-              "z-10",
-              "bg-base-100/0",
-              "border-0",
-              "hover:bg-base-100",
-              "transition-all",
-              "font-bold",
-            ])}
-            onClick={() => {
-              if (onClose) onClose();
-            }}
-          >
-            <X />
-          </button>
-        )}
-
-        {/* Image Container */}
-        <div className="flex justify-center items-center">
-          {isLoading && (
-            <span className="loading loading-spinner loading-lg m-8" />
-          )}
-          {!isLoading && scaledUrl && (
-            <div
-              style={{
-                position: "relative",
-                width: `${finalWidth}px`,
-                height: `${finalHeight}px`,
-                maxWidth: "90vw",
-                maxHeight: "90vh",
-              }}
-            >
-              <Image
-                src={scaledUrl}
-                alt={photo.alt || "Enlarged Image"}
-                width={finalWidth}
-                height={finalHeight}
-                style={{
-                  objectFit: "contain",
-                }}
-                className="rounded-lg"
-                onLoad={() => setIsLoading(false)}
-                priority={true}
-              />
-            </div>
-          )}
-        </div>
-      </div>
-    </dialog>
-  );
+  if (!scaledUrl) return null;
 
   return (
-    <>
-      <div
-        role="button"
-        tabIndex={0}
-        style={{ cursor: "pointer", display: "inline-block" }}
-      >
-        {children}
-      </div>
-
-      {/* Render modal using React Portal */}
-      {createPortal(modalContent, document.body)}
-
-      {/* Preload the image */}
-      {scaledUrl && (
-        <Image
-          src={scaledUrl}
-          alt=""
-          width={finalWidth}
-          height={finalHeight}
-          style={{ display: "none" }}
-          onLoad={() => setIsLoading(false)}
-          priority={true}
-        />
+    <div
+      style={{
+        position: "relative",
+        width: `${finalWidth}px`,
+        height: `${finalHeight}px`,
+        maxWidth: "90vw",
+        maxHeight: "90vh",
+      }}
+    >
+      {showSpinner && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="loading loading-spinner loading-lg" />
+        </div>
       )}
-    </>
+      {/* Always rendered once we have a URL so the browser can decode
+          immediately; hidden via opacity until the image is ready. */}
+      <Image
+        src={scaledUrl}
+        alt={photo.alt || "Enlarged Image"}
+        width={finalWidth}
+        height={finalHeight}
+        style={{
+          objectFit: "contain",
+          opacity: isLoading ? 0 : 1,
+          transition: isLoading ? "none" : "opacity 0.1s",
+        }}
+        className="rounded-lg"
+        onLoad={handleImageLoaded}
+        priority={true}
+      />
+    </div>
   );
 };
 

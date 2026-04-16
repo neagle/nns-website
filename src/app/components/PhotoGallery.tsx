@@ -1,12 +1,21 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  MouseEvent,
+} from "react";
+import { createPortal } from "react-dom";
 import type { Photo } from "@/app/types";
 import { getWixImageDimensions } from "@/app/utils";
 import { getScaledToFitImageUrl } from "@/app/utils/wix/media";
+import { media } from "@wix/sdk";
 import Image from "next/image";
 import classnames from "classnames";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, X } from "lucide-react";
 
 // Import Swiper React components
 import { Navigation, Pagination } from "swiper/modules";
@@ -18,7 +27,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-// Prevent SSR for PhotoModal
+// Prevent SSR for PhotoModal (uses useLayoutEffect reading window)
 import dynamic from "next/dynamic";
 const PhotoModal = dynamic(() => import("./PhotoModal"), {
   ssr: false,
@@ -28,11 +37,59 @@ interface PhotoGalleryProps {
   photos: Photo[];
 }
 
+// Compute the same full-size URL that PhotoModal uses so prefetch URLs get
+// cache hits when the modal opens.
+function computeModalUrl(
+  photo: Photo,
+  windowWidth: number,
+  windowHeight: number,
+): { url: string; width: number; height: number } | null {
+  if (!photo.settings || !windowWidth || !windowHeight) return null;
+  const { width: originalW, height: originalH } = photo.settings;
+  const containerW = Math.round(windowWidth * 0.9);
+  const containerH = Math.round(windowHeight * 0.9);
+  const scaleFactor = Math.min(containerW / originalW, containerH / originalH);
+  const w = Math.round(originalW * scaleFactor);
+  const h = Math.round(originalH * scaleFactor);
+  const url = media.getScaledToFillImageUrl(photo.src, w, h, {});
+  return { url, width: w, height: h };
+}
+
 const PhotoGallery = ({ photos }: PhotoGalleryProps) => {
   const swiperRef = useRef<SwiperType | null>(null);
   const [openModalIndex, setOpenModalIndex] = useState<number | null>(null);
+  // Tracks the last-opened index so the image stays visible during the
+  // DaisyUI close animation after openModalIndex becomes null.
+  const [lastOpenModalIndex, setLastOpenModalIndex] = useState<number | null>(
+    null,
+  );
+  const [prefetchedIndices, setPrefetchedIndices] = useState<Set<number>>(
+    new Set(),
+  );
+  const [loadedSlugs, setLoadedSlugs] = useState<Set<string>>(new Set());
+  // Guard createPortal — document is not available during SSR.
+  const [isMounted, setIsMounted] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(0);
+  const [windowHeight, setWindowHeight] = useState(0);
 
-  // Close modal on Escape
+  const handlePhotoLoaded = useCallback((slug: string) => {
+    setLoadedSlugs((prev) => new Set(prev).add(slug));
+  }, []);
+
+  useEffect(() => {
+    setIsMounted(true);
+    setWindowWidth(window.innerWidth);
+    setWindowHeight(window.innerHeight);
+  }, []);
+
+  // Keep lastOpenModalIndex up to date whenever a real index is selected.
+  useEffect(() => {
+    if (openModalIndex !== null) {
+      setLastOpenModalIndex(openModalIndex);
+    }
+  }, [openModalIndex]);
+
+  // Keyboard navigation
   useEffect(() => {
     function handleKeypress(e: globalThis.KeyboardEvent) {
       if (e.key === "Escape") {
@@ -56,6 +113,30 @@ const PhotoGallery = ({ photos }: PhotoGalleryProps) => {
       document.removeEventListener("keyup", handleKeypress);
     };
   }, [photos.length]);
+
+  // All indices to prefetch: hovered thumbnails + neighbours of the open modal.
+  // Exclude the currently open index — the modal handles its own loading.
+  const indicesToPrefetch = useMemo(() => {
+    const set = new Set(prefetchedIndices);
+    if (openModalIndex !== null) {
+      if (openModalIndex > 0) set.add(openModalIndex - 1);
+      if (openModalIndex < photos.length - 1) set.add(openModalIndex + 1);
+      set.delete(openModalIndex);
+    }
+    return set;
+  }, [prefetchedIndices, openModalIndex, photos.length]);
+
+  const isModalOpen = openModalIndex !== null;
+  // Use lastOpenModalIndex during the close animation so the image doesn't
+  // disappear before the DaisyUI backdrop has finished fading out.
+  const displayIndex = openModalIndex ?? lastOpenModalIndex;
+  const currentPhoto = displayIndex !== null ? photos[displayIndex] : null;
+
+  const handleBackdropClick = (e: MouseEvent<HTMLDialogElement>) => {
+    if (e.target === e.currentTarget) {
+      setOpenModalIndex(null);
+    }
+  };
 
   return (
     <div className="overflow-hidden">
@@ -95,50 +176,49 @@ const PhotoGallery = ({ photos }: PhotoGalleryProps) => {
                 "transition-opacity",
               ])}"></span>`,
           }}
-          // onSlideChange={() => {}}
-          // onSwiper={(swiper) => console.log(swiper)}
         >
           {photos.map((photo, i) => {
             const { width, height } = getWixImageDimensions(photo.src);
             const ratio = width / height;
 
-            const scaledHeight = 300;
-            const scaledWidth = Math.round(scaledHeight * ratio);
+            const displayHeight = 300;
+            const displayWidth = Math.round(displayHeight * ratio);
 
+            // Request 2× pixel resolution for retina / HiDPI screens while
+            // keeping the CSS display size at displayWidth × displayHeight.
             const scaledImage = getScaledToFitImageUrl(
               photo.src,
-              scaledWidth,
-              scaledHeight,
-              {}
+              displayWidth * 2,
+              displayHeight * 2,
+              {},
             );
 
             return (
-              <>
-                <SwiperSlide
-                  key={photo.slug}
-                  style={{ width: scaledWidth }}
-                  onClick={() => {
-                    if (openModalIndex !== i) {
-                      setOpenModalIndex(i);
-                    }
-                  }}
-                >
-                  <PhotoModal
-                    photo={photo}
-                    isOpen={openModalIndex === i}
-                    onClose={() => {
-                      setOpenModalIndex(null);
-                    }}
-                  >
-                    <Image
-                      src={scaledImage}
-                      alt={photo.alt}
-                      width={scaledWidth}
-                      height={scaledHeight}
-                    />
-                  </PhotoModal>
-                </SwiperSlide>
-              </>
+              <SwiperSlide
+                key={photo.slug}
+                style={{ width: displayWidth }}
+                onClick={() => {
+                  if (openModalIndex !== i) {
+                    setOpenModalIndex(i);
+                  }
+                }}
+                onMouseEnter={() => {
+                  setPrefetchedIndices((prev) => {
+                    if (prev.has(i)) return prev;
+                    const next = new Set(prev);
+                    next.add(i);
+                    return next;
+                  });
+                }}
+              >
+                <Image
+                  src={scaledImage}
+                  alt={photo.alt}
+                  width={displayWidth}
+                  height={displayHeight}
+                  className="cursor-pointer"
+                />
+              </SwiperSlide>
             );
           })}
         </Swiper>
@@ -160,10 +240,16 @@ const PhotoGallery = ({ photos }: PhotoGalleryProps) => {
           ])}
         >
           <ArrowLeft
-            className={classnames(
-              // { "opacity-20": swiperRef.current?.isBeginning },
-              ["w-6", "md:w-8", "h-6", "md:h-8", "text-primary", "z-10"]
-            )}
+            className={classnames([
+              "w-6",
+              "md:w-8",
+              "h-6",
+              "md:h-8",
+              "text-primary",
+              "z-10",
+              "transition-transform",
+              "active:scale-120",
+            ])}
             onClick={() => swiperRef.current?.slidePrev()}
           />
         </div>
@@ -184,10 +270,16 @@ const PhotoGallery = ({ photos }: PhotoGalleryProps) => {
           ])}
         >
           <ArrowRight
-            className={classnames(
-              // { "opacity-20": swiperRef.current?.isBeginning },
-              ["w-6", "md:w-8", "h-6", "md:h-8", "text-primary", "z-10"]
-            )}
+            className={classnames([
+              "w-6",
+              "md:w-8",
+              "h-6",
+              "md:h-8",
+              "text-primary",
+              "z-10",
+              "transition-transform",
+              "active:scale-120",
+            ])}
             onClick={() => swiperRef.current?.slideNext()}
           />
         </div>
@@ -201,6 +293,90 @@ const PhotoGallery = ({ photos }: PhotoGalleryProps) => {
           "mb-8",
         ])}
       />
+
+      {/* Single shared lightbox — stays modal-open while navigating so the
+          backdrop never fades between photos */}
+      {isMounted &&
+        createPortal(
+          <dialog
+            className={classnames(
+              { "modal-open": isModalOpen, "bg-black/90!": isModalOpen },
+              ["modal"],
+            )}
+            onClick={handleBackdropClick}
+          >
+            <div
+              className={classnames([
+                "modal-box",
+                "relative",
+                "w-auto",
+                "max-w-none",
+                "h-auto",
+                "overflow-hidden",
+                "p-0",
+                "shadow-lg",
+                "shadow-yellow-500/50",
+              ])}
+            >
+              {/* Close button */}
+              {isModalOpen && (
+                <button
+                  type="button"
+                  className={classnames([
+                    "btn",
+                    "btn-sm",
+                    "btn-circle",
+                    "absolute",
+                    "right-2",
+                    "top-2",
+                    "z-10",
+                    "bg-base-100/0",
+                    "border-0",
+                    "hover:bg-base-100",
+                    "transition-all",
+                    "font-bold",
+                  ])}
+                  onClick={() => setOpenModalIndex(null)}
+                >
+                  <X />
+                </button>
+              )}
+
+              {/* Image — currentPhoto stays set during the close animation
+                  via lastOpenModalIndex so the image doesn't vanish mid-fade */}
+              <div className="flex justify-center items-center">
+                {currentPhoto && (
+                  <PhotoModal
+                    photo={currentPhoto}
+                    alreadyLoaded={loadedSlugs.has(currentPhoto.slug)}
+                    onImageLoaded={() => handlePhotoLoaded(currentPhoto.slug)}
+                  />
+                )}
+              </div>
+            </div>
+          </dialog>,
+          document.body,
+        )}
+
+      {/* Hidden images: prefetch on hover + neighbours of the open modal */}
+      {windowWidth > 0 &&
+        [...indicesToPrefetch].map((i) => {
+          const photo = photos[i];
+          if (!photo) return null;
+          const computed = computeModalUrl(photo, windowWidth, windowHeight);
+          if (!computed) return null;
+          return (
+            <Image
+              key={`prefetch-${photo.slug}`}
+              src={computed.url}
+              alt=""
+              width={computed.width}
+              height={computed.height}
+              style={{ display: "none" }}
+              priority
+            />
+          );
+        })}
     </div>
   );
 };
