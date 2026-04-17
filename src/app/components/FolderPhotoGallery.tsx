@@ -22,6 +22,10 @@ const FolderPhotoGallery = async ({
     sort: { fieldName: "displayName", order: SortOrder.ASC },
   });
 
+  if (!files) {
+    return null;
+  }
+
   return (
     <div className={classNames(className, ["md:w-[300px]"])}>
       <PhotoStrip
