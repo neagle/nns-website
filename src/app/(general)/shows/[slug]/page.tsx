@@ -14,6 +14,7 @@ import CenterSpinner from "@/app/components/CenterSpinner";
 import PersonList, { getPersonList } from "@/app/components/PersonList";
 import FormattedDateTime from "@/app/components/FormattedDateTime";
 import CreditList from "./CreditList";
+import { MessageCircleWarning } from "lucide-react";
 
 interface PageProps {
   params: Promise<{
@@ -218,6 +219,19 @@ const ShowContent = async ({ slug }: { slug: string }) => {
                 dangerouslySetInnerHTML={{ __html: show.description }}
               ></div>
             </section>
+          )}
+
+          {show.contentWarning && (
+            <div
+              role="alert"
+              className="alert alert-warning alert-soft flex gap-4"
+            >
+              <MessageCircleWarning className="shrink-0" />
+              <div className="grow text-xs">
+                <strong className="">Content Warning:</strong>{" "}
+                {show.contentWarning}
+              </div>
+            </div>
           )}
 
           {show.reviews && (
