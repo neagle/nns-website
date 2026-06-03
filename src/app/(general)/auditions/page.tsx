@@ -177,7 +177,14 @@ const AuditionContent = async () => {
                 )}
                 {show.auditions ? (
                   <div
-                    className="prose mb-4 text-pretty"
+                    className={classnames([
+                      "prose",
+                      "mb-4",
+                      "text-pretty",
+                      "[&_h2]:text-lg",
+                      "[&_h2]:m-0",
+                      "[&_li>p]:m-0",
+                    ])}
                     dangerouslySetInnerHTML={{ __html: show.auditions }}
                   />
                 ) : (
