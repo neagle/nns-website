@@ -63,8 +63,9 @@ const Page = async () => {
           ])}
         >
           <p>
-            We believe the word <em>community</em> is the most important word in
-            &ldquo;community theater.&rdquo;
+            We believe the word <i>community</i>
+            {"\u00A0"}is the most important word in &ldquo;community
+            theater.&rdquo;
           </p>
           <p>
             If you are a local artist who wants to join a fun group of people,
@@ -177,7 +178,14 @@ const AuditionContent = async () => {
                 )}
                 {show.auditions ? (
                   <div
-                    className="prose mb-4 text-pretty"
+                    className={classnames([
+                      "prose",
+                      "mb-4",
+                      "text-pretty",
+                      "[&_h2]:text-lg",
+                      "[&_h2]:m-0",
+                      "[&_li>p]:m-0",
+                    ])}
                     dangerouslySetInnerHTML={{ __html: show.auditions }}
                   />
                 ) : (

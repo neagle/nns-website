@@ -52,6 +52,8 @@ What needs to be done for launch?
 - [x] Our Venue page
 - [x] Work With Us page
 
+Hey, Nate and Jeff!
+
 Optional next steps:
 
 - [ ] Feed from Facebook and Instagram accounts
