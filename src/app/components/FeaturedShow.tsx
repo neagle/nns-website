@@ -12,7 +12,7 @@ import { getShowBackgroundStyle } from "@/app/utils";
 import Link from "next/link";
 import FeaturedCast from "@/app/components/FeaturedCast";
 import FormattedDateTime from "@/app/components/FormattedDateTime";
-import MailingListSignup from "@/app/components/MailingListSignup";
+// import MailingListSignup from "@/app/components/MailingListSignup";
 
 const FeaturedShow = async () => {
   const { items } = await wixClient.items
@@ -207,7 +207,7 @@ const FeaturedShow = async () => {
                     </p>
                   )}
                 </div>
-                <MailingListSignup />
+                {/* <MailingListSignup /> */}
               </section>
             </li>
           );
