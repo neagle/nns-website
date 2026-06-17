@@ -38,7 +38,7 @@ const Plan = ({ plan, className = "" }: PlanProps) => {
     loader.start();
     const redirect = await wixClient.redirects.createRedirectSession({
       paidPlansCheckout: { planId: plan._id },
-      callbacks: { postFlowUrl: window.location.href },
+      callbacks: { postFlowUrl: `${window.location.origin}/box-office/thank-you` },
     });
 
     if (!redirect.redirectSession) {

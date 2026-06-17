@@ -139,7 +139,7 @@ const Tickets = ({
           eventSlug: event.slug,
           reservationId: reservation._id,
         },
-        callbacks: { postFlowUrl: window.location.href },
+        callbacks: { postFlowUrl: `${window.location.origin}/box-office/thank-you` },
       });
 
       if (!redirect.redirectSession) {

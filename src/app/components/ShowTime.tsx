@@ -156,7 +156,9 @@ const ShowTime = ({
           eventSlug: event.slug,
           reservationId: reservation._id,
         },
-        callbacks: { postFlowUrl: window.location.href },
+        callbacks: {
+          postFlowUrl: `${window.location.origin}/box-office/thank-you`,
+        },
       });
 
       if (!redirect.redirectSession) {
@@ -307,6 +309,7 @@ const ShowTime = ({
           {hashtags.length
             ? hashtags.map((tag) => (
                 <div
+                  key={tag}
                   className={classnames([
                     "badge",
                     "badge-xs",
