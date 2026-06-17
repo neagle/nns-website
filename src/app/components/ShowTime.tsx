@@ -51,6 +51,14 @@ const ShowTime = ({
   // Prevents concurrent in-flight fetches (e.g. rapid hover in/out).
   const isFetchingRef = useRef(false);
 
+  // Parse event.shortDescription for hashtags and use them to create an array
+  const hashtags = event.shortDescription
+    ? event.shortDescription
+        .split(" ")
+        .filter((word) => word.startsWith("#"))
+        .map((tag) => tag.substring(1))
+    : [];
+
   // "DONATION" is Wix's pricingType for Pay What You Can events.
   const isPayWhatYouCan = ticketInfo?.pricing?.pricingType === "DONATION";
   const minimumPrice = Number(ticketInfo?.pricing?.minPrice?.value || "0");
@@ -296,6 +304,24 @@ const ShowTime = ({
               Pay What You Can!
             </div>
           )}
+          {hashtags.length
+            ? hashtags.map((tag) => (
+                <div
+                  className={classnames([
+                    "badge",
+                    "badge-xs",
+                    "badge-outline",
+                    "mb-2",
+                    "badge-info",
+                  ])}
+                >
+                  {tag
+                    .split("-")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ")}
+                </div>
+              ))
+            : null}
           <div
             className={classnames({}, [
               "font-bold",

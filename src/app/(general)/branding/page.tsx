@@ -57,6 +57,17 @@ const page = async () => {
         </div>
       </section>
 
+      <section id="hashtags">
+        <h2>Hashtags</h2>
+        <p>
+          Events (specific performances of shows) can have hashtags in their
+          short description fields. These will be displayed as info badges at
+          the top of their showtime card. They should use kebab-case formatting
+          (ie, "understudy-performance") and will be parsed to display as
+          "#understudy-performance".
+        </p>
+      </section>
+
       <section id="qrcodes">
         <h2>QR Codes</h2>
         <p>
