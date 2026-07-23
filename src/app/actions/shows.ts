@@ -1,5 +1,6 @@
 import type { Show, Credit, Ticket } from "@/app/types";
 import wixClient from "@/lib/wixClient";
+import { titlesMatch } from "@/app/utils";
 
 type Props = {
   shows: Show[];
@@ -47,6 +48,16 @@ export const getShowsWithData = async ({
 }: Props) => {
   "use server";
 
+  let eventsQuery = wixClient.wixEventsV2
+    .queryEvents()
+    .ascending("dateAndTimeSettings.startDate");
+
+  if (onlyUpcoming) {
+    eventsQuery = eventsQuery.eq("status", "UPCOMING");
+  }
+
+  const allEvents = await eventsQuery.find();
+
   const showsWithData = await Promise.all(
     shows.map(async (show: Show) => {
       const castQuery = wixClient.items
@@ -63,23 +74,17 @@ export const getShowsWithData = async ({
         .include("person")
         .ascending("order");
 
-      let showsQuery = wixClient.wixEventsV2
-        .queryEvents()
-        .eq("title", show.title)
-        .ascending("dateAndTimeSettings.startDate");
-
-      if (onlyUpcoming) {
-        showsQuery = showsQuery.eq("status", "UPCOMING");
-      }
-
-      const [cast, crew, events] = await Promise.all([
+      const [cast, crew] = await Promise.all([
         castQuery.find(),
         crewQuery.find(),
-        showsQuery.find(),
       ]);
 
+      const matchingEvents = allEvents.items.filter((event) =>
+        titlesMatch(event.title, show.title),
+      );
+
       const ticketResults = await Promise.all(
-        events.items.map((event) =>
+        matchingEvents.map((event) =>
           event._id
             ? wixClient.orders.queryAvailableTickets({
                 filter: { eventId: event._id },
@@ -90,7 +95,7 @@ export const getShowsWithData = async ({
       );
 
       const ticketDefinitionsByEventId: Record<string, Ticket[]> = {};
-      events.items.forEach((event, i) => {
+      matchingEvents.forEach((event, i) => {
         if (event._id) {
           ticketDefinitionsByEventId[event._id] = (ticketResults[i].definitions ||
             []) as unknown as Ticket[];
@@ -101,7 +106,7 @@ export const getShowsWithData = async ({
         ...show,
         cast: cast.items,
         crew: sortCreditsByPerson(crew.items as Credit[]),
-        shows: events.items,
+        shows: matchingEvents,
         ticketDefinitionsByEventId,
       };
     })

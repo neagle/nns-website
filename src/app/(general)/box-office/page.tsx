@@ -1,21 +1,27 @@
 export const revalidate = 60;
 
 import type { Metadata } from "next";
-import React, { cache, Suspense } from "react";
+import { cache, Suspense } from "react";
 import wixClient from "@/lib/wixClient";
 import ShowTime from "@/app/components/ShowTime";
 import type { Event } from "@wix/auto_sdk_events_wix-events-v-2";
-import type { Ticket } from "@/app/types";
+import type { Show, Ticket } from "@/app/types";
 import classnames from "classnames";
 import WixImage from "@/app/components/WixImage";
 import Link from "next/link";
-import { formatList } from "@/app/utils";
-import slugify from "@sindresorhus/slugify";
+import { findShowByTitle, formatList } from "@/app/utils";
+
+type BoxOfficeShowGroup = {
+  key: string;
+  title: string;
+  show?: Show;
+  events: Event[];
+};
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { shows } = await getBoxOfficeData();
+  const { showGroups } = await getBoxOfficeData();
 
-  const showTitles = Object.keys(shows);
+  const showTitles = showGroups.map(({ show, title }) => show?.title || title);
 
   const metadata = {
     title: `Box Office: ${formatList(showTitles)}`,
@@ -27,8 +33,8 @@ export async function generateMetadata(): Promise<Metadata> {
   // In the future, we could add behavior for dealing with multiple shows, but
   // it's a fine default behavior at the moment to default to the standard site
   // OG Image.
-  if (showTitles.length === 1) {
-    const slug = slugify(showTitles[0], { separator: "-", lowercase: true });
+  if (showGroups.length === 1 && showGroups[0].show?.slug) {
+    const slug = showGroups[0].show.slug;
     const ogImage = `https://www.novanightskytheater.com/og/shows/${slug}.png`;
 
     const openGraph = {
@@ -45,11 +51,16 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const getBoxOfficeData = cache(async () => {
-  const { items: events } = await wixClient.wixEventsV2
-    .queryEvents()
-    .eq("status", "UPCOMING")
-    .ascending("dateAndTimeSettings.startDate")
-    .find();
+  const [{ items: events }, { items: showItems }] = await Promise.all([
+    wixClient.wixEventsV2
+      .queryEvents()
+      .eq("status", "UPCOMING")
+      .ascending("dateAndTimeSettings.startDate")
+      .find(),
+    wixClient.items.query("Shows").find(),
+  ]);
+
+  const cmsShows = showItems as Show[];
 
   const ticketResults = await Promise.all(
     events.map((event) =>
@@ -70,29 +81,41 @@ const getBoxOfficeData = cache(async () => {
     }
   });
 
-  // Group events by show
-  const shows: Record<string, Event[]> = events.reduce(
-    (acc: Record<string, Event[]>, event) => {
-      if (!event.title) {
-        return acc;
-      }
+  const showGroupsByKey = new Map<string, BoxOfficeShowGroup>();
 
-      if (!acc[event.title]) {
-        acc[event.title] = [];
-      }
-      acc[event.title].push(event);
-      return acc;
-    },
-    {},
-  );
+  // Group events by CMS show when possible so links always use the true show slug.
+  events.forEach((event) => {
+    if (!event.title) {
+      return;
+    }
 
-  return { shows, ticketDefinitionsByEventId };
+    const show = findShowByTitle(cmsShows, event.title);
+    const key = show?._id || event.title;
+    const existingGroup = showGroupsByKey.get(key);
+
+    if (existingGroup) {
+      existingGroup.events.push(event);
+      return;
+    }
+
+    showGroupsByKey.set(key, {
+      key,
+      title: show?.title || event.title,
+      show,
+      events: [event],
+    });
+  });
+
+  return {
+    showGroups: Array.from(showGroupsByKey.values()),
+    ticketDefinitionsByEventId,
+  };
 });
 
 const BoxOfficeContent = async () => {
-  const { shows, ticketDefinitionsByEventId } = await getBoxOfficeData();
+  const { showGroups, ticketDefinitionsByEventId } = await getBoxOfficeData();
 
-  if (Object.keys(shows).length === 0) {
+  if (showGroups.length === 0) {
     return (
       <div className="">
         <p>No tickets are currently on sale.</p>
@@ -102,21 +125,17 @@ const BoxOfficeContent = async () => {
 
   return (
     <>
-      {Object.keys(shows).map(async (show) => {
-        const title = shows[show][0].title;
-        const slug = slugify(title || "", {
-          separator: "-",
-          lowercase: true,
-        });
-        const id = shows[show][0]._id;
-        const imageUrl = shows[show][0].mainImage;
+      {showGroups.map(({ key, title, show, events }) => {
+        const firstEvent = events[0];
+        const id = firstEvent._id || key;
+        const imageUrl = firstEvent.mainImage;
+        const showHref = show?.slug ? `/shows/${show.slug}` : undefined;
 
         return (
           <section key={id} className="last-of-type:mt-8">
             <div className={classnames(["flex", "flex-col", "md:flex-row"])}>
               {imageUrl && (
-                <Link
-                  href={`/shows/${slug}`}
+                <div
                   className={classnames([
                     "mb-4",
                     "md:mb-0",
@@ -128,14 +147,26 @@ const BoxOfficeContent = async () => {
                     "transition-transform",
                   ])}
                 >
-                  <WixImage
-                    priority={true}
-                    className="rounded-lg"
-                    src={imageUrl}
-                    alt={show}
-                    targetHeight={400}
-                  />
-                </Link>
+                  {showHref ? (
+                    <Link href={showHref}>
+                      <WixImage
+                        priority={true}
+                        className="rounded-lg"
+                        src={imageUrl}
+                        alt={title}
+                        targetHeight={400}
+                      />
+                    </Link>
+                  ) : (
+                    <WixImage
+                      priority={true}
+                      className="rounded-lg"
+                      src={imageUrl}
+                      alt={title}
+                      targetHeight={400}
+                    />
+                  )}
+                </div>
               )}
               <div className="grow-1">
                 <div
@@ -150,7 +181,7 @@ const BoxOfficeContent = async () => {
                     "group",
                   ])}
                 >
-                  {shows[show].map((event) => {
+                  {events.map((event) => {
                     return (
                       <ShowTime
                         key={event._id}

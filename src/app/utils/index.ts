@@ -106,6 +106,49 @@ export const formatList = (arr: string[]) => {
   }
 };
 
+const normalizeTitleForLookup = (title: string) => {
+  return title
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/['’]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+};
+
+export const titlesMatch = (left?: string | null, right?: string | null) => {
+  if (!left || !right) {
+    return false;
+  }
+
+  if (left === right) {
+    return true;
+  }
+
+  return normalizeTitleForLookup(left) === normalizeTitleForLookup(right);
+};
+
+export const findShowByTitle = (shows: Show[], title?: string | null) => {
+  if (!title) {
+    return;
+  }
+
+  const exactMatch = shows.find((show) => show.title === title);
+  if (exactMatch) {
+    return exactMatch;
+  }
+
+  const normalizedTitle = normalizeTitleForLookup(title);
+  const normalizedMatches = shows.filter(
+    (show) => normalizeTitleForLookup(show.title) === normalizedTitle,
+  );
+
+  if (normalizedMatches.length === 1) {
+    return normalizedMatches[0];
+  }
+};
+
 export const getFirstMiddleLastNamesFromSlug = (slug: string) => {
   const parts = slug.replaceAll("_", " ").split("-");
   const firstName = parts[0];

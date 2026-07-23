@@ -12,7 +12,6 @@ import { getShowBackgroundStyle } from "@/app/utils";
 import Link from "next/link";
 import FeaturedCast from "@/app/components/FeaturedCast";
 import FormattedDateTime from "@/app/components/FormattedDateTime";
-import slugify from "@sindresorhus/slugify";
 // import MailingListSignup from "@/app/components/MailingListSignup";
 
 const FeaturedShow = async () => {
@@ -45,12 +44,8 @@ const FeaturedShow = async () => {
   return (
     <div>
       <ul className="flex flex-col">
-        {sortedShows.map(async (show) => {
+        {sortedShows.map((show) => {
           const backgroundStyle = getShowBackgroundStyle(show);
-          const slug = slugify(show.title || "", {
-            separator: "-",
-            lowercase: true,
-          });
           const hasOpened = show.openingDate
             ? new Date(show.openingDate) <= new Date()
             : false;
@@ -213,7 +208,7 @@ const FeaturedShow = async () => {
                     <div className="text-xs">
                       <p className="">
                         That’s a wrap for{" "}
-                        <Link href={`/shows/${slug}`}>{show.title}</Link>!
+                        <Link href={`/shows/${show.slug}`}>{show.title}</Link>!
                       </p>
                     </div>
                   ) : (
