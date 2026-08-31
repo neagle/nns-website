@@ -10,6 +10,7 @@ import Link from "next/link";
 type Props = {
   role: string;
   castMember: Person;
+  showDates?: string;
   headshot?: string;
   className?: string;
   width?: number;
@@ -18,6 +19,7 @@ type Props = {
 const FeaturedCastMember = ({
   role,
   castMember,
+  showDates,
   headshot,
   className = "",
   width = 300,
@@ -76,6 +78,11 @@ const FeaturedCastMember = ({
       <div className="card-body leading-tight">
         <div className="card-title font-bold text-neutral-content">{role}</div>
         <p className="font-bold">{fullName(castMember)}</p>
+        {showDates && (
+          <p className="text-sm text-neutral-content">
+            <strong className="opacity-50">Show Dates:</strong> {showDates}
+          </p>
+        )}
       </div>
     </Link>
   );

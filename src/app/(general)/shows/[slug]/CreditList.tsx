@@ -89,11 +89,27 @@ const CreditList = ({ category, data }: CreditListProps) => {
                           ])}
                         >
                           {c.role}
+                          {c.showDates && (
+                            <span className="text-xs text-neutral-content block leading-tight">
+                              <strong className="opacity-50">
+                                Show Dates:
+                              </strong>{" "}
+                              {c.showDates}
+                            </span>
+                          )}
                         </li>
                       );
                     })
                   ) : (
-                    <li>{credit.role}</li>
+                    <li>
+                      {credit.role}
+                      {credit.showDates && (
+                        <span className="text-xs text-neutral-content block leading-tight">
+                          <strong className="opacity-50">Show Dates:</strong>{" "}
+                          {credit.showDates}
+                        </span>
+                      )}
+                    </li>
                   )}{" "}
                 </ul>
               </div>

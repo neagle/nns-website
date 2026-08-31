@@ -26,6 +26,9 @@ const page = async () => {
           <Link href="#fonts">Fonts</Link>
         </li>
         <li>
+          <Link href="#hashtags">Hashtags</Link>
+        </li>
+        <li>
           <Link href="#qr-codes">QR Codes</Link>
         </li>
 

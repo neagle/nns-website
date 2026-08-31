@@ -54,6 +54,7 @@ export interface AlternateHeadshot {
 export interface Credit {
   _id: string;
   role: string;
+  showDates?: string;
   person: Person;
   order?: number;
   show: Show;

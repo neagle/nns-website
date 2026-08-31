@@ -90,6 +90,7 @@ const FeaturedCast: React.FC<Props> = ({ show }) => {
                 "justify-center",
               ])}
               role={cast.role}
+              showDates={cast.showDates}
               castMember={cast.person}
               headshot={headshot}
             />
