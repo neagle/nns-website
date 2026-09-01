@@ -60,7 +60,7 @@ const FeaturedCastMember = ({
         "block",
         "flex",
         "flex-col",
-        "items-start",
+        "w-fit",
         "hover:scale-110",
         "hover:shadow-lg",
         "focus:scale-110",
@@ -75,7 +75,16 @@ const FeaturedCastMember = ({
       <figure>
         <Headshot />
       </figure>
-      <div className="card-body leading-tight">
+      <div
+        className={classnames([
+          "card-body",
+          "leading-tight",
+          // don't let this child establish an intrinsic preferred width
+          "w-0",
+          // once the parent's width has been established, fill it
+          "min-w-full",
+        ])}
+      >
         <div className="card-title font-bold text-neutral-content">{role}</div>
         <p className="font-bold">{fullName(castMember)}</p>
         {showDates && (
