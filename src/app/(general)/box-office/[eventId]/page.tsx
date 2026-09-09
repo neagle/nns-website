@@ -83,13 +83,15 @@ const EventContent = async ({ eventId }: { eventId: string }) => {
 
   return (
     <div className="p-4 md:p-6 xl:p-8 md:grid md:grid-cols-[auto_1fr] md:gap-8">
-      <WixImage
-        priority={true}
-        className="rounded-lg mx-auto mb-8 md:mb-0"
-        src={event.mainImage!}
-        alt={event.title!}
-        targetHeight={400}
-      />
+      {event.mainImage && (
+        <WixImage
+          priority={true}
+          className="rounded-lg mx-auto mb-8 md:mb-0"
+          src={event.mainImage}
+          alt={event.title!}
+          targetHeight={400}
+        />
+      )}
       <section className="w-full flex flex-col gap-8">
         <section>
           {isPayWhatYouCan && (
