@@ -147,7 +147,15 @@ const Tickets = ({
           eventSlug: event.slug,
           reservationId: reservation._id,
         },
-        callbacks: { postFlowUrl },
+        // Without `thankYouPageUrl`, Wix defaults to bouncing the visitor
+        // through its own hosted event "thank you" page first, then on to
+        // `postFlowUrl`. That intermediate Wix-hosted page has been
+        // 404-ing (`/__events/event-details/<slug>/not-found`) for some
+        // visitors — reliably reproduced on mobile Safari — leaving them
+        // stuck after a successful purchase. Setting `thankYouPageUrl`
+        // explicitly skips that broken hop and sends success traffic
+        // straight to our own domain.
+        callbacks: { postFlowUrl, thankYouPageUrl: postFlowUrl },
       });
 
       if (!redirect.redirectSession) {
