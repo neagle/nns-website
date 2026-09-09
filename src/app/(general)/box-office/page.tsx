@@ -18,6 +18,13 @@ type BoxOfficeShowGroup = {
   events: Event[];
 };
 
+// Prefix used to mark internal QA/test events in Wix (e.g. for reproducing
+// the checkout redirect flow) so they never show up in the public listing.
+// The event detail page (box-office/[eventId]) has no such filter and
+// queries Wix directly by ID, so a test event created with this prefix is
+// still reachable at its direct URL — just never linked or listed anywhere.
+const TEST_EVENT_TITLE_PREFIX = "[TEST]";
+
 export async function generateMetadata(): Promise<Metadata> {
   const { showGroups } = await getBoxOfficeData();
 
@@ -51,7 +58,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const getBoxOfficeData = cache(async () => {
-  const [{ items: events }, { items: showItems }] = await Promise.all([
+  const [{ items: allEvents }, { items: showItems }] = await Promise.all([
     wixClient.wixEventsV2
       .queryEvents()
       .eq("status", "UPCOMING")
@@ -59,6 +66,12 @@ const getBoxOfficeData = cache(async () => {
       .find(),
     wixClient.items.query("Shows").find(),
   ]);
+
+  // Exclude internal QA/test events from the public listing (see
+  // TEST_EVENT_TITLE_PREFIX above).
+  const events = allEvents.filter(
+    (event) => !event.title?.startsWith(TEST_EVENT_TITLE_PREFIX),
+  );
 
   const cmsShows = showItems as Show[];
 
