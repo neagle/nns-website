@@ -134,12 +134,20 @@ const Tickets = ({
       await wixClient.ticketReservations.createTicketReservation(options);
 
     if (reservation._id) {
+      // Use a fixed canonical site URL (rather than window.location.origin)
+      // so postFlowUrl always matches the domain allow-listed in Wix's
+      // Headless settings, even if the site is ever reached via an
+      // alternate host (preview URL, apex vs. www, etc.).
+      const siteUrl =
+        process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+      const postFlowUrl = `${siteUrl}/box-office/thank-you`;
+
       const redirect = await wixClient.redirects.createRedirectSession({
         eventsCheckout: {
           eventSlug: event.slug,
           reservationId: reservation._id,
         },
-        callbacks: { postFlowUrl: `${window.location.origin}/box-office/thank-you` },
+        callbacks: { postFlowUrl },
       });
 
       if (!redirect.redirectSession) {
@@ -147,6 +155,27 @@ const Tickets = ({
         setRedirecting(false);
         return;
       }
+
+      // Fire-and-forget diagnostic log so we can correlate a customer's
+      // "This link is no longer valid" report with the exact reservation
+      // and redirect session Wix issued for their checkout.
+      fetch("/api/box-office/log-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          eventId: event._id,
+          eventSlug: event.slug,
+          reservationId: reservation._id,
+          redirectSessionId: redirect.redirectSession._id,
+          redirectFullUrl: redirect.redirectSession.fullUrl,
+          postFlowUrl,
+          userAgent:
+            typeof navigator !== "undefined" ? navigator.userAgent : null,
+        }),
+      }).catch(() => {
+        // Ignore logging failures; never block checkout on them.
+      });
 
       window.location.href = redirect.redirectSession.fullUrl || "/";
     } else {
