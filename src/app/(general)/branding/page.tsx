@@ -39,6 +39,9 @@ const page = async () => {
         <li>
           <Link href="#content-guidelines">Content Guidelines</Link>
         </li>
+        <li>
+          <Link href="#testing">Testing</Link>
+        </li>
       </ul>
 
       <section id="logos">
@@ -132,6 +135,35 @@ const page = async () => {
             &ldquo;actress.&rdquo;
           </li>
         </ul>
+      </section>
+
+      <section id="testing" className="clear-both">
+        <h2>Testing</h2>
+        <p>
+          There&rsquo;s a permanent, unlisted Wix event for exercising the box
+          office checkout flow (reservation → Wix hosted checkout → redirect
+          back to the site) without booking a real show or charging a real
+          card. It&rsquo;s a Pay What You Can ticket with a $0 minimum, so it
+          completes Wix&rsquo;s full checkout/payment page for $0.
+        </p>
+        <p>
+          Its Wix event title is prefixed with{" "}
+          <code className="whitespace-nowrap">[TEST]</code>, which the box
+          office listing filters out, so it never appears publicly &mdash;
+          it&rsquo;s only reachable via its direct URL below.
+        </p>
+        <p>
+          Event ID:{" "}
+          <code className="whitespace-nowrap">
+            0c5c610a-8539-4aaf-a073-20ad8b005048
+          </code>
+        </p>
+        <Link
+          className="link"
+          href="/box-office/0c5c610a-8539-4aaf-a073-20ad8b005048"
+        >
+          Open the test event&rsquo;s checkout page.
+        </Link>
       </section>
     </div>
   );
