@@ -22,13 +22,14 @@ export default function ThankYouPage() {
   const entries = Object.entries(params);
 
   return (
-    <main className="prose mx-auto my-12 max-w-2xl text-center p-6">
-      <h1>Thank you — Your purchase was successful</h1>
-      <p className="opacity-80">
-        A confirmation was sent if an email was provided during checkout.
-      </p>
+    <main className="prose p-6">
+      <h1>
+        Success! <b className="ml-2">🎉</b>
+      </h1>
+      <p>Your tickets are winging their way to your inbox.</p>
+      <p>We look forward to seeing you at the show!</p>
 
-      <div className="mt-8 flex gap-4 justify-center">
+      <div className="mt-8 flex gap-4">
         <Link href="/box-office" className="btn btn-primary">
           Back to Box Office
         </Link>
