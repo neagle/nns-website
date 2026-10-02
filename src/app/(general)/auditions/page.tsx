@@ -38,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const ogImage = `https://www.novanightskytheater.com/og/shows/${show.slug}.png`;
 
   return {
-    title: `Audition info for ${show.title}, by ${show.author}`,
+    title: `Audition info for ${show.title.trim()}, by ${show.author.trim()}`,
     description: show.description
       ? `${show.description.replace(/<[^>]+>/g, "").slice(0, 160)}...`
       : "Learn more about this show at NOVA Nightsky Theater.",
@@ -151,7 +151,7 @@ const AuditionContent = async () => {
                     <b className="text-sm text-primary/50 font-normal lowercase">
                       by
                     </b>{" "}
-                    {show.author}
+                    {show.author.trim()}
                   </h2>
 
                   {show?.adaptors && (

@@ -77,7 +77,7 @@ const OpenAuditions = async () => {
             ])}
           >
             Auditions are currently open for <strong>{show.title}</strong>, by{" "}
-            {show.author}
+            {show.author.trim()}
           </Link>
         </div>
       </div>

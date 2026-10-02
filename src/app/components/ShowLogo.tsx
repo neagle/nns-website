@@ -57,13 +57,13 @@ const TextPanel = ({
             "text-2xl": width >= 200,
             "text-xl": width >= 150,
           },
-          ["opacity-70", "mb-2", "leading-tight"]
+          ["opacity-70", "mb-2", "leading-tight"],
         )}
         style={{ color }}
       >
         {show.title}
       </h2>
-      <p className="opacity-50 text-xs">by {show.author}</p>
+      <p className="opacity-50 text-xs">by {show.author.trim()}</p>
       {!noDirector && show.directors?.length && (
         <p className="opacity-50 text-xs">
           directed by {getPersonList({ people: show.directors })}
@@ -76,7 +76,7 @@ const TextPanel = ({
     <div
       className={classnames(
         ["w-full", "h-full", "flex", "flex-col", "p-[1.5rem]"],
-        className
+        className,
       )}
       style={{ backgroundColor, color }}
     >

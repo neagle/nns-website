@@ -42,9 +42,11 @@ export async function generateMetadata({
   const ogImage = `https://www.novanightskytheater.com/og/shows/${slug}.png`;
 
   return {
-    title: `${show.title}, by ${show.author}, directed by ${getPersonList({
-      people: show.directors,
-    })}`,
+    title: `${show.title.trim()}, by ${show.author.trim()}, directed by ${getPersonList(
+      {
+        people: show.directors,
+      },
+    )}`,
     description: show.description
       ? `${show.description.replace(/<[^>]+>/g, "").slice(0, 160)}...`
       : "Learn more about this show at NOVA Nightsky Theater.",
@@ -92,7 +94,7 @@ const ShowContent = async ({ slug }: { slug: string }) => {
               <b className="text-sm text-primary/50 font-normal lowercase">
                 by
               </b>{" "}
-              {show.author}
+              {show.author.trim()}
             </h2>
 
             {show?.adaptors && (
