@@ -52,9 +52,6 @@ const Shows = async ({ startOfYear, endOfYear }: ShowsProps) => {
           "grid",
           "gap-0",
           "grid-cols-1",
-          // "sm:grid-cols-2",
-          // "md:grid-cols-3",
-          // "lg:grid-cols-4",
           "items-stretch",
 
           "group",
@@ -69,7 +66,6 @@ const Shows = async ({ startOfYear, endOfYear }: ShowsProps) => {
           "sm:grid-cols-2": shows.length <= 4,
           "md:grid-cols-3": shows.length <= 4,
           "lg:grid-cols-4": shows.length <= 4,
-
           "lg:grid-cols-5": shows.length > 4,
         },
       )}
