@@ -41,12 +41,16 @@ export async function generateMetadata({
   const show = await getShowData(slug);
   const ogImage = `https://www.novanightskytheater.com/og/shows/${slug}.png`;
 
+  const title = [
+    show.title.trim(),
+    show.author ? `by ${show.author.trim()}` : ``,
+    show.directors.length
+      ? `directed by ${getPersonList({ people: show.directors })}`
+      : ``,
+  ].join(", ");
+
   return {
-    title: `${show.title.trim()}, by ${show.author.trim()}, directed by ${getPersonList(
-      {
-        people: show.directors,
-      },
-    )}`,
+    title,
     description: show.description
       ? `${show.description.replace(/<[^>]+>/g, "").slice(0, 160)}...`
       : "Learn more about this show at NOVA Nightsky Theater.",
@@ -131,7 +135,7 @@ const ShowContent = async ({ slug }: { slug: string }) => {
             </h2>
           )}
 
-          {show?.directors?.length && (
+          {show?.directors?.length ? (
             <section>
               <h2>Director{show.directors.length > 1 ? "s" : ""}</h2>
 
@@ -139,7 +143,7 @@ const ShowContent = async ({ slug }: { slug: string }) => {
                 <PersonList people={show.directors} linkToCredits={true} />
               </p>
             </section>
-          )}
+          ) : null}
 
           {!show.noLongerAuditioning &&
             show.auditions &&
