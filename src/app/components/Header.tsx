@@ -11,6 +11,7 @@ const Header = async () => {
   const { items } = await wixClient.items
     .query("Shows")
     .descending("openingDate")
+    .ne("preview", true)
     .find();
   const shows = items as Show[];
 
