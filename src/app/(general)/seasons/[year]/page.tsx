@@ -46,7 +46,34 @@ const Shows = async ({ startOfYear, endOfYear }: ShowsProps) => {
   const shows = await getShows(startOfYear, endOfYear);
 
   return (
-    <>
+    <div
+      className={classnames(
+        [
+          "grid",
+          "gap-0",
+          "grid-cols-1",
+          // "sm:grid-cols-2",
+          // "md:grid-cols-3",
+          // "lg:grid-cols-4",
+          "items-stretch",
+
+          "group",
+
+          "[&:has(*:hover)]:hover:[&>*]:scale-90",
+          "[&:has(*:hover)]:hover:[&>*]:transition-all",
+          "[&:has(*:hover)]:hover:[&>*]:opacity-50",
+          "[&:focus-within]:[&>*]:scale-90",
+          "[&:focus-within]:[&>*]:opacity-50",
+        ],
+        {
+          "sm:grid-cols-2": shows.length <= 4,
+          "md:grid-cols-3": shows.length <= 4,
+          "lg:grid-cols-4": shows.length <= 4,
+
+          "lg:grid-cols-5": shows.length > 4,
+        },
+      )}
+    >
       {shows.map((show, index) => {
         return (
           <ShowLogo
@@ -70,7 +97,7 @@ const Shows = async ({ startOfYear, endOfYear }: ShowsProps) => {
           />
         );
       })}
-    </>
+    </div>
   );
 };
 
@@ -86,29 +113,9 @@ const Season = async ({ params }: PageProps) => {
       <h1 className="p-4 text-2xl text-primary! font-normal!">
         <b className="text-primary! text-3xl">{year}</b> Season
       </h1>
-      <div
-        className={classnames([
-          "grid",
-          "gap-0",
-          "grid-cols-1",
-          "sm:grid-cols-2",
-          "md:grid-cols-3",
-          "lg:grid-cols-4",
-          "items-stretch",
-
-          "group",
-
-          "[&:has(*:hover)]:hover:[&>*]:scale-90",
-          "[&:has(*:hover)]:hover:[&>*]:transition-all",
-          "[&:has(*:hover)]:hover:[&>*]:opacity-50",
-          "[&:focus-within]:[&>*]:scale-90",
-          "[&:focus-within]:[&>*]:opacity-50",
-        ])}
-      >
-        <Suspense fallback={<CenterSpinner />}>
-          <Shows startOfYear={startOfYear} endOfYear={endOfYear} />
-        </Suspense>
-      </div>
+      <Suspense fallback={<CenterSpinner />}>
+        <Shows startOfYear={startOfYear} endOfYear={endOfYear} />
+      </Suspense>
     </div>
   );
 };
