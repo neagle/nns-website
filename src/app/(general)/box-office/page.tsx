@@ -138,6 +138,12 @@ const BoxOfficeContent = async () => {
 
   return (
     <>
+      <div className="alert alert-info mb-4 alert-outline p-2">
+        <p className="text-xs m-0">
+          Because we share space with Falls Church Presbyterian Church, our only
+          matinees are on Saturdays.
+        </p>
+      </div>
       {showGroups.map(({ key, title, show, events }) => {
         const firstEvent = events[0];
         const id = firstEvent._id || key;
