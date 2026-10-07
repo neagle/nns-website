@@ -150,21 +150,14 @@ const ShowContent = async ({ slug }: { slug: string }) => {
             openingDate &&
             openingDate > now && (
               <section>
-                <h2>Auditions</h2>
+                <a href="/auditions" className="btn btn-primary w-full">
+                  Audition Info &amp; Signup
+                </a>
 
-                <div
+                {/* <div
                   className="prose text-pretty"
                   dangerouslySetInnerHTML={{ __html: show.auditions }}
-                />
-
-                {show.auditionLink && (
-                  <Link
-                    href={show.auditionLink}
-                    className="mt-4 btn btn-primary btn-wide hover:scale-110 transition-all"
-                  >
-                    Sign Up to Audition
-                  </Link>
-                )}
+                /> */}
               </section>
             )}
 

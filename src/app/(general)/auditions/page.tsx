@@ -189,7 +189,7 @@ const AuditionContent = async () => {
                     dangerouslySetInnerHTML={{ __html: show.auditions }}
                   />
                 ) : (
-                  <p className="text-lg">Audition information coming soon!</p>
+                  <p className="text-lg">Audition information coming soon.</p>
                 )}
 
                 {show.description && (

@@ -42,6 +42,7 @@ const CreditList = ({ category, data }: CreditListProps) => {
       <ul>
         {manualSort(data).map((credit: Credit) => {
           const credItem = Array.isArray(credit) ? credit[0] : credit;
+
           return (
             <li key={credItem._id} className="grid grid-cols-2 gap-x-2">
               <div
@@ -53,20 +54,21 @@ const CreditList = ({ category, data }: CreditListProps) => {
                   "text-sm",
                 ])}
               >
-                <Link
-                  href={`/credits/${nameSlug(credItem.person)}/${
-                    credItem.person._id
-                  }`}
-                  className={classnames([
-                    "link",
-                    // "text-sm",
-                    "text-primary/70",
-                    "hover:text-primary",
-                    "transition-all",
-                  ])}
-                >
-                  {fullName(credItem.person)}
-                </Link>
+                {credItem.person ? (
+                  <Link
+                    href={`/credits/${nameSlug(credItem.person)}/${
+                      credItem.person._id
+                    }`}
+                    className={classnames([
+                      "link",
+                      "text-primary/70",
+                      "hover:text-primary",
+                      "transition-all",
+                    ])}
+                  >
+                    {fullName(credItem.person)}
+                  </Link>
+                ) : null}
               </div>
               <div
                 className={classnames([
