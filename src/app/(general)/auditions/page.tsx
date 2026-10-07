@@ -16,6 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const now = new Date();
   const { items } = await wixClient.items
     .query("Shows")
+    .ne("preview", true)
     .ge("openingDate", now.toISOString())
     .isNotEmpty("auditionLink")
     .ne("noLongerAuditioning", true)
@@ -95,6 +96,7 @@ const AuditionContent = async () => {
   const now = new Date();
   const { items } = await wixClient.items
     .query("Shows")
+    .ne("preview", true)
     .ge("openingDate", now.toISOString())
     .ne("noLongerAuditioning", true)
     .ascending("openingDate")
@@ -206,7 +208,7 @@ const AuditionContent = async () => {
           );
         })
       ) : (
-        <div>
+        <div className="p-4">
           <h2 className="text-xl mb-4">Nothing right now</h2>
           <p>
             ...but stay tuned! Follow us on{" "}

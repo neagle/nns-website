@@ -33,6 +33,7 @@ export async function generateMetadata({ params }: PageProps) {
 const getShows = async (startOfYear: Date, endOfYear: Date) => {
   const { items } = await wixClient.items
     .query("Shows")
+    .ne("preview", true)
     .ge("openingDate", startOfYear.toISOString()) // Greater than or equal to start of the year
     .le("openingDate", endOfYear.toISOString()) // Less than or equal to end of the year
     .ascending("openingDate")
