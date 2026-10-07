@@ -122,6 +122,56 @@ const Page = async () => {
             photosFolderId="f9121230e78c499bbc214a7faa968714"
           >
             <p>
+              <EasterEgg>Jaclyn Robertson</EasterEgg> is a producer, director,
+              actress, and teaching artist, and the Co-founder and Producing
+              Director of NOVA Nightsky Theater. She is a graduate of the
+              <Link href="https://www.amda.edu/">
+                American Musical and Dramatic Academy (AMDA)
+              </Link>
+              .
+            </p>
+
+            <p>
+              Since returning to theater in 2017, Jaclyn has worked with{" "}
+              <Link href="https://www.providenceplayers.org/">
+                Providence Players of Fairfax
+              </Link>
+              ,{" "}
+              <Link href="https://www.shoestringtheatrecompany.com/">
+                Shoestring Theatre Company
+              </Link>
+              ,{" "}
+              <Link href="https://www.fairfaxcitytheatre.org/">
+                City of Fairfax Theatre Company
+              </Link>
+              ,{" "}
+              <Link href="https://www.thelittletheatre.com/">
+                Little Theatre of Alexandria
+              </Link>
+              , and{" "}
+              <Link href="https://www.nextstoptheatre.org/">
+                NextStop Theatre Company
+              </Link>
+              . In 2024, she joined NextStop as a Teaching Artist and currently
+              serves as Director of the Stars on Stage program. In 2027, she
+              will serve as NextStop&rsquo;s Interim Director of Education.
+            </p>
+
+            <p>
+              Jaclyn founded NOVA Nightsky Theater in 2021 and serves as the
+              company&rsquo;s Producing Director, overseeing its production
+              operations, community outreach, and marketing. She brings her
+              background as a small business owner to her work with NNS, with a
+              particular focus on audience development and creating a supportive
+              experience for the company&rsquo;s artists and production teams.
+            </p>
+
+            <p>
+              As an artist and educator, Jaclyn is passionate about creating
+              meaningful opportunities for people of all ages and experience
+              levels to engage with theater, both onstage and behind the scenes.
+            </p>
+            {/* <p>
               <EasterEgg>Jaclyn</EasterEgg> is a producer, actress, mom of
               three, and a serial entrepreneur. After graduating from the{" "}
               <Link className="link" href="https://www.amda.edu/">
@@ -159,7 +209,7 @@ const Page = async () => {
               business owner to NOVA Nightsky by focusing on community outreach,
               marketing/branding, and making sure our crews and casts have
               everything they need to feel supported.
-            </p>
+            </p> */}
           </Person>
           <Person
             name="Adam Ressa"
