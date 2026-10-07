@@ -124,7 +124,7 @@ const Page = async () => {
             <p>
               <EasterEgg>Jaclyn Robertson</EasterEgg> is a producer, director,
               actress, and teaching artist, and the Co-founder and Producing
-              Director of NOVA Nightsky Theater. She is a graduate of the
+              Director of NOVA Nightsky Theater. She is a graduate of the{" "}
               <Link href="https://www.amda.edu/">
                 American Musical and Dramatic Academy (AMDA)
               </Link>
