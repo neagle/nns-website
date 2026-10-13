@@ -9,6 +9,11 @@ import { getImageWithDimensions } from "@/app/actions/media";
 import chalk from "chalk";
 
 const SIZE = { width: 1200, height: 630, margin: 20 };
+const SHOW_SIZES = [
+  { ...SIZE, suffix: "" },
+  { width: 980, height: 552, margin: 20, suffix: "-980x552" },
+  { width: 844, height: 844, margin: 20, suffix: "-844x844" },
+];
 const OUT_DIR = path.join(process.cwd(), "public", "og");
 
 // simple fetch with timeout
@@ -37,12 +42,12 @@ async function fetchPeople() {
   return items as Person[];
 }
 
-async function buildBackground(show: Show): Promise<Buffer> {
+async function buildBackground(show: Show, size: typeof SIZE): Promise<Buffer> {
   // base canvas filled with backgroundColor (default #111)
   const base = sharp({
     create: {
-      width: SIZE.width,
-      height: SIZE.height,
+      width: size.width,
+      height: size.height,
       channels: 4,
       background: show.backgroundColor || "#0e2a35",
     },
@@ -52,12 +57,12 @@ async function buildBackground(show: Show): Promise<Buffer> {
 
   if (show.backgroundTexture) {
     const backgroundTexture = await getImageWithDimensions(
-      show.backgroundTexture
+      show.backgroundTexture,
     );
     try {
       const texBuf = await fetchBuffer(backgroundTexture.url);
       const tex = await sharp(texBuf)
-        .resize(SIZE.width, SIZE.height, { fit: "cover" })
+        .resize(size.width, size.height, { fit: "cover" })
         .png()
         .toBuffer();
 
@@ -84,7 +89,7 @@ async function renderPerson(person: Person): Promise<Buffer | null> {
       person.headshot,
       SIZE.width,
       SIZE.height,
-      {}
+      {},
     );
     const raw = await fetchBuffer(headshotUrl);
     // Normalize to JPG and constrain to OG size (preserve aspect ratio)
@@ -100,15 +105,18 @@ async function renderPerson(person: Person): Promise<Buffer | null> {
   return headshotBuf;
 }
 
-async function renderShow(show: Show): Promise<Buffer | null> {
+async function renderShow(
+  show: Show,
+  size: typeof SIZE,
+): Promise<Buffer | null> {
   if (!show.logo) return null; // skip shows without a logo
 
   // 1) background (color/texture)
-  const background = await buildBackground(show);
+  const background = await buildBackground(show, size);
 
   // 2) main logo resized to fit inside the safe box
-  const safeW = SIZE.width - SIZE.margin * 2;
-  const safeH = SIZE.height - SIZE.margin * 2;
+  const safeW = size.width - size.margin * 2;
+  const safeH = size.height - size.margin * 2;
 
   let logoBuf: Buffer;
   try {
@@ -139,7 +147,7 @@ async function renderShow(show: Show): Promise<Buffer | null> {
     .toBuffer();
 
   const finalPng = await sharp(background)
-    .composite([{ input: overlay, left: SIZE.margin, top: SIZE.margin }])
+    .composite([{ input: overlay, left: size.margin, top: size.margin }])
     .png()
     .toBuffer();
 
@@ -147,18 +155,20 @@ async function renderShow(show: Show): Promise<Buffer | null> {
 }
 
 async function buildShowImages(shows: Show[]) {
-  fs.mkdir(path.join(OUT_DIR, "shows"), { recursive: true });
+  await fs.mkdir(path.join(OUT_DIR, "shows"), { recursive: true });
   return shows.map(async (show: Show) => {
     const slug = show.slug || show._id;
     try {
-      const png = await renderShow(show);
-      if (!png) {
-        console.log(chalk.red(`(skip) ${slug} — no usable logo`));
-        return;
+      for (const size of SHOW_SIZES) {
+        const png = await renderShow(show, size);
+        if (!png) {
+          console.log(chalk.red(`(skip) ${slug} — no usable logo`));
+          return;
+        }
+        const file = path.join(OUT_DIR, "shows", `${slug}${size.suffix}.png`);
+        await fs.writeFile(file, png);
+        process.stdout.write(chalk.green("."));
       }
-      const file = path.join(OUT_DIR, "shows", `${slug}.png`);
-      await fs.writeFile(file, png);
-      process.stdout.write(chalk.green("."));
     } catch (err) {
       console.warn(chalk.red(`OG FAIL for ${slug}:`, (err as Error).message));
     }
@@ -179,7 +189,7 @@ async function buildPeopleImages(people: Person[]) {
       process.stdout.write(chalk.green("."));
     } catch (err) {
       console.warn(
-        chalk.red(`OG FAIL for person ${person._id}:`, (err as Error).message)
+        chalk.red(`OG FAIL for person ${person._id}:`, (err as Error).message),
       );
     }
   });
@@ -188,8 +198,8 @@ async function buildPeopleImages(people: Person[]) {
 async function run() {
   console.log(
     `🖼️  Generating Open Graph images for shows and people to ${chalk.cyan(
-      OUT_DIR
-    )}`
+      OUT_DIR,
+    )}`,
   );
   await fs.mkdir(OUT_DIR, { recursive: true });
   const shows = await fetchShows();
