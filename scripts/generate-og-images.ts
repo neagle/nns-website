@@ -44,7 +44,7 @@ async function buildBackground(show: Show): Promise<Buffer> {
       width: SIZE.width,
       height: SIZE.height,
       channels: 4,
-      background: show.backgroundColor || "#111111",
+      background: show.backgroundColor || "#0e2a35",
     },
   }).png();
 
