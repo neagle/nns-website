@@ -43,21 +43,13 @@ const sortNoHeadshotsLast = (showTitle: string, cast: Credit[]) => {
 const FeaturedCast: React.FC<Props> = ({ show }) => {
   return (
     <div
-      className={classnames(
-        {
-          "xl:grid-cols-2": show.cast.length % 2 === 0,
-          "xl:grid-cols-3": show.cast.length % 3 === 0,
-          "xl:grid-cols-4": show.cast.length >= 4,
-        },
-        [
-          "grid",
-          "gap-8",
-          "sm:grid-cols-1",
-          "md:grid-cols-2",
-          "justify-items-center",
-          "items-start",
-        ],
-      )}
+      className={classnames([
+        "grid",
+        "gap-8",
+        "[grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]",
+        "justify-items-center",
+        "items-start",
+      ])}
     >
       {sortNoHeadshotsLast(show.title, manualSort(show.cast)).map(
         (cast: Credit) => {
@@ -83,12 +75,6 @@ const FeaturedCast: React.FC<Props> = ({ show }) => {
           return (
             <FeaturedCastMember
               key={cast._id}
-              className={classnames([
-                "flex",
-                "flex-col",
-                "items-center",
-                "justify-center",
-              ])}
               role={cast.role}
               showDates={cast.showDates}
               castMember={cast.person}
