@@ -9,11 +9,20 @@ type Props = {
   name: string;
   slug?: string;
   title: string;
+  subtitles?: string | string[];
   photosFolderId?: string;
   children?: React.ReactNode;
 };
 
-const Person = ({ id, name, slug, title, photosFolderId, children }: Props) => {
+const Person = ({
+  id,
+  name,
+  slug,
+  title,
+  subtitles,
+  photosFolderId,
+  children,
+}: Props) => {
   const personSlug =
     slug || slugify(name, { separator: "-", lowercase: false });
 
@@ -44,6 +53,11 @@ const Person = ({ id, name, slug, title, photosFolderId, children }: Props) => {
         </Link>
         <h3 className="text-accent! mb-4 font-normal! normal-case! font-sans! leading-tight">
           {title}
+          {subtitles && (
+            <span className="block text-sm text-accent/50">
+              {Array.isArray(subtitles) ? subtitles.join(", ") : subtitles}
+            </span>
+          )}
         </h3>
       </div>
       <div className="mb-4 md:mb-0 md:-mt-4">

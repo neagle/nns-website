@@ -102,9 +102,9 @@ const Page = async () => {
           <Image
             priority
             className="w-full rounded-lg shadow-md mb-4 shadow-primary"
-            src="/images/photographs/general/all-the-board.jpg"
-            width="2930"
-            height="1496"
+            src="/images/photographs/general/2027-board.jpg"
+            width="1536"
+            height="1536"
             sizes="(max-width: 768px) 100vw, 40vw"
             alt="NOVA Nightsky's Board: Adam Ressa, Jaclyn Robertson, and Sarah Baczewski"
           />
@@ -118,13 +118,20 @@ const Page = async () => {
           <Person
             name="Jaclyn Robertson"
             id="30f3d369-55e6-46ff-a77f-f7201fe29b58"
-            title="Producing Director / Co&#x2011;Founder / Actress"
+            title="Producing Director"
+            subtitles={[
+              "Co-Founder",
+              "Actress",
+              "Producer",
+              "Director",
+              "Teaching\u00A0Artist",
+            ]}
             photosFolderId="f9121230e78c499bbc214a7faa968714"
           >
             <p>
-              <EasterEgg>Jaclyn Robertson</EasterEgg> is a producer, director,
-              actress, and teaching artist, and the Co-founder and Producing
-              Director of NOVA Nightsky Theater. She is a graduate of the{" "}
+              <EasterEgg>Jaclyn Robertson</EasterEgg> is the Co-founder and
+              Producing Director of NOVA Nightsky Theater. She is a graduate of
+              the{" "}
               <Link href="https://www.amda.edu/">
                 American Musical and Dramatic Academy (AMDA)
               </Link>
@@ -171,50 +178,12 @@ const Page = async () => {
               meaningful opportunities for people of all ages and experience
               levels to engage with theater, both onstage and behind the scenes.
             </p>
-            {/* <p>
-              <EasterEgg>Jaclyn</EasterEgg> is a producer, actress, mom of
-              three, and a serial entrepreneur. After graduating from the{" "}
-              <Link className="link" href="https://www.amda.edu/">
-                American Musical and Dramatic Academy
-              </Link>
-              , she took a long hiatus from the theater to raise her three young
-              children and spent a decade running a successful fitness business
-              for mothers. Since 2017 Jaclyn has worked at{" "}
-              <Link className="link" href="https://www.providenceplayers.org/">
-                Providence Players of Fairfax
-              </Link>
-              ,{" "}
-              <Link
-                className="link"
-                href="https://www.shoestringtheatrecompany.com/"
-              >
-                Shoestring Theatre Company
-              </Link>
-              ,{" "}
-              <Link className="link" href="https://www.fairfaxcitytheatre.org/">
-                City of Fairfax Theater Company
-              </Link>
-              , and{" "}
-              <Link className="link" href="https://thelittletheatre.com/">
-                Little Theater of Alexandria (LTA)
-              </Link>
-              . In 2024 she began working as a Teaching Artist for{" "}
-              <Link className="link" href="https://www.nextstoptheatre.org/">
-                NextStop Theater Company
-              </Link>
-              .
-            </p>
-            <p>
-              As our Producing Director, Jaclyn brings her expertise as a small
-              business owner to NOVA Nightsky by focusing on community outreach,
-              marketing/branding, and making sure our crews and casts have
-              everything they need to feel supported.
-            </p> */}
           </Person>
           <Person
             name="Adam Ressa"
             id="56eeb542-0b53-423d-83dc-f9f183adb531"
-            title="Design and Technical&nbsp;Director / Actor"
+            title="Co-Technical Director"
+            subtitles="Actor"
             photosFolderId="fee4187d32d04283aa0fe811e416387a"
           >
             <p className="mb-4">
@@ -268,13 +237,13 @@ const Page = async () => {
           <Person
             name="Sarah Baczewski"
             id="12b45679-e12a-4bcd-a6cb-098d86e7bbe3"
-            title="Artistic&nbsp;Director / Actress / Director"
+            title="Artistic Director"
+            subtitles={["Actress", "Director", "Stage\u00A0Manager"]}
             photosFolderId="4f9a71dd9d2e49f4a9792b5244b51cdd"
           >
             <p className="mb-4">
-              Sarah Baczewski is a director, stage manager and (occasional)
-              actress. A Washington State native, Sarah is a recent transplant
-              (via Los Angeles, CA) to the Washington, DC area. She has directed
+              A Washington State native, Sarah is a recent transplant (via Los
+              Angeles, CA) to the Washington, DC area. She has directed
               productions for{" "}
               <Link className="link" href="https://www.providenceplayers.org/">
                 Providence Players of Fairfax
@@ -300,7 +269,8 @@ const Page = async () => {
           <Person
             name="Elyse R. Smith"
             id="62151fb6-b85d-4de7-9508-a346d65c0262"
-            title="Administrative&nbsp;Director / Actress / Director"
+            title="Co-Technical Director"
+            subtitles={["Actress", "Director"]}
             photosFolderId="3caf53af3db94a6e862b7f7b1d76f7a2"
           >
             <p className="mb-4">
@@ -347,109 +317,90 @@ const Page = async () => {
             </p>
           </Person>
         </div>
-      </section>
-      <section className="">
-        <div className="bg-info/60 p-4 md:p-6 xl:p-8">
-          <h1 className="text-3xl">Company Members</h1>
-        </div>
-        <div
-          className={classnames([
-            "p-4 md:p-6 xl:p-8",
-            "text-sm",
-            "md:text-lg",
-            "leading-tight",
-          ])}
-        >
-          Theater is a team sport, and NOVA Nightsky relies on the hard work and
-          dedication of volunteers to make our shows&nbsp;successful. Company
-          Members are individuals who are tackling larger technical roles in our
-          2025&nbsp;season.
-        </div>
         <div className={classnames(["p-4", "md:p-6", "xl:p-8"])}>
           <Person
             name="Hannah Ruth Blackwell"
             id="3d7c8a3f-94e8-4219-95ec-268ac55d3687"
             slug="Hannah_Ruth-Blackwell"
-            title="Actor / Director / Playwright"
+            title="Administrative Director"
+            subtitles={["Actress", "Director", "Playwright"]}
             photosFolderId="cad84141f3f745cfbb78efa1ed945eb7"
           >
             <p>
-              Hannah Ruth Blackwell is an actor, director, and playwright
-              hailing from the Blue Ridge Mountains of Virginia, and is a
-              graduate of{" "}
-              <Link className="link" href="https://www.american.edu/">
-                American University
-              </Link>{" "}
-              with dual degrees in Musical Theatre and Music. She was in her
-              first theater production at the age of 3, and has been involved in
-              theater ever since! She has been involved with NOVA Nightsky
-              Theater in both a directing and acting capacity, and is excited to
-              join the team as a company member. When not in rehearsal, Hannah
-              Ruth can be found fundraising for nonprofit organizations, or at
-              home with her wife and their two cats.
+              Hannah Ruth Blackwell hails from the Blue Ridge Mountains of
+              Virginia, and is a graduate of{" "}
+              <Link href="https://www.american.edu/">American University</Link>{" "}
+              with dual degrees in Musical Theatre and Music. As part of a very
+              musical and theatrical family, she was in her first ever theater
+              production at the age of three, and has been involved in the arts
+              ever since! She has worked with NOVA Nightsky Theater many times
+              since 2023 as a director, actor, sound designer, and stage
+              manager, and is excited to join the board after a stint as a
+              company member.
+            </p>
+            <p>
+              When not in rehearsal, Hannah Ruth can be found creating order
+              from chaos for fundraising teams at nonprofits (spreadsheets make
+              the world go round!), or beading/embroidering/painting at home
+              with her equally artistic wife and their two cats, both of whom
+              love to “help” with any and all household artistic projects.
             </p>
           </Person>
           <Person
-            name="Fosse Thornton"
-            id="a78c3737-bc15-4130-926a-86c9b04cc4ef"
-            title="Dancer / Actress"
-            photosFolderId="26e8bbe1612b4b03b5d29169d8d2564c"
+            name="Pilar Bruyere"
+            id="3d7c8a3f-94e8-4219-95ec-268ac55d3687"
+            title="Front of House Director"
+            subtitles={["Actor", "Consulting\u00A0Artist", "Director"]}
+            photosFolderId="05f94ac26a03481da8e45ecab703fca3"
           >
             <p>
-              Fosse is an actor / dancer / singer born and raised in Northern
-              Virginia. She loves the classics-with-an-in-your-face-twist, and
-              has found that NOVA Nightsky is the perfect place to work on some
-              real good theater with an incredibly talented and passionate team.
-              When she&rsquo;s not onstage, you can find her at the skatepark or
-              in a dance class. Thanks to Jaclyn, Adam, Sarah and the whole team
-              for the laughs and artistry&mdash;and cheers to many more.
+              A DC native, Pilar sought her fortune as a professional theater
+              artist in Philadelphia and settled on a degree in Theater Arts
+              from <Link href="https://www.temple.edu/">Temple University</Link>
+              . She returned to theater in 2023 after several years as a
+              customer service specialist, when she and Jaclyn first discovered
+              the other did theater after being friends for years and never once
+              discussing the topic. Since then, she has acted in numerous NOVA
+              Nightsky productions and holds the record for being cast in the
+              most consecutive shows in a season. Additionally, she has
+              performed with a few other local companies including Silver Spring
+              Stage, Bowie Community Theater, and Dominion Stage.
+            </p>
+
+            <p>
+              When not in rehearsal, Pilar enjoys helping where she can with NNS
+              productions, taking herself on blind dates to movies and shows (no
+              reading the synopsis!), consulting her cat on dinner recipes,
+              dreaming up costumes, and smiling at people. As the new Front of
+              House Director, she looks forward to smiling at you, too!
             </p>
           </Person>
-        </div>
-      </section>
-      <section className="">
-        <div className="bg-secondary/60 p-4 md:p-6 xl:p-8">
-          <h1 className="text-3xl">Technical Crew</h1>
-        </div>
-        <div className={classnames(["p-4", "md:p-6", "xl:p-8"])}>
           <Person
             name="Nate Eagle"
             id="4fc560a2-b4fa-46e2-89d2-db253361a0e9"
-            title="Webmaster / Actor"
+            title="Digital Operations Director"
+            subtitles={["Actor", "Sound\u00A0Designer"]}
             photosFolderId="62068bde83d34dc280bdc8b00c17b8f4"
           >
             <p>
-              Nate Eagle is a software engineer, actor, and amateur mixologist.
-              He&rsquo;s a proud alum of{" "}
-              <Link className="link" href="https://www.sjc.edu/">
-                St. John&rsquo;s College
-              </Link>{" "}
-              in Annapolis, Maryland&mdash;yeah, the weird Great Books
-              school&mdash;where he studied liberal arts and philosophy.
-              He&rsquo;s an avid{" "}
-              <Link
-                className="link"
-                href="https://gokibitz.com/user/cloudbrows"
-              >
-                go player
+              Nate Eagle came back to theater in 2024 after a twenty-year hiatus
+              and has been making up for lost time ever since. At NOVA Nightsky,
+              he has been lucky enough to do things he never expected to do in a
+              theater: bring a radio station to life for <em>The Gulf</em>, fill
+              an old CRT television with vintage Westerns and commercials for{" "}
+              <em>Fool for Love</em>, and help bring the AI in{" "}
+              <em>Anthropology</em> to life with sound, light, and a glowing
+              illusion under glass.
+            </p>
+            <p>
+              By day, Nate is a software engineer at{" "}
+              <Link href="https://leolabs.space/">LeoLabs</Link>, where he works
+              on software for a network of radars tracking objects in low-Earth
+              orbit. He is a graduate of{" "}
+              <Link href="https://www.sjc.edu/">
+                St. John’s College in Annapolis
               </Link>
-              ,{" "}
-              <Link
-                className="link"
-                href="https://nateeagle.com/tag/cocktails/"
-              >
-                cocktailer
-              </Link>
-              , and{" "}
-              <Link
-                className="link"
-                href="https://nateeagle.com/posts/burns-supper/"
-              >
-                Robert Burns enthusiast
-              </Link>
-              . He acted in High School and college, then spent 21 years doing a
-              bunch of other stuff. He returned to acting in 2024 and
-              doesn&rsquo;t seem to be stopping any time soon.
+              , where he studied liberal arts and philosophy.
             </p>
           </Person>
         </div>
