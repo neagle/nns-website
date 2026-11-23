@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: "Buy a season subscription to NOVA Nightsky Theater.",
 };
 
+export const revalidate = 300;
+
 const SubscriptionsContent = async () => {
   const planList = await wixClient.plans
     .queryPublicPlans()
