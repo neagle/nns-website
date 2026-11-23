@@ -363,11 +363,12 @@ const Page = async () => {
               twenty-year hiatus and has been making up for lost time ever
               since. At NOVA Nightsky, he has been lucky enough to do things he
               never expected to do in a theater: bring a radio station to life
-              for The Gulf, fill an old CRT television with vintage Westerns and
-              commercials for Fool for Love, and help bring the AI in
-              Anthropology to life with sound, light, and a glowing illusion
-              under glass. He also redesigned and rebuilt this very site because
-              he had a dream about a website that had fireflies.
+              for <em>The Gulf</em>, fill an old CRT television with vintage
+              Westerns and commercials for <em>Fool for Love</em>, and help
+              bring the AI in
+              <em>Anthropology</em> to life with sound, light, and a glowing
+              illusion under glass. He also redesigned and rebuilt this very
+              site because he had a dream about a website that had fireflies.
             </p>
             <p>
               By day, Nate is a software engineer at{" "}
