@@ -318,7 +318,7 @@ const Page = async () => {
             id="3d7c8a3f-94e8-4219-95ec-268ac55d3687"
             slug="Hannah_Ruth-Blackwell"
             title="Administrative Director"
-            subtitles="Actress / Director"
+            subtitles={["Actress", "Director"]}
             photosFolderId="cad84141f3f745cfbb78efa1ed945eb7"
           >
             <p>
