@@ -119,13 +119,19 @@ const Page = async () => {
             name="Jaclyn Robertson"
             id="30f3d369-55e6-46ff-a77f-f7201fe29b58"
             title="Producing Director"
-            subtitles={["Co-Founder", "Actress"]}
+            subtitles={[
+              "Co-Founder",
+              "Actress",
+              "Producer",
+              "Director",
+              "Teaching\u00A0Artist",
+            ]}
             photosFolderId="f9121230e78c499bbc214a7faa968714"
           >
             <p>
-              <EasterEgg>Jaclyn Robertson</EasterEgg> is a producer, director,
-              actress, and teaching artist, and the Co-founder and Producing
-              Director of NOVA Nightsky Theater. She is a graduate of the{" "}
+              <EasterEgg>Jaclyn Robertson</EasterEgg> is the Co-founder and
+              Producing Director of NOVA Nightsky Theater. She is a graduate of
+              the{" "}
               <Link href="https://www.amda.edu/">
                 American Musical and Dramatic Academy (AMDA)
               </Link>
@@ -232,13 +238,12 @@ const Page = async () => {
             name="Sarah Baczewski"
             id="12b45679-e12a-4bcd-a6cb-098d86e7bbe3"
             title="Artistic Director"
-            subtitles={["Actress", "Director"]}
+            subtitles={["Actress", "Director", "Stage\u00A0Manager"]}
             photosFolderId="4f9a71dd9d2e49f4a9792b5244b51cdd"
           >
             <p className="mb-4">
-              Sarah Baczewski is a director, stage manager and (occasional)
-              actress. A Washington State native, Sarah is a recent transplant
-              (via Los Angeles, CA) to the Washington, DC area. She has directed
+              A Washington State native, Sarah is a recent transplant (via Los
+              Angeles, CA) to the Washington, DC area. She has directed
               productions for{" "}
               <Link className="link" href="https://www.providenceplayers.org/">
                 Providence Players of Fairfax
@@ -318,13 +323,12 @@ const Page = async () => {
             id="3d7c8a3f-94e8-4219-95ec-268ac55d3687"
             slug="Hannah_Ruth-Blackwell"
             title="Administrative Director"
-            subtitles={["Actress", "Director"]}
+            subtitles={["Actress", "Director", "Playwright"]}
             photosFolderId="cad84141f3f745cfbb78efa1ed945eb7"
           >
             <p>
-              Hannah Ruth Blackwell is an actor, director, and playwright
-              hailing from the Blue Ridge Mountains of Virginia, and is a
-              graduate of{" "}
+              Hannah Ruth Blackwell hails from the Blue Ridge Mountains of
+              Virginia, and is a graduate of{" "}
               <Link href="https://www.american.edu/">American University</Link>{" "}
               with dual degrees in Musical Theatre and Music. As part of a very
               musical and theatrical family, she was in her first ever theater
@@ -346,29 +350,47 @@ const Page = async () => {
             name="Pilar Bruyere"
             id="3d7c8a3f-94e8-4219-95ec-268ac55d3687"
             title="Front of House Director"
+            subtitles={["Actor", "Consulting\u00A0Artist", "Director"]}
             photosFolderId="05f94ac26a03481da8e45ecab703fca3"
           >
-            <p>Crickets!</p>
+            <p>
+              A DC native, Pilar sought her fortune as a professional theater
+              artist in Philadelphia and settled on a degree in Theater Arts
+              from <Link href="https://www.temple.edu/">Temple University</Link>
+              . She returned to theater in 2023 after several years as a
+              customer service specialist, when she and Jaclyn first discovered
+              the other did theater after being friends for years and never once
+              discussing the topic. Since then, she has acted in numerous NOVA
+              Nightsky productions and holds the record for being cast in the
+              most consecutive shows in a season. Additionally, she has
+              performed with a few other local companies including Silver Spring
+              Stage, Bowie Community Theater, and Dominion Stage.
+            </p>
+
+            <p>
+              When not in rehearsal, Pilar enjoys helping where she can with NNS
+              productions, taking herself on blind dates to movies and shows (no
+              reading the synopsis!), consulting her cat on dinner recipes,
+              dreaming up costumes, and smiling at people. As the new Front of
+              House Director, she looks forward to smiling at you, too!
+            </p>
           </Person>
           <Person
             name="Nate Eagle"
             id="4fc560a2-b4fa-46e2-89d2-db253361a0e9"
             title="Digital Operations Director"
-            subtitles={["Actor", "Sound Designer"]}
+            subtitles={["Actor", "Sound\u00A0Designer"]}
             photosFolderId="62068bde83d34dc280bdc8b00c17b8f4"
           >
             <p>
-              Nate Eagle is an actor, sound designer, webmaster, and general
-              technical mischief-maker who came back to theater in 2024 after a
-              twenty-year hiatus and has been making up for lost time ever
-              since. At NOVA Nightsky, he has been lucky enough to do things he
-              never expected to do in a theater: bring a radio station to life
-              for <em>The Gulf</em>, fill an old CRT television with vintage
-              Westerns and commercials for <em>Fool for Love</em>, and help
-              bring the AI in
+              Nate Eagle came back to theater in 2024 after a twenty-year hiatus
+              and has been making up for lost time ever since. At NOVA Nightsky,
+              he has been lucky enough to do things he never expected to do in a
+              theater: bring a radio station to life for <em>The Gulf</em>, fill
+              an old CRT television with vintage Westerns and commercials for{" "}
+              <em>Fool for Love</em>, and help bring the AI in{" "}
               <em>Anthropology</em> to life with sound, light, and a glowing
-              illusion under glass. He also redesigned and rebuilt this very
-              site because he had a dream about a website that had fireflies.
+              illusion under glass.
             </p>
             <p>
               By day, Nate is a software engineer at{" "}
