@@ -20,7 +20,8 @@ const Footer = () => {
           <p className="uppercase tracking-wider grow-1 mb-2 md:mb-0 text-sm md:text-lg">
             &copy;{" "}
             <Suspense>
-              <LinkToQrCode>NOVA Nightsky Theater</LinkToQrCode>
+              {/* <LinkToQrCode>NOVA Nightsky Theater</LinkToQrCode> */}
+              NOVA Nightsky Theater
             </Suspense>
           </p>
           <div className="grow-0 text-md btn btn-xs md:btn-sm btn-outline mr-5 mb-2 md:mb-0">
