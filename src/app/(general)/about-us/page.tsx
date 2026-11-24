@@ -182,7 +182,7 @@ const Page = async () => {
           <Person
             name="Adam Ressa"
             id="56eeb542-0b53-423d-83dc-f9f183adb531"
-            title="Co-Technical Director"
+            title="Design and Technical Director"
             subtitles="Actor"
             photosFolderId="fee4187d32d04283aa0fe811e416387a"
           >
